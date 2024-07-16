@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="server:Web" />
+      <artifact name="server" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
@@ -10,15 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/server_Web.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/server_Web_exploded.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/admin.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/player/player.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/server.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/TestServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/web/WEB-INF/web.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/server.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/server_Web.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/server_Web_exploded.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/TestServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/TestServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/web/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/web/WEB-INF/web.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +59,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Tomcat Server.Tomcat 10.0.11.executor": "Run",
     "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/doodle/Downloads/Java Resources/examples/Online Chat V3",
     "node.js.detected.package.eslint": "true",
@@ -69,7 +67,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
+    "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "preferences.applicationServers",
@@ -81,9 +79,9 @@
       <option name="OPEN_IN_BROWSER" value="false" />
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
-        <artifact name="server:Web exploded">
+        <artifact name="server">
           <settings>
-            <option name="CONTEXT_PATH" value="/server_Web_exploded" />
+            <option name="CONTEXT_PATH" value="/server" />
           </settings>
         </artifact>
       </deployment>
@@ -160,7 +158,9 @@
       </ConfigurationWrapper>
       <method v="2">
         <option name="Make" enabled="true" />
-        <option name="BuildArtifacts" enabled="true" />
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="server" />
+        </option>
       </method>
     </configuration>
   </component>
@@ -187,6 +187,7 @@
       <workItem from="1721147788921" duration="3000" />
       <workItem from="1721147800894" duration="11000" />
       <workItem from="1721149185056" duration="665000" />
+      <workItem from="1721151392554" duration="1902000" />
     </task>
     <servers />
   </component>

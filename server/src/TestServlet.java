@@ -5,11 +5,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
-//@WebServlet(name = "TestServlet", urlPatterns = {"/test"})
+@WebServlet(name = "Test", urlPatterns = {"/test"})
 public class TestServlet extends HttpServlet {
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("Hello World");
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+        res.getWriter().println("Hello World");
     }
 }
