@@ -9,14 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/server.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/server_Web.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/server_Web_exploded.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/TestServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/TestServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/web/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/web/WEB-INF/web.xml" afterDir="false" />
-    </list>
+    <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="Understanding how tomcat works and jaxb generation" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -187,11 +180,24 @@
       <workItem from="1721147788921" duration="3000" />
       <workItem from="1721147800894" duration="11000" />
       <workItem from="1721149185056" duration="665000" />
-      <workItem from="1721151392554" duration="1902000" />
+      <workItem from="1721151392554" duration="1936000" />
     </task>
+    <task id="LOCAL-00001" summary="Understanding how tomcat works and jaxb generation">
+      <option name="closed" value="true" />
+      <created>1721153331399</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1721153331399</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Understanding how tomcat works and jaxb generation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Understanding how tomcat works and jaxb generation" />
   </component>
 </project>
