@@ -6,7 +6,7 @@
 //
 
 
-package jaxb.generated;
+package parsing.jaxb.generated;
 
 import java.util.ArrayList;
 import java.util.List;

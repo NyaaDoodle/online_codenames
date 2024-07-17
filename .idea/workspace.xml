@@ -9,24 +9,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="now jaxb generation...">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/admin_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/admin/src/test/SendTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/game/engine/CodenamesEngine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/game/listing/ListingState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/game/structure/Board.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/game/structure/GameStructure.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/game/structure/Team.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/game/structure/Words.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/jaxb/JAXBConversion.java" afterDir="false" />
+    <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="testing requests, parsing, beginning work on game classes">
+      <change afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/JAXBConversion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/admin.iml" beforeDir="false" afterPath="$PROJECT_DIR$/admin/admin.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/TestServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/TestServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/JAXBConversion.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/parsing/WordsCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/WordsCollector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/TestServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/servlets/TestServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/exceptions/GameListingFileException.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/exceptions/GameStructureFileException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/jaxb/JAXBConversion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNBoard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNTeam.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNTeam.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNTeams.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNTeams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ObjectFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ObjectFactory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +69,7 @@
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
+    "last_directory_selection": "/home/doodle/Programming/Java/repos/online_codenames/server/src/servlets",
     "last_opened_file_path": "/home/doodle/Downloads/Java Resources/lib/gson-2.8.8-javadoc.jar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -84,12 +79,13 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.applicationServers",
+    "settings.editor.selected.configurable": "editor.preferences.completion",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="servlets" />
       <recent name="game.structure" />
       <recent name="jaxb" />
     </key>
@@ -241,7 +237,7 @@
       <workItem from="1721149185056" duration="665000" />
       <workItem from="1721151392554" duration="1936000" />
       <workItem from="1721200414081" duration="5088000" />
-      <workItem from="1721208497203" duration="8458000" />
+      <workItem from="1721208497203" duration="14189000" />
     </task>
     <task id="LOCAL-00001" summary="Understanding how tomcat works and jaxb generation">
       <option name="closed" value="true" />
@@ -259,7 +255,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721200464940</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="testing requests, parsing, beginning work on game classes">
+      <option name="closed" value="true" />
+      <created>1721228575059</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1721228575059</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -268,6 +272,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Understanding how tomcat works and jaxb generation" />
     <MESSAGE value="now jaxb generation..." />
-    <option name="LAST_COMMIT_MESSAGE" value="now jaxb generation..." />
+    <MESSAGE value="testing requests, parsing, beginning work on game classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="testing requests, parsing, beginning work on game classes" />
   </component>
 </project>
