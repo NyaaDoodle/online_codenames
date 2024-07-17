@@ -10,12 +10,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="now jaxb generation...">
-      <change afterPath="$PROJECT_DIR$/server/src/exceptions/GameListingFileException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/game/instance/GameInstance.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/jaxb/generated/JAXBConversion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/parsing/WordsCollector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/admin_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin/src/test/SendTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/game/engine/CodenamesEngine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/game/listing/ListingState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/game/structure/Board.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/game/structure/GameStructure.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/game/structure/Team.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/game/structure/Words.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/jaxb/JAXBConversion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/admin.iml" beforeDir="false" afterPath="$PROJECT_DIR$/admin/admin.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/TestServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/TestServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/JAXBConversion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/parsing/WordsCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/WordsCollector.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +37,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -54,6 +66,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Application.SendTest.executor": "Run",
     "Application.WordsCollector.executor": "Run",
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -62,20 +75,39 @@
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/bmroo/Downloads/Java Resources/codenames_project",
+    "last_opened_file_path": "/home/doodle/Downloads/Java Resources/lib/gson-2.8.8-javadoc.jar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
+    "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "preferences.applicationServers",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.WordsCollector">
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="game.structure" />
+      <recent name="jaxb" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.SendTest">
+    <configuration name="SendTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.SendTest" />
+      <module name="admin" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="WordsCollector" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="parsing.WordsCollector" />
       <module name="server" />
@@ -179,6 +211,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SendTest" />
         <item itemvalue="Application.WordsCollector" />
       </list>
     </recent_temporary>
@@ -208,6 +241,7 @@
       <workItem from="1721149185056" duration="665000" />
       <workItem from="1721151392554" duration="1936000" />
       <workItem from="1721200414081" duration="5088000" />
+      <workItem from="1721208497203" duration="8458000" />
     </task>
     <task id="LOCAL-00001" summary="Understanding how tomcat works and jaxb generation">
       <option name="closed" value="true" />
