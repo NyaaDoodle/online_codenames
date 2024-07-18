@@ -37,7 +37,7 @@ public class JAXBConversion {
         return outGameStructure;
     }
 
-    public static Board parseECNBoard(final ECNBoard ecnBoard) {
+    private static Board parseECNBoard(final ECNBoard ecnBoard) {
         final int cardCount = ecnBoard.getCardsCount();
         final int blackCardsCount = ecnBoard.getBlackCardsCount();
         final ECNLayout ecnLayout = ecnBoard.getECNLayout();
@@ -46,7 +46,7 @@ public class JAXBConversion {
         return new Board(cardCount, blackCardsCount, rows, columns);
     }
 
-    public static List<Team> parseECNTeams(final ECNTeams ecnTeams) throws GameStructureFileException {
+    private static List<Team> parseECNTeams(final ECNTeams ecnTeams) {
         List<Team> teams = new ArrayList<>();
         ecnTeams.getECNTeam().forEach(ecnTeam -> {
             final String name = ecnTeam.getName();
@@ -58,61 +58,40 @@ public class JAXBConversion {
         return teams;
     }
 
-    public static void checkValidity(final GameStructure gameStructure) throws GameStructureFileException {
-
+    private static void checkValidity(final GameStructure gameStructure) throws GameStructureFileException {
         checkGameNameUniqueness(gameStructure.getName());
-
-        checkDictionaryFile(gameStructure.getDictionaryFileName());
-
-        Board board = gameStructure.getBoard();
-        final int totalCardsCount = board.getCardCount() + board.getBlackCardCount();
-        checkTotalCardsCountToWordCount(totalCardsCount, gameStructure.getWords().size());
-
-        final int totalTeamCards = gameStructure.getTeams().stream().mapToInt(Team::getCardCount).sum();
-        checkTotalTeamCardsCountToCardCount(totalTeamCards, board.getCardCount());
-
-        checkTableSizeToTotalCardsCount(board.getRows(), board.getColumns(), totalCardsCount);
-
-        gameStructure.getTeams().forEach(team -> checkDefinersAndGuessersCounts(team.getDefinersCount(), team.getGuessersCount()));
-
+        checkTotalCardsCountToWordCount(gameStructure.getBoard(), gameStructure.getWords().size());
+        checkTotalTeamCardsCountToCardCount(gameStructure.getTeams(), gameStructure.getBoard().getCardCount());
+        checkTableSizeToTotalCardsCount(gameStructure.getBoard());
+        for (Team team : gameStructure.getTeams()) {
+            checkDefinersAndGuessersCounts(team);
+        }
         checkTeamNameUniqueness(gameStructure.getTeams());
+    }
 
+    private static void checkGameNameUniqueness(final String gameName) throws GameStructureFileException {
+        // TODO add the function, where do I check where the game names are?
+    }
 
-
-
-
-        if (teams.get(0).getName().equals(teams.get(1).getName())) {
-            throw new GameStructureFileException("Both teams share the same name: " + teams.get(0).getName() + "\nPlease give a different name to one of the teams.");
+    private static void checkTotalCardsCountToWordCount(final Board board, final int wordCount) throws GameStructureFileException {
+        final int totalCardsInGame = board.getCardCount() + board.getBlackCardCount();
+        if (totalCardsInGame > wordCount) {
+            throw new GameStructureFileException("Amount of all word cards (regular and black words) in a game is greater than the amount of words in the word bank: "
+                    + totalCardsInGame + " > " + wordCount
+                    + "\nCorrect the \"cards-count\" and/or \"black-cards-count\" in the XML file so that the sum is no greater than " + wordCount);
         }
     }
-    public static void checkGameNameUniqueness(final String gameName) throws GameStructureFileException {
 
-    }
-    public static void checkDictionaryFile(final String dictionaryFileName) throws GameStructureFileException {
-
-    }
-    public static void checkTotalCardsCountToWordCount(final int totalCardsCount, final int wordCount) throws GameStructureFileException {
-        if (board.getCardCount() > words.getGameWords().size()) {
-            throw new GameStructureFileException("Amount of regular words in a game is greater than the amount of words in the word bank: "
-                    + board.getCardCount() + " > " + words.getGameWords().size()
-                    + "\nCorrect the \"cards-count\" in the XML file to be less than " + words.getGameWords().size());
-        }
-
-        if (board.getBlackCardCount() > words.getBlackWords().size()) {
-            throw new GameStructureFileException("Amount of black words in a game is greater than the amount of black words in the word bank: "
-                    + board.getBlackCardCount() + " > " + words.getBlackWords().size()
-                    + "\nCorrect the \"black-cards-count\" in the XML file to be less than " + words.getBlackWords().size());
+    private static void checkTotalTeamCardsCountToCardCount(final List<Team> teams, final int cardCount) throws GameStructureFileException {
+        final int totalTeamCards = teams.stream().mapToInt(Team::getCardCount).sum();
+        if (totalTeamCards > cardCount) {
+            throw new GameStructureFileException("The amount of cards assigned for all teams is greater than the amount of regular cards available in a game: "
+                    + totalTeamCards + " > " + cardCount
+                    + "\nCorrect the values of \"cards-count\" in the XML file for each team, so that the sum is no greater than " + cardCount);
         }
     }
-    public static void checkTotalTeamCardsCountToCardCount(final int totalTeamCardsCount, final int cardCount) throws GameStructureFileException {
-        final int totalTeamsCards = teams.stream().mapToInt(Team::getCardCount).sum();
-        if (totalTeamsCards > board.getCardCount()) {
-            throw new GameStructureFileException("The amount of cards assigned for both teams is greater than the amount of regular cards available in a game: "
-                    + totalTeamsCards + " > " + board.getCardCount()
-                    + "\nCorrect the values of \"cards-count\" in the XML file for each team, so that the sum is less than " + board.getCardCount());
-        }
-    }
-    public static void checkTableSizeToTotalCardsCount(final int rows, final int columns, final int totalCardsCount) throws GameStructureFileException {
+
+    private static void checkTableSizeToTotalCardsCount(final Board board) throws GameStructureFileException {
         final int cardsTableSize = board.getRows() * board.getColumns();
         final int totalCardsInGame = board.getCardCount() + board.getBlackCardCount();
         if (cardsTableSize < totalCardsInGame) {
@@ -121,16 +100,24 @@ public class JAXBConversion {
                     + "\nCorrect the values of \"rows\" and \"columns\" in the XML file so that their product is equal or more than " + totalCardsInGame);
         }
     }
-    public static void checkTeamNameUniqueness(final List<Team> teams) throws GameStructureFileException {
+
+    private static void checkTeamNameUniqueness(final List<Team> teams) throws GameStructureFileException {
         List<String> teamNamesList = teams.stream().map(Team::getName).collect(Collectors.toList());
         for (String teamName : teamNamesList) {
             if (Collections.frequency(teamNamesList, teamName) > 1) {
-
+                throw new GameStructureFileException("There is more than one team sharing the same name: " + teamName + "\nPlease give a different name to one of the teams.");
             }
         }
     }
 
-    public static void checkDefinersAndGuessersCounts(final int definersCount, final int guessersCount) throws GameStructureFileException {
-
+    private static void checkDefinersAndGuessersCounts(final Team team) throws GameStructureFileException {
+        if (team.getDefinersCount() < 1) {
+            throw new GameStructureFileException("The number of definers in Team " + team.getName() + " is less than 1, it is " + team.getDefinersCount()
+                    + "\nPlease change the number in \"definers\" of Team " + team.getName() + " in the XML file to be at least 1.");
+        }
+        else if (team.getGuessersCount() < 1) {
+            throw new GameStructureFileException("The number of guessers in Team " + team.getName() + " is less than 1, it is " + team.getGuessersCount()
+                    + "\nPlease change the number in \"guessers\" of Team " + team.getName() + " in the XML file to be at least 1.");
+        }
     }
 }

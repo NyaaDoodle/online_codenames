@@ -10,17 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="testing requests, parsing, beginning work on game classes">
-      <change afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/JAXBConversion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/servlets/NewGameServlet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/TestServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/servlets/TestServlet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/exceptions/GameListingFileException.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/exceptions/GameStructureFileException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/jaxb/JAXBConversion.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNBoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNLayout.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNTeam.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNTeam.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ECNTeams.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ECNTeams.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/jaxb/generated/ObjectFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/generated/ObjectFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/test/SendTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/test/NewGameServletTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/exceptions/GameStructureFileException.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/exceptions/GameStructureFileException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/parsing/jaxb/JAXBConversion.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/JAXBConversion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/servlets/TestServlet.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +56,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Application.NewGameServletTest.executor": "Run",
     "Application.SendTest.executor": "Run",
     "Application.WordsCollector.executor": "Run",
     "DefaultHtmlFileTemplate": "HTML File",
@@ -90,9 +87,9 @@
       <recent name="jaxb" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SendTest">
-    <configuration name="SendTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.SendTest" />
+  <component name="RunManager" selected="Application.NewGameServletTest">
+    <configuration name="NewGameServletTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.NewGameServletTest" />
       <module name="admin" />
       <extension name="coverage">
         <pattern>
@@ -207,7 +204,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.SendTest" />
+        <item itemvalue="Application.NewGameServletTest" />
         <item itemvalue="Application.WordsCollector" />
       </list>
     </recent_temporary>
@@ -238,6 +235,7 @@
       <workItem from="1721151392554" duration="1936000" />
       <workItem from="1721200414081" duration="5088000" />
       <workItem from="1721208497203" duration="14189000" />
+      <workItem from="1721296326238" duration="7060000" />
     </task>
     <task id="LOCAL-00001" summary="Understanding how tomcat works and jaxb generation">
       <option name="closed" value="true" />
@@ -273,6 +271,7 @@
     <MESSAGE value="Understanding how tomcat works and jaxb generation" />
     <MESSAGE value="now jaxb generation..." />
     <MESSAGE value="testing requests, parsing, beginning work on game classes" />
-    <option name="LAST_COMMIT_MESSAGE" value="testing requests, parsing, beginning work on game classes" />
+    <MESSAGE value="admin servlets work begin" />
+    <option name="LAST_COMMIT_MESSAGE" value="admin servlets work begin" />
   </component>
 </project>
