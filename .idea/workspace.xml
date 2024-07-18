@@ -10,13 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="testing requests, parsing, beginning work on game classes">
-      <change afterPath="$PROJECT_DIR$/server/src/servlets/NewGameServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/constants/Constants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/servlets/LoginServlet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/test/SendTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/test/NewGameServletTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/exceptions/GameStructureFileException.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/exceptions/GameStructureFileException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/parsing/jaxb/JAXBConversion.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/parsing/jaxb/JAXBConversion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/servlets/TestServlet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/test/NewGameServletTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/test/NewGameServletTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/game/structure/GameStructure.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/game/structure/GameStructure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/game/structure/Words.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/servlets/NewGameServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/servlets/NewGameServlet.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,33 +54,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Application.NewGameServletTest.executor": "Run",
-    "Application.SendTest.executor": "Run",
-    "Application.WordsCollector.executor": "Run",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Tomcat Server.Tomcat 10.0.11.executor": "Run",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_directory_selection": "/home/doodle/Programming/Java/repos/online_codenames/server/src/servlets",
-    "last_opened_file_path": "/home/doodle/Downloads/Java Resources/lib/gson-2.8.8-javadoc.jar",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "editor.preferences.completion",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Application.NewGameServletTest.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SendTest.executor&quot;: &quot;Run&quot;,
+    &quot;Application.WordsCollector.executor&quot;: &quot;Run&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Tomcat Server.Tomcat 10.0.11.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;/home/doodle/Programming/Java/repos/online_codenames/server/src/servlets&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/doodle/Downloads/Java Resources/lib/gson-2.8.8-javadoc.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="servlets" />
@@ -272,6 +273,7 @@
     <MESSAGE value="now jaxb generation..." />
     <MESSAGE value="testing requests, parsing, beginning work on game classes" />
     <MESSAGE value="admin servlets work begin" />
-    <option name="LAST_COMMIT_MESSAGE" value="admin servlets work begin" />
+    <MESSAGE value="more stuff ahh" />
+    <option name="LAST_COMMIT_MESSAGE" value="more stuff ahh" />
   </component>
 </project>

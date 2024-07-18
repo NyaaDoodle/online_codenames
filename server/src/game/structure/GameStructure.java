@@ -1,5 +1,6 @@
 package game.structure;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -27,11 +28,11 @@ public class GameStructure {
     }
 
     public List<Team> getTeams() {
-        return teams;
+        return Collections.unmodifiableList(teams);
     }
 
     public Set<String> getWords() {
-        return words;
+        return Collections.unmodifiableSet(words);
     }
 
     public String getDictionaryFileName() {

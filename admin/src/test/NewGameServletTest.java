@@ -8,14 +8,17 @@ import java.io.IOException;
 public class NewGameServletTest {
     // TODO does the xml file exist? is it even ".xml"?
     // TODO does the txt file exist? is it even ".txt"?
-    private static final String TEST_DIR = "c:\\Users\\bmroo\\Downloads\\Java Resources\\test_files\\e2\\";
-    //private static final String TEST_DIR = "/home/doodle/Downloads/Java Resources/test_files/e2/";
+    //private static final String TEST_DIR = "c:\\Users\\bmroo\\Downloads\\Java Resources\\test_files\\e2\\";
+    private static final String TEST_DIR = "/home/doodle/Downloads/Java Resources/test_files/e2/";
     private static final String BASE_URL = "http://localhost:8080/server";
     private static final String NEW_GAME_URI = "/new-game";
     private static final String STRUCTURE_FILE_PART_NAME = "structure-file";
     private static final String DICTIONARY_FILE_PART_NAME = "dictionary-file";
+    private static final String TEST_XML = "classic-mod.xml";
     public static void main(String[] args) {
-        File structureFile = new File(TEST_DIR + "classic-mod.xml");
+        // TODO get user input for xml file
+        File structureFile = new File(TEST_DIR + TEST_XML);
+        // TODO fetch the txt file through the xml file alone
         File dictionaryFile = new File(TEST_DIR + "moby dick.txt");
         RequestBody body = new MultipartBody.Builder()
                 .addFormDataPart(STRUCTURE_FILE_PART_NAME, structureFile.getName(), RequestBody.create(structureFile, MediaType.parse("text/xml")))
