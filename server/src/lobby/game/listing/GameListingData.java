@@ -1,25 +1,31 @@
-package game.listing;
+package lobby.game.listing;
 
 import game.structure.GameStructure;
 import game.structure.Team;
 
 import java.util.List;
 
-public class GameListing {
+public class GameListingData {
     private final GameStructure gameStructure;
-    private ListingState state;
-    private int connectedDefiners;
-    private int connectedGuessers;
+    private final String name;
+    private final ListingState state;
+    private final int connectedDefiners;
+    private final int connectedGuessers;
 
-    public GameListing(GameStructure gameStructure) {
-        this.gameStructure = gameStructure;
-        this.state = ListingState.PENDING;
-        this.connectedDefiners = 0;
-        this.connectedGuessers = 0;
+    public GameListingData(GameListing gameListing) {
+        this.gameStructure = gameListing.getGameStructure();
+        this.name = gameListing.getGameStructure().getName();
+        this.state = gameListing.getState();
+        this.connectedDefiners = gameListing.getConnectedDefiners();
+        this.connectedGuessers = gameListing.getConnectedGuessers();
     }
 
     public GameStructure getGameStructure() {
         return gameStructure;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public ListingState getState() {
@@ -34,26 +40,6 @@ public class GameListing {
         return connectedGuessers;
     }
 
-    public void setState(ListingState state) {
-        if (this.state.equals(ListingState.PENDING)) {
-            this.state = state;
-        }
-    }
-
-    public void incrementConnectedDefiners() {
-        if (this.state.equals(ListingState.PENDING)) {
-            connectedDefiners++;
-        }
-    }
-
-    public void incrementConnectedGuessers() {
-        if (this.state.equals(ListingState.PENDING)) {
-            connectedGuessers++;
-        }
-    }
-    public String getName() {
-        return gameStructure.getName();
-    }
     public int getRows() {
         return gameStructure.getBoard().getRows();
     }

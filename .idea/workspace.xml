@@ -9,14 +9,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="testing requests, parsing, beginning work on game classes">
-      <change afterPath="$PROJECT_DIR$/server/src/constants/Constants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/servlets/LoginServlet.java" afterDir="false" />
+    <list default="true" id="7f153309-e0e4-47e6-ab90-237db100937b" name="Changes" comment="testing of initial parsing and error handling done">
+      <change afterPath="$PROJECT_DIR$/server/src/exceptions/GameListingException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/lobby/LobbyManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/lobby/game/listing/GameListingData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/utils/ServletUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/test/NewGameServletTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/test/NewGameServletTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/game/structure/GameStructure.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/game/structure/GameStructure.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/game/structure/Words.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/game/listing/GameListing.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/lobby/game/listing/GameListing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/game/listing/ListingState.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/lobby/game/listing/ListingState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/servlets/NewGameServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/servlets/NewGameServlet.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -274,6 +275,7 @@
     <MESSAGE value="testing requests, parsing, beginning work on game classes" />
     <MESSAGE value="admin servlets work begin" />
     <MESSAGE value="more stuff ahh" />
-    <option name="LAST_COMMIT_MESSAGE" value="more stuff ahh" />
+    <MESSAGE value="testing of initial parsing and error handling done" />
+    <option name="LAST_COMMIT_MESSAGE" value="testing of initial parsing and error handling done" />
   </component>
 </project>

@@ -1,7 +1,8 @@
 package servlets;
 
 import exceptions.GameStructureFileException;
-import game.listing.GameListing;
+import lobby.LobbyManager;
+import lobby.game.listing.GameListing;
 import game.structure.GameStructure;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import parsing.jaxb.JAXBConversion;
+import utils.ServletUtils;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class NewGameServlet extends HttpServlet {
         try ( InputStream structureStream = req.getPart(STRUCTURE_FILE_PART_NAME).getInputStream();
               InputStream dictionaryStream = req.getPart(DICTIONARY_FILE_PART_NAME).getInputStream()) {
             GameStructure gameStructure = JAXBConversion.parseToGameStructure(structureStream, dictionaryStream);
-            addGameToGameList(gameStructure);
+            addGameToLobby(gameStructure);
             sendSuccess(res, gameStructure.getName()); // TODO use gameListing instead!
         }
         catch (final JAXBException e) {
@@ -37,10 +39,12 @@ public class NewGameServlet extends HttpServlet {
         }
     }
 
-    private void addGameToGameList(final GameStructure gameStructure) {
-        // TODO make game listing, then add it to the list of game listings
-        GameListing gameListing = new GameListing(gameStructure);
-
+    private void addGameToLobby(final GameStructure gameStructure) {
+        // TODO game name uniqueness failing thanks to concurrency?
+        LobbyManager lobbyManager = ServletUtils.getLobbyManager(getServletContext());
+        synchronized (this) {
+            lobbyManager.addGame(gameStructure);
+        }
     }
 
     private void sendSuccess(final HttpServletResponse res, final String gameName) throws IOException {
