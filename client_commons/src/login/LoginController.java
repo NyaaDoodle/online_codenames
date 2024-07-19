@@ -1,6 +1,6 @@
 package login;
 
-import constants.Constants;
+import utils.constants.ClientConstants;
 import login.exceptions.UsernameInputException;
 import okhttp3.*;
 
@@ -10,7 +10,8 @@ import java.util.*;
 public class LoginController {
     // For now, only admin is reserved.
     private static final Set<String> reservedUsernames = new HashSet<>(Collections.singletonList("admin"));
-    private static final String LOGIN_URL = Constants.BASE_URL + Constants.LOGIN_RESOURCE_URI;
+    private static final String LOGIN_URL = ClientConstants.BASE_URL + ClientConstants.LOGIN_RESOURCE_URI;
+    private static final String LOGOUT_URL = ClientConstants.BASE_URL + ClientConstants.LOGOUT_RESOURCE_URI;
     private static final String USERNAME_QUERY_NAME = "username";
 
     public static void validateUsernameInput(final String username) throws UsernameInputException {
@@ -18,19 +19,25 @@ public class LoginController {
             throw new UsernameInputException("A blank username cannot be used.");
         }
         else if (reservedUsernames.contains(username)) {
-            throw new UsernameInputException("The username \"" + username + "\" is reserved. Please use a different username.")
+            throw new UsernameInputException("The username \"" + username + "\" is reserved. Please use a different username.");
         }
     }
 
-    public static void AttemptToConnect(final OkHttpClient httpClient, String username) throws UsernameInputException, IOException {
+    public static void AttemptToConnect(final OkHttpClient httpClient, final String username) throws UsernameInputException, IOException {
         final HttpUrl finalURL = Objects.requireNonNull(HttpUrl.parse(LOGIN_URL)).newBuilder().addQueryParameter(USERNAME_QUERY_NAME, username).build();
         Request req = new Request.Builder().get().url(finalURL).build();
         Call call = httpClient.newCall(req);
         try (Response res = call.execute()) {
-            if (res.code() != Constants.STATUS_CODE_OK) {
+            if (res.code() != ClientConstants.STATUS_CODE_OK) {
                 assert res.body() != null;
                 throw new UsernameInputException(res.body().string());
             }
         }
+    }
+
+    public static void Logout(final OkHttpClient httpClient) throws IOException {
+        Request req = new Request.Builder().get().url(LOGOUT_URL).build();
+        Call call = httpClient.newCall(req);
+        call.execute();
     }
 }

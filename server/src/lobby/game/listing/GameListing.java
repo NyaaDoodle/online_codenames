@@ -1,17 +1,13 @@
 package lobby.game.listing;
 
-import game.instance.GameInstance;
 import game.structure.GameStructure;
 import game.structure.Team;
-
-import java.util.List;
-import java.util.Map;
 
 public class GameListing {
     private final GameStructure gameStructure;
     private final String name;
     private ListingState state;
-    private ConnectedPlayersMap connectedPlayers;
+    private final ConnectedPlayersMap connectedPlayers;
 
     public GameListing(GameStructure gameStructure) {
         this.gameStructure = gameStructure;
@@ -26,33 +22,51 @@ public class GameListing {
 
     public String getName() { return name; }
 
-    public ListingState getState() {
-        return state;
+    public boolean isGamePending() { return state == ListingState.PENDING; }
+
+    public boolean isGameActive() { return state == ListingState.ACTIVE; }
+
+    public int getConnectedDefinersByTeam(final Team team) {
+        return connectedPlayers.getConnectedDefinersByTeam(team);
     }
 
-    public int getConnectedDefiners() {
-        return connectedDefiners;
+    public int getConnectedGuessersByTeam(final Team team) {
+        return connectedPlayers.getConnectedGuessersByTeam(team);
     }
 
-    public int getConnectedGuessers() {
-        return connectedGuessers;
+    public int getTotalConnectedPlayers() {
+        return connectedPlayers.getTotalConnectedPlayers();
     }
 
-    public void setState(ListingState state) {
-        if (this.state.equals(ListingState.PENDING)) {
-            this.state = state;
+    public synchronized void incrementConnectedDefinersByTeam(final Team team) {
+        if (state.equals(ListingState.PENDING)) {
+            if (getConnectedDefinersByTeam(team) < team.getDefinersCount()) {
+                connectedPlayers.incrementConnectedDefinersByTeam(team);
+            }
+        }
+        checkIfListingFull();
+    }
+
+    public synchronized void incrementConnectedGuessersByTeam(final Team team) {
+        if (state.equals(ListingState.PENDING)) {
+            if (getConnectedGuessersByTeam(team) < team.getGuessersCount()) {
+                connectedPlayers.incrementConnectedGuessersByTeam(team);
+            }
+        }
+        checkIfListingFull();
+    }
+
+    private void setGameAsActive() {
+        if (state.equals(ListingState.PENDING)) {
+            this.state = ListingState.ACTIVE;
         }
     }
 
-    public void incrementConnectedDefiners() {
-        if (this.state.equals(ListingState.PENDING)) {
-            connectedDefiners++;
-        }
-    }
-
-    public void incrementConnectedGuessers() {
-        if (this.state.equals(ListingState.PENDING)) {
-            connectedGuessers++;
+    private void checkIfListingFull() {
+        int expectedTotalPlayers = gameStructure.getTeams().stream()
+                .mapToInt(team -> team.getDefinersCount() + team.getGuessersCount()).sum();
+        if (connectedPlayers.getTotalConnectedPlayers() == expectedTotalPlayers) {
+            setGameAsActive();
         }
     }
 }
