@@ -19,7 +19,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/Java Resources/lib/gson-2.8.8.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/Java Resources/lib/okio-2.8.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -37,21 +37,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/Java Resources/lib/okio-2.8.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$USER_HOME$/Downloads/Java Resources/lib/kotlin-stdlib-common-1.4.10.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="client_commons" />
   </component>
 </module>

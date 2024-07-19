@@ -1,0 +1,36 @@
+package login;
+
+import constants.Constants;
+import login.exceptions.UsernameInputException;
+import okhttp3.*;
+
+import java.io.IOException;
+import java.util.*;
+
+public class LoginController {
+    // For now, only admin is reserved.
+    private static final Set<String> reservedUsernames = new HashSet<>(Collections.singletonList("admin"));
+    private static final String LOGIN_URL = Constants.BASE_URL + Constants.LOGIN_RESOURCE_URI;
+    private static final String USERNAME_QUERY_NAME = "username";
+
+    public static void validateUsernameInput(final String username) throws UsernameInputException {
+        if (username.isEmpty()) {
+            throw new UsernameInputException("A blank username cannot be used.");
+        }
+        else if (reservedUsernames.contains(username)) {
+            throw new UsernameInputException("The username \"" + username + "\" is reserved. Please use a different username.")
+        }
+    }
+
+    public static void AttemptToConnect(final OkHttpClient httpClient, String username) throws UsernameInputException, IOException {
+        final HttpUrl finalURL = Objects.requireNonNull(HttpUrl.parse(LOGIN_URL)).newBuilder().addQueryParameter(USERNAME_QUERY_NAME, username).build();
+        Request req = new Request.Builder().get().url(finalURL).build();
+        Call call = httpClient.newCall(req);
+        try (Response res = call.execute()) {
+            if (res.code() != Constants.STATUS_CODE_OK) {
+                assert res.body() != null;
+                throw new UsernameInputException(res.body().string());
+            }
+        }
+    }
+}

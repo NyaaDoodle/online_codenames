@@ -52,5 +52,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="client_commons" />
   </component>
 </module>
