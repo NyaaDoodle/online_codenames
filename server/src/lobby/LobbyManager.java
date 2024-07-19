@@ -19,4 +19,7 @@ public class LobbyManager {
         GameListing gameListing = gameListings.get(gameName);
         return (gameListing == null ? null : new GameListingData(gameListing));
     }
+    public boolean doesGameAlreadyExist(final String gameName) {
+        return gameListings.get(gameName) != null;
+    }
 }

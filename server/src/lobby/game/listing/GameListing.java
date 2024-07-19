@@ -1,23 +1,23 @@
 package lobby.game.listing;
 
+import game.instance.GameInstance;
 import game.structure.GameStructure;
 import game.structure.Team;
 
 import java.util.List;
+import java.util.Map;
 
 public class GameListing {
     private final GameStructure gameStructure;
     private final String name;
     private ListingState state;
-    private int connectedDefiners;
-    private int connectedGuessers;
+    private ConnectedPlayersMap connectedPlayers;
 
     public GameListing(GameStructure gameStructure) {
         this.gameStructure = gameStructure;
         this.name = gameStructure.getName();
         this.state = ListingState.PENDING;
-        this.connectedDefiners = 0;
-        this.connectedGuessers = 0;
+        this.connectedPlayers = new ConnectedPlayersMap(gameStructure.getTeams());
     }
 
     public GameStructure getGameStructure() {

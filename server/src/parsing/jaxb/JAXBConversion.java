@@ -59,7 +59,7 @@ public class JAXBConversion {
     }
 
     private static void checkValidity(final GameStructure gameStructure) throws GameStructureFileException {
-        checkGameNameUniqueness(gameStructure.getName());
+        // Game name uniqueness will be handled later, right before adding the game to the lobby.
         checkTotalCardsCountToWordCount(gameStructure.getBoard(), gameStructure.getWords().size());
         checkTotalTeamCardsCountToCardCount(gameStructure.getTeams(), gameStructure.getBoard().getCardCount());
         checkTableSizeToTotalCardsCount(gameStructure.getBoard());
@@ -67,10 +67,6 @@ public class JAXBConversion {
             checkDefinersAndGuessersCounts(team);
         }
         checkTeamNameUniqueness(gameStructure.getTeams());
-    }
-
-    private static void checkGameNameUniqueness(final String gameName) throws GameStructureFileException {
-        // TODO add the function, where do I check where the game names are?
     }
 
     private static void checkTotalCardsCountToWordCount(final Board board, final int wordCount) throws GameStructureFileException {
