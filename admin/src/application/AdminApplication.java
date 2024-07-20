@@ -2,7 +2,7 @@ package application;
 
 import login.exceptions.UsernameInputException;
 import ui.ClientUIElements;
-import util.http.HttpClientUtils;
+import utils.http.HttpClientUtils;
 
 import java.io.IOException;
 

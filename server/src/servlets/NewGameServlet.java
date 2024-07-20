@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import parsing.jaxb.JAXBConversion;
+import utils.ResponseUtils;
 import utils.ServletUtils;
 
 import javax.xml.bind.JAXBException;
@@ -25,18 +26,18 @@ public class NewGameServlet extends HttpServlet {
     private static final String JAXB_EXCEPTION_ERROR_PREFIX = "Invalid XML file according to schema-layout. Please correct the file to fit the schema requirements.\nAdditional info: ";
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         try (InputStream structureStream = req.getPart(STRUCTURE_FILE_PART_NAME).getInputStream();
              InputStream dictionaryStream = req.getPart(DICTIONARY_FILE_PART_NAME).getInputStream()) {
             GameStructure gameStructure = JAXBConversion.parseToGameStructure(structureStream, dictionaryStream);
             addGameToLobby(gameStructure);
-            sendPlainTextSuccess(res, gameStructure.getName());
+            ResponseUtils.sendPlainTextSuccess(res, "New game \"" + gameStructure.getName() + "\" was added successfully");
         } catch (final JAXBException e) {
-            sendPlainTextConflict(res, e.getMessage(), JAXB_EXCEPTION_ERROR_PREFIX);
+            ResponseUtils.sendPlainTextBadRequest(res, JAXB_EXCEPTION_ERROR_PREFIX + e.getMessage());
         } catch (final GameStructureFileException e) {
-            sendPlainTextConflict(res, e.getMessage());
+            ResponseUtils.sendPlainTextBadRequest(res, e.getMessage());
         } catch (final GameListingException e) {
-            sendPlainTextConflict(res, e.getMessage());
+            ResponseUtils.sendPlainTextConflict(res, e.getMessage());
         }
     }
 
@@ -50,23 +51,5 @@ public class NewGameServlet extends HttpServlet {
                         + "\n Please provide a new name in the \"name\" value in the XML file.");
             }
         }
-    }
-
-    private void sendPlainTextSuccess(final HttpServletResponse res, final String gameName) throws IOException {
-        res.setStatus(HttpServletResponse.SC_OK);
-        res.setContentType("text/plain");
-        res.getWriter().println("New game \"" + gameName + "\" was added successfully");
-    }
-
-    private void sendPlainTextConflict(final HttpServletResponse res, final String errorMessage) throws IOException {
-        res.setStatus(HttpServletResponse.SC_CONFLICT);
-        res.setContentType("text/plain");
-        res.getWriter().println(errorMessage);
-    }
-
-    private void sendPlainTextConflict(final HttpServletResponse res, final String errorMessage, final String prefix) throws IOException {
-        res.setStatus(HttpServletResponse.SC_CONFLICT);
-        res.setContentType("text/plain");
-        res.getWriter().println(prefix + errorMessage);
     }
 }

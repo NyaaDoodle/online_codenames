@@ -1,4 +1,4 @@
-package util.http;
+package utils.http;
 
 import login.LoginController;
 import login.exceptions.UsernameInputException;
@@ -7,7 +7,9 @@ import okhttp3.OkHttpClient;
 import java.io.IOException;
 
 public class HttpClientUtils {
-    private final static OkHttpClient HTTP_CLIENT = new OkHttpClient();
+    private final static SimpleCookieManager cookieManager = new SimpleCookieManager();
+    private final static OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
+            .cookieJar(cookieManager).build();
 
     public static void AttemptToLogin(final String username) throws UsernameInputException, IOException {
         LoginController.AttemptToConnect(HTTP_CLIENT, username);
