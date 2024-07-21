@@ -3,6 +3,7 @@ package login;
 import utils.constants.ClientConstants;
 import login.exceptions.UsernameInputException;
 import okhttp3.*;
+import utils.http.HttpClientUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -23,10 +24,10 @@ public class LoginController {
         }
     }
 
-    public static void AttemptToConnect(final OkHttpClient httpClient, final String username) throws UsernameInputException, IOException {
+    public static void attemptToConnect(final OkHttpClient httpClient, final String username) throws UsernameInputException, IOException {
         final HttpUrl finalURL = Objects.requireNonNull(HttpUrl.parse(LOGIN_URL)).newBuilder().addQueryParameter(USERNAME_QUERY_NAME, username).build();
-        Request req = new Request.Builder().get().url(finalURL).build();
-        Call call = httpClient.newCall(req);
+        final Request req = new Request.Builder().get().url(finalURL).build();
+        final Call call = httpClient.newCall(req);
         try (Response res = call.execute()) {
             if (res.code() != ClientConstants.STATUS_CODE_OK) {
                 assert res.body() != null;
@@ -35,9 +36,13 @@ public class LoginController {
         }
     }
 
-    public static void Logout(final OkHttpClient httpClient) throws IOException {
-        Request req = new Request.Builder().get().url(LOGOUT_URL).build();
-        Call call = httpClient.newCall(req);
-        call.execute();
+    public static void logout(final OkHttpClient httpClient) throws IOException {
+        final Request req = new Request.Builder().get().url(LOGOUT_URL).build();
+        final Call call = httpClient.newCall(req);
+        try (Response res = call.execute()) {
+            if (res.code() == ClientConstants.STATUS_CODE_OK) {
+                HttpClientUtils.removeCookiesOf(ClientConstants.SERVER_NAME);
+            }
+        }
     }
 }

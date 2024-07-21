@@ -9,15 +9,13 @@ public class GameListingData {
     private final GameStructure gameStructure;
     private final String name;
     private final ListingState state;
-    private final int connectedDefiners;
-    private final int connectedGuessers;
+    private final ConnectedPlayersMap connectedPlayers;
 
     public GameListingData(GameListing gameListing) {
         this.gameStructure = gameListing.getGameStructure();
         this.name = gameListing.getGameStructure().getName();
         this.state = gameListing.getState();
-        this.connectedDefiners = gameListing.getConnectedDefiners();
-        this.connectedGuessers = gameListing.getConnectedGuessers();
+        this.connectedPlayers = gameListing.getConnectedPlayers();
     }
 
     public GameStructure getGameStructure() {
@@ -32,12 +30,8 @@ public class GameListingData {
         return state;
     }
 
-    public int getConnectedDefiners() {
-        return connectedDefiners;
-    }
-
-    public int getConnectedGuessers() {
-        return connectedGuessers;
+    public ConnectedPlayersMap getConnectedPlayers() {
+        return connectedPlayers;
     }
 
     public int getRows() {
@@ -58,7 +52,20 @@ public class GameListingData {
     public int getBlackCardsCount() {
         return gameStructure.getBoard().getBlackCardCount();
     }
-    public List<Team> getTeam() {
+    public boolean isGamePending() { return state == ListingState.PENDING; }
+    public boolean isGameActive() { return state == ListingState.ACTIVE; }
+    public List<Team> getTeams() {
         return gameStructure.getTeams();
+    }
+    public int getConnectedDefinersByTeam(final Team team) {
+        return connectedPlayers.getConnectedDefinersByTeam(team);
+    }
+
+    public int getConnectedGuessersByTeam(final Team team) {
+        return connectedPlayers.getConnectedGuessersByTeam(team);
+    }
+
+    public int getTotalConnectedPlayers() {
+        return connectedPlayers.getTotalConnectedPlayers();
     }
 }

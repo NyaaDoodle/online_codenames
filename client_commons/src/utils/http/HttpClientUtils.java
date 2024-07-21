@@ -11,11 +11,15 @@ public class HttpClientUtils {
     private final static OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
             .cookieJar(cookieManager).build();
 
+    public static void removeCookiesOf(String domain) {
+        cookieManager.removeCookiesOf(domain);
+    }
+
     public static void AttemptToLogin(final String username) throws UsernameInputException, IOException {
-        LoginController.AttemptToConnect(HTTP_CLIENT, username);
+        LoginController.attemptToConnect(HTTP_CLIENT, username);
     }
     public static void LogoutFromServer() throws IOException {
-        LoginController.Logout(HTTP_CLIENT);
+        LoginController.logout(HTTP_CLIENT);
     }
     public static void closeHttpClient() {
         HTTP_CLIENT.dispatcher().executorService().shutdown();

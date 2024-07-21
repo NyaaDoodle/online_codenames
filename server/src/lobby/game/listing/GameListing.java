@@ -3,6 +3,9 @@ package lobby.game.listing;
 import game.structure.GameStructure;
 import game.structure.Team;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class GameListing {
     private final GameStructure gameStructure;
     private final String name;
@@ -22,9 +25,13 @@ public class GameListing {
 
     public String getName() { return name; }
 
-    public boolean isGamePending() { return state == ListingState.PENDING; }
+    public ListingState getState() {
+        return state;
+    }
 
-    public boolean isGameActive() { return state == ListingState.ACTIVE; }
+    public ConnectedPlayersMap getConnectedPlayers() {
+        return connectedPlayers;
+    }
 
     public int getConnectedDefinersByTeam(final Team team) {
         return connectedPlayers.getConnectedDefinersByTeam(team);

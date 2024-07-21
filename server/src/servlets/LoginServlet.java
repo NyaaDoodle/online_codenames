@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import users.UserManager;
+import utils.LogUtils;
 import utils.ResponseUtils;
 import utils.ServletUtils;
 import utils.SessionUtils;
@@ -27,6 +28,7 @@ public class LoginServlet extends HttpServlet {
                 parameterUsername = parameterUsername.trim();
                 synchronized (this) {
                     if (!(userManager.doesUserExist(parameterUsername))) {
+                        LogUtils.logToConsole("Adding user \"" + parameterUsername + "\" to users.");
                         userManager.addUser(parameterUsername);
                         req.getSession(true).setAttribute(Constants.USERNAME_ATTRIBUTE_NAME, parameterUsername);
                         res.setStatus(HttpServletResponse.SC_OK);
