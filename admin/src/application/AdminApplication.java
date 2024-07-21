@@ -8,15 +8,22 @@ import java.io.IOException;
 
 public class AdminApplication {
     private static final String ADMIN_USERNAME = "admin";
-    //private static boolean toExitProgram = false;
+    private static boolean exitingProgram = false;
     public static void main(String[] args) {
         ClientUIElements.greeter();
         loginToServer();
-        // TODO while not toExitProgram
+        while (!exitingProgram) {
+            MainMenu.printMenu();
+            MainMenu.selection();
+        }
         exitProgram();
     }
 
-    public static void loginToServer() {
+    public static void tellToExit() {
+        exitingProgram = true;
+    }
+
+    private static void loginToServer() {
         boolean loginSuccess = false;
         while (!loginSuccess) {
             try {
@@ -28,13 +35,13 @@ public class AdminApplication {
                 ClientUIElements.unexpectedIOExceptionMessage(e);
             } catch (UsernameInputException e) {
                 // Admin has already logged on
-                AdminUIElements.AdminAlreadyJoinedMessage();
+                AdminUIElements.adminAlreadyJoinedMessage();
                 ClientUIElements.pressEnterToContinue();
             }
         }
     }
 
-    public static void logout() {
+    private static void logout() {
         boolean logoutSuccess = false;
         while (!logoutSuccess) {
             try {
@@ -48,7 +55,7 @@ public class AdminApplication {
         }
     }
 
-    public static void exitProgram() {
+    private static void exitProgram() {
         logout();
         HttpClientUtils.closeHttpClient();
         ClientUIElements.exitMessage();
