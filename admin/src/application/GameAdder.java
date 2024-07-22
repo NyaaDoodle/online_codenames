@@ -2,10 +2,15 @@ package application;
 
 import exceptions.UnsupportedFileTypeException;
 import input.InputController;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import ui.UIElements;
+import utils.constants.Constants;
 import utils.http.HttpClientUtils;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -23,6 +28,9 @@ public class GameAdder {
     private static final Set<String> DICTIONARY_FILE_TYPES = new HashSet<>(Collections.singletonList(".txt"));
     private static final String XML_DICTIONARY_NODE_NAME = "ECN-Dictionary-File";
 
+    private static final String STRUCTURE_FILE_PART_NAME = "structure-file";
+    private static final String DICTIONARY_FILE_PART_NAME = "dictionary-file";
+
     private static final String STRUCTURE_FILE_TYPE_UNSUPPORTED = "File specified is not an XML file or does not end with \".xml\". Please enter a valid XML game format file.";
     private static final String DICTIONARY_FILE_TYPE_UNSUPPORTED = "Dictionary file specified in the game format file is not a TXT file or does not end with \".txt\""
             + "\nPlease provide a TXT file in \"ECN-Dictionary-File\" in the XML file.";
@@ -34,7 +42,7 @@ public class GameAdder {
     private static final String DICTIONARY_FILE_NULL = "Dictionary file name was not found on the specified game format file. Please correct the XML file to fit the schema requirements.";
 
     public static void addNewGame() {
-        File structureFile = null, dictionaryFile = null;
+        File structureFile, dictionaryFile;
         boolean addGameSuccess = false;
         while (!addGameSuccess) {
             newFilePromptMessage();
@@ -42,14 +50,14 @@ public class GameAdder {
                 structureFile = loadStructureFile();
                 dictionaryFile = loadDictionaryFile(structureFile);
                 Request req = buildAddGameRequest(structureFile, dictionaryFile);
-                HttpClientUtils.sendRequest(req);
+                HttpClientUtils.sendRequestSync(req);
                 addGameSuccess = true;
             } catch (final Exception e) {
                 System.out.println(e.getMessage());
             }
         }
         gameAddedSuccessfullyMessage();
-        // TODO list games, basically use main menu option 2.
+        UIElements.printGameListAll();
     }
 
     private static void newFilePromptMessage() {
@@ -79,7 +87,7 @@ public class GameAdder {
 
     @NotNull
     private static File loadDictionaryFile(final File structureFile) throws Exception {
-        String dictionaryFileName = getDictionaryFileName(structureFile);
+        String dictionaryFileName = structureFile.getParent() + getFileSystemSlash() + getDictionaryFileName(structureFile);
         File inputFile = null;
         boolean validInput = false;
         while (!validInput) {
@@ -101,7 +109,7 @@ public class GameAdder {
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = builder.parse(structureFile);
-            fileName = doc.getElementsByTagName(XML_DICTIONARY_NODE_NAME).item(0).getFirstChild().getNodeValue());
+            fileName = doc.getElementsByTagName(XML_DICTIONARY_NODE_NAME).item(0).getFirstChild().getNodeValue();
         } catch (IOException e) {
             throw new Exception(IO_EXCEPTION_ERROR);
         } catch (ParserConfigurationException e) {
@@ -114,6 +122,14 @@ public class GameAdder {
     }
 
     private static Request buildAddGameRequest(final File structureFile, final File dictionaryFile) {
+        RequestBody body = new MultipartBody.Builder()
+                .addFormDataPart(STRUCTURE_FILE_PART_NAME, structureFile.getName(), RequestBody.create(structureFile, MediaType.parse("text/xml")))
+                .addFormDataPart(DICTIONARY_FILE_PART_NAME, dictionaryFile.getName(), RequestBody.create(dictionaryFile, MediaType.parse("text/plain")))
+                .build();
+        return new Request.Builder().url(Constants.BASE_URL + Constants.NEW_GAME_RESOURCE_URI).post(body).build();
+    }
 
+    private static char getFileSystemSlash() {
+        return (System.getProperty("os.name").contains("Windows")) ? '\\' : '/';
     }
 }

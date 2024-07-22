@@ -48,7 +48,7 @@ public class NewGameServlet extends HttpServlet {
                 lobbyManager.addGame(gameStructure);
             } else {
                 throw new GameListingException("There already is a game with the same name: " + gameStructure.getName()
-                        + "\n Please provide a new name in the \"name\" value in the XML file.");
+                        + "\nPlease provide a new name in the \"name\" value in the XML file.");
             }
         }
     }

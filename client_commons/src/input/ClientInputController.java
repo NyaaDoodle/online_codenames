@@ -24,8 +24,8 @@ public class ClientInputController {
             }
             catch (InputMismatchException e) {
                 System.out.println("Invalid input: not a number, please enter a number");
-                SCANNER.nextLine();
             }
+            SCANNER.nextLine();
         }
         return input;
     }

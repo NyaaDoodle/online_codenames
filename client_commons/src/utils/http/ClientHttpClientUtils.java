@@ -2,8 +2,12 @@ package utils.http;
 
 import login.LoginController;
 import login.exceptions.UsernameInputException;
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
+import utils.constants.ClientConstants;
 
 import java.io.IOException;
 
@@ -20,8 +24,16 @@ public class ClientHttpClientUtils {
         COOKIE_MANAGER.removeCookiesOf(domain);
     }
 
-    public static void sendRequest(final Request req) throws Exception {
-
+    @NotNull
+    public static String sendRequestSync(final Request req) throws Exception {
+        final Call call = HTTP_CLIENT.newCall(req);
+        try (Response res = call.execute()) {
+            if (res.code() != ClientConstants.STATUS_CODE_OK) {
+                assert res.body() != null;
+                throw new Exception(res.body().string());
+            }
+            return (res.body() != null) ? res.body().string() : "";
+        }
     }
 
     public static void AttemptToLogin(final String username) throws UsernameInputException, IOException {

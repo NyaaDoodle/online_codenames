@@ -1,10 +1,7 @@
-package lobby.game.listing;
+package lobby.game.list;
 
 import game.structure.GameStructure;
 import game.structure.Team;
-
-import java.util.Collection;
-import java.util.Collections;
 
 public class GameListing {
     private final GameStructure gameStructure;

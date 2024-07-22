@@ -1,4 +1,4 @@
-package lobby.game.listing;
+package lobby.game.list;
 
 import game.structure.GameStructure;
 import game.structure.Team;

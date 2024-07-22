@@ -1,29 +1,37 @@
-package lobby.game.listing;
+package lobby.game.list;
 
 import game.structure.Team;
-import utils.constants.Constants;
+import utils.constants.ClientConstants;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ConnectedPlayersMap {
-    private final Map<Team, Integer> connectedDefinersPerTeam = new HashMap<>();
-    private final Map<Team, Integer> connectedGuessersPerTeam = new HashMap<>();
+    private Map<Team, Integer> connectedDefinersPerTeam = new HashMap<>();
+    private Map<Team, Integer> connectedGuessersPerTeam = new HashMap<>();
 
-    public ConnectedPlayersMap(final List<Team> teams) {
-        teams.forEach(team -> {
-            connectedDefinersPerTeam.put(team, 0);
-            connectedGuessersPerTeam.put(team, 0);
-        });
+    public Map<Team, Integer> getConnectedDefinersPerTeam() {
+        return connectedDefinersPerTeam;
+    }
+
+    public void setConnectedDefinersPerTeam(Map<Team, Integer> connectedDefinersPerTeam) {
+        this.connectedDefinersPerTeam = connectedDefinersPerTeam;
+    }
+
+    public Map<Team, Integer> getConnectedGuessersPerTeam() {
+        return connectedGuessersPerTeam;
+    }
+
+    public void setConnectedGuessersPerTeam(Map<Team, Integer> connectedGuessersPerTeam) {
+        this.connectedGuessersPerTeam = connectedGuessersPerTeam;
     }
 
     public int getConnectedDefinersByTeam(final Team team) {
-        return connectedDefinersPerTeam.getOrDefault(team, Constants.ERROR_NUM);
+        return connectedDefinersPerTeam.getOrDefault(team, ClientConstants.ERROR_NUM);
     }
 
     public int getConnectedGuessersByTeam(final Team team) {
-        return connectedGuessersPerTeam.getOrDefault(team, Constants.ERROR_NUM);
+        return connectedGuessersPerTeam.getOrDefault(team, ClientConstants.ERROR_NUM);
     }
 
     public int getTotalConnectedDefiners() {

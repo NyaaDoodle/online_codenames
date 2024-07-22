@@ -1,8 +1,8 @@
 package lobby;
 
 import game.structure.GameStructure;
-import lobby.game.listing.GameListing;
-import lobby.game.listing.GameListingData;
+import lobby.game.list.GameListing;
+import lobby.game.list.GameListingData;
 
 import java.util.HashMap;
 import java.util.Map;

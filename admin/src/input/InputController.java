@@ -1,8 +1,11 @@
 package input;
 
 import application.AdminApplication;
+import application.GameAdder;
 import exceptions.UnsupportedFileTypeException;
+import lobby.LobbyController;
 import org.jetbrains.annotations.NotNull;
+import ui.UIElements;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,10 +24,10 @@ public class InputController extends ClientInputController {
         int input = ClientInputController.intMenuInput(INTEGERS_FOR_MAIN_MENU);
         switch (input) {
             case 1:
-                // TODO add game
+                GameAdder.addNewGame();
                 break;
             case 2:
-                // TODO list games
+                UIElements.printGameListAll();
                 break;
             case 3:
                 // TODO spectate game - after player-client work
