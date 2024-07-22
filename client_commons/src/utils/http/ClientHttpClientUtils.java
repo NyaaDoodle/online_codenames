@@ -3,6 +3,7 @@ package utils.http;
 import login.LoginController;
 import login.exceptions.UsernameInputException;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 import java.io.IOException;
 
@@ -17,6 +18,10 @@ public class ClientHttpClientUtils {
 
     public static void removeCookiesOf(String domain) {
         COOKIE_MANAGER.removeCookiesOf(domain);
+    }
+
+    public static void sendRequest(final Request req) throws Exception {
+
     }
 
     public static void AttemptToLogin(final String username) throws UsernameInputException, IOException {

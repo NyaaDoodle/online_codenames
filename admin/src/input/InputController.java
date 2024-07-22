@@ -1,7 +1,11 @@
 package input;
 
 import application.AdminApplication;
+import exceptions.UnsupportedFileTypeException;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,7 +35,25 @@ public class InputController extends ClientInputController {
         }
     }
 
-    public static void fileNameInput(final Set<String> acceptedFileTypes) {
+    @NotNull
+    public static File fileInput(final Set<String> supportedFileTypes) throws FileNotFoundException, UnsupportedFileTypeException {
+        String inputPath = SCANNER.nextLine();
+        return fileInput(supportedFileTypes, inputPath);
+    }
 
+    @NotNull
+    public static File fileInput(final Set<String> supportedFileTypes, final String inputPath) throws FileNotFoundException, UnsupportedFileTypeException {
+        if (supportedFileTypes.stream().anyMatch(inputPath::endsWith)) {
+            File inputFile = new File(inputPath);
+            if (inputFile.exists() && inputFile.isFile()) {
+                return inputFile;
+            }
+            else {
+                throw new FileNotFoundException();
+            }
+        }
+        else {
+            throw new UnsupportedFileTypeException();
+        }
     }
 }

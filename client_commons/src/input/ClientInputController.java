@@ -12,12 +12,12 @@ public class ClientInputController {
 
     public static int intMenuInput(final Set<Integer> acceptedIntegers) {
         int input = DEFAULT_VALUE;
-        boolean validInputAccepted = false;
-        while (!validInputAccepted) {
+        boolean validInput = false;
+        while (!validInput) {
             try {
                 input = SCANNER.nextInt();
                 if (acceptedIntegers.contains(input)) {
-                    validInputAccepted = true;
+                    validInput = true;
                 } else {
                     System.out.println("Invalid key, please enter one of the following numbers to select your option: " + acceptedIntegers);
                 }
