@@ -3,7 +3,7 @@ package login;
 import utils.constants.ClientConstants;
 import login.exceptions.UsernameInputException;
 import okhttp3.*;
-import utils.http.HttpClientUtils;
+import utils.http.ClientHttpClientUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -41,7 +41,7 @@ public class LoginController {
         final Call call = httpClient.newCall(req);
         try (Response res = call.execute()) {
             if (res.code() == ClientConstants.STATUS_CODE_OK) {
-                HttpClientUtils.removeCookiesOf(ClientConstants.SERVER_NAME);
+                ClientHttpClientUtils.removeCookiesOf(ClientConstants.SERVER_NAME);
             }
         }
     }

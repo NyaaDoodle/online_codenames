@@ -1,8 +1,10 @@
 package application;
 
+import input.InputController;
 import login.exceptions.UsernameInputException;
 import ui.ClientUIElements;
-import utils.http.HttpClientUtils;
+import ui.UIElements;
+import utils.http.ClientHttpClientUtils;
 
 import java.io.IOException;
 
@@ -13,8 +15,8 @@ public class AdminApplication {
         ClientUIElements.greeter();
         loginToServer();
         while (!exitingProgram) {
-            MainMenu.printMenu();
-            MainMenu.selection();
+            UIElements.printMainMenu();
+            InputController.mainMenuSelection();
         }
         exitProgram();
     }
@@ -28,14 +30,14 @@ public class AdminApplication {
         while (!loginSuccess) {
             try {
                 ClientUIElements.connectingToServerMessage();
-                HttpClientUtils.AttemptToLogin(ADMIN_USERNAME);
+                ClientHttpClientUtils.AttemptToLogin(ADMIN_USERNAME);
                 ClientUIElements.userLoggedInMessage(ADMIN_USERNAME);
                 loginSuccess = true;
             } catch (IOException e) {
                 ClientUIElements.unexpectedIOExceptionMessage(e);
             } catch (UsernameInputException e) {
                 // Admin has already logged on
-                AdminUIElements.adminAlreadyJoinedMessage();
+                UIElements.adminAlreadyJoinedMessage();
                 ClientUIElements.pressEnterToContinue();
             }
         }
@@ -46,7 +48,7 @@ public class AdminApplication {
         while (!logoutSuccess) {
             try {
                 ClientUIElements.logoutMessage();
-                HttpClientUtils.LogoutFromServer();
+                ClientHttpClientUtils.LogoutFromServer();
                 logoutSuccess = true;
             }
             catch (IOException e) {
@@ -57,7 +59,7 @@ public class AdminApplication {
 
     private static void exitProgram() {
         logout();
-        HttpClientUtils.closeHttpClient();
+        ClientHttpClientUtils.closeHttpClient();
         ClientUIElements.exitMessage();
     }
 }
