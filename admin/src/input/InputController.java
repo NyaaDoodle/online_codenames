@@ -2,8 +2,10 @@ package input;
 
 import application.AdminApplication;
 import application.GameAdder;
+import application.GameSpectator;
 import exceptions.UnsupportedFileTypeException;
 import lobby.LobbyController;
+import lobby.game.list.GameList;
 import org.jetbrains.annotations.NotNull;
 import ui.UIElements;
 
@@ -21,7 +23,7 @@ public class InputController extends ClientInputController {
             = IntStream.rangeClosed(1, OPTIONS_IN_MAIN_MENU).boxed().collect(Collectors.toSet());
 
     public static void mainMenuSelection() {
-        int input = ClientInputController.intMenuInput(INTEGERS_FOR_MAIN_MENU);
+        int input = intMenuInput(INTEGERS_FOR_MAIN_MENU);
         switch (input) {
             case 1:
                 GameAdder.addNewGame();
@@ -31,11 +33,19 @@ public class InputController extends ClientInputController {
                 break;
             case 3:
                 // TODO spectate game - after player-client work
+                GameSpectator.selectGame();
                 break;
             case 4:
                 AdminApplication.tellToExit();
                 break;
         }
+    }
+
+    public static String spectateGameSelection(final GameList gameList) {
+        final Set<Integer> integersForGameSelection = IntStream.rangeClosed(1, gameList.getGameAmount())
+                .boxed().collect(Collectors.toSet());
+        int input = intMenuInput(integersForGameSelection);
+        return gameList.getGameList().get(input - 1).getName();
     }
 
     @NotNull

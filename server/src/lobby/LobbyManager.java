@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class LobbyManager {
@@ -29,8 +30,14 @@ public class LobbyManager {
         return gameListings.get(gameName) != null;
     }
 
-    public GameList getGameList() {
-        final List<GameListingData> gameList = gameListings.values().stream().map(GameListingData::new).collect(Collectors.toList());
+    public GameList getGameList(final boolean onlyActive, final boolean includeActive) {
+        List<GameListingData> gameList = gameListings.values().stream().map(GameListingData::new).collect(Collectors.toList());
+        if (onlyActive) {
+            gameList = gameList.stream().filter(GameListingData::isGameActive).collect(Collectors.toList());
+        }
+        else if (!includeActive) {
+            gameList = gameList.stream().filter(GameListingData::isGamePending).collect(Collectors.toList());
+        }
         return new GameList(gameList);
     }
 }

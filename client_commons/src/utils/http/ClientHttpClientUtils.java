@@ -1,6 +1,6 @@
 package utils.http;
 
-import login.LoginController;
+import login.ClientLoginController;
 import login.exceptions.UsernameInputException;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -36,12 +36,12 @@ public class ClientHttpClientUtils {
         }
     }
 
-    public static void AttemptToLogin(final String username) throws UsernameInputException, IOException {
-        LoginController.attemptToConnect(HTTP_CLIENT, username);
+    public static void attemptToLogin(final String username) throws UsernameInputException, IOException {
+        ClientLoginController.attemptToConnect(HTTP_CLIENT, username);
     }
 
-    public static void LogoutFromServer() throws IOException {
-        LoginController.logout(HTTP_CLIENT);
+    public static void logoutFromServer() throws IOException {
+        ClientLoginController.attemptToLogout(HTTP_CLIENT);
     }
 
     public static void closeHttpClient() {

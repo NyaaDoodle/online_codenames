@@ -1,5 +1,6 @@
 package login;
 
+import ui.ClientUIElements;
 import utils.constants.ClientConstants;
 import login.exceptions.UsernameInputException;
 import okhttp3.*;
@@ -8,7 +9,7 @@ import utils.http.ClientHttpClientUtils;
 import java.io.IOException;
 import java.util.*;
 
-public class LoginController {
+public class ClientLoginController {
     // For now, only admin is reserved.
     private static final Set<String> reservedUsernames = new HashSet<>(Collections.singletonList("admin"));
     private static final String LOGIN_URL = ClientConstants.BASE_URL + ClientConstants.LOGIN_RESOURCE_URI;
@@ -16,7 +17,7 @@ public class LoginController {
     private static final String USERNAME_QUERY_NAME = "username";
 
     public static void validateUsernameInput(final String username) throws UsernameInputException {
-        if (username.isEmpty()) {
+        if (username == null || username.isEmpty()) {
             throw new UsernameInputException("A blank username cannot be used.");
         }
         else if (reservedUsernames.contains(username)) {
@@ -36,7 +37,21 @@ public class LoginController {
         }
     }
 
-    public static void logout(final OkHttpClient httpClient) throws IOException {
+    public static void logout() {
+        boolean logoutSuccess = false;
+        while (!logoutSuccess) {
+            try {
+                ClientUIElements.logoutMessage();
+                ClientHttpClientUtils.logoutFromServer();
+                logoutSuccess = true;
+            }
+            catch (IOException e) {
+                ClientUIElements.unexpectedIOExceptionMessage(e);
+            }
+        }
+    }
+
+    public static void attemptToLogout(final OkHttpClient httpClient) throws IOException {
         final Request req = new Request.Builder().get().url(LOGOUT_URL).build();
         final Call call = httpClient.newCall(req);
         try (Response res = call.execute()) {

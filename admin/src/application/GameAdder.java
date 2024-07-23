@@ -57,7 +57,6 @@ public class GameAdder {
             }
         }
         gameAddedSuccessfullyMessage();
-        UIElements.printGameListAll();
     }
 
     private static void newFilePromptMessage() {

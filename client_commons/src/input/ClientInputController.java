@@ -10,6 +10,8 @@ public class ClientInputController {
 
     protected static Scanner getScanner() { return SCANNER; }
 
+    public static void closeScanner() { SCANNER.close(); }
+
     public static int intMenuInput(final Set<Integer> acceptedIntegers) {
         int input = DEFAULT_VALUE;
         boolean validInput = false;
