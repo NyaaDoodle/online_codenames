@@ -2,6 +2,7 @@ package lobby.game.list;
 
 import game.structure.GameStructure;
 import game.structure.Team;
+import utils.FindUtils;
 
 public class GameListing {
     private final GameStructure gameStructure;
@@ -30,31 +31,35 @@ public class GameListing {
         return connectedPlayers;
     }
 
-    public int getConnectedDefinersByTeam(final Team team) {
-        return connectedPlayers.getConnectedDefinersByTeam(team);
+    public int getConnectedDefinersByTeam(final String teamName) {
+        return connectedPlayers.getConnectedDefinersByTeam(teamName);
     }
 
-    public int getConnectedGuessersByTeam(final Team team) {
-        return connectedPlayers.getConnectedGuessersByTeam(team);
+    public int getConnectedGuessersByTeam(final String teamName) {
+        return connectedPlayers.getConnectedGuessersByTeam(teamName);
     }
 
     public int getTotalConnectedPlayers() {
         return connectedPlayers.getTotalConnectedPlayers();
     }
 
-    public synchronized void incrementConnectedDefinersByTeam(final Team team) {
-        if (state.equals(ListingState.PENDING)) {
-            if (getConnectedDefinersByTeam(team) < team.getDefinersCount()) {
-                connectedPlayers.incrementConnectedDefinersByTeam(team);
+    public synchronized void incrementConnectedDefinersByTeam(final String teamName) {
+        final Team team = FindUtils.getTeam(teamName, gameStructure.getTeams());
+        if (team != null) {
+            if (state.equals(ListingState.PENDING)) {
+                if (getConnectedDefinersByTeam(teamName) < team.getDefinersCount()) {
+                    connectedPlayers.incrementConnectedDefinersByTeam(teamName);
+                }
             }
         }
         checkIfListingFull();
     }
 
-    public synchronized void incrementConnectedGuessersByTeam(final Team team) {
+    public synchronized void incrementConnectedGuessersByTeam(final String teamName) {
+        final Team team = FindUtils.getTeam(teamName, gameStructure.getTeams());
         if (state.equals(ListingState.PENDING)) {
-            if (getConnectedGuessersByTeam(team) < team.getGuessersCount()) {
-                connectedPlayers.incrementConnectedGuessersByTeam(team);
+            if (getConnectedGuessersByTeam(teamName) < team.getGuessersCount()) {
+                connectedPlayers.incrementConnectedGuessersByTeam(teamName);
             }
         }
         checkIfListingFull();

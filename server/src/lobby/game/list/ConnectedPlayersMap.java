@@ -8,22 +8,22 @@ import java.util.List;
 import java.util.Map;
 
 public class ConnectedPlayersMap {
-    private final Map<Team, Integer> connectedDefinersPerTeam = new HashMap<>();
-    private final Map<Team, Integer> connectedGuessersPerTeam = new HashMap<>();
+    private final Map<String, Integer> connectedDefinersPerTeam = new HashMap<>();
+    private final Map<String, Integer> connectedGuessersPerTeam = new HashMap<>();
 
     public ConnectedPlayersMap(final List<Team> teams) {
         teams.forEach(team -> {
-            connectedDefinersPerTeam.put(team, 0);
-            connectedGuessersPerTeam.put(team, 0);
+            connectedDefinersPerTeam.put(team.getName(), 0);
+            connectedGuessersPerTeam.put(team.getName(), 0);
         });
     }
 
-    public int getConnectedDefinersByTeam(final Team team) {
-        return connectedDefinersPerTeam.getOrDefault(team, Constants.ERROR_NUM);
+    public int getConnectedDefinersByTeam(final String teamName) {
+        return connectedDefinersPerTeam.getOrDefault(teamName, Constants.ERROR_NUM);
     }
 
-    public int getConnectedGuessersByTeam(final Team team) {
-        return connectedGuessersPerTeam.getOrDefault(team, Constants.ERROR_NUM);
+    public int getConnectedGuessersByTeam(final String teamName) {
+        return connectedGuessersPerTeam.getOrDefault(teamName, Constants.ERROR_NUM);
     }
 
     public int getTotalConnectedDefiners() {
@@ -38,12 +38,12 @@ public class ConnectedPlayersMap {
         return getTotalConnectedDefiners() + getTotalConnectedGuessers();
     }
 
-    public void incrementConnectedDefinersByTeam(final Team team) {
-        connectedDefinersPerTeam.replace(team, getConnectedDefinersByTeam(team) + 1);
+    public void incrementConnectedDefinersByTeam(final String teamName) {
+        connectedDefinersPerTeam.replace(teamName, getConnectedDefinersByTeam(teamName) + 1);
     }
 
-    public void incrementConnectedGuessersByTeam(final Team team) {
-        connectedGuessersPerTeam.replace(team, getConnectedGuessersByTeam(team) + 1);
+    public void incrementConnectedGuessersByTeam(final String teamName) {
+        connectedGuessersPerTeam.replace(teamName, getConnectedGuessersByTeam(teamName) + 1);
     }
 
 }

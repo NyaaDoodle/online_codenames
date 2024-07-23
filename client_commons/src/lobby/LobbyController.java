@@ -45,12 +45,9 @@ public class LobbyController {
         final String jsonBody = ClientHttpClientUtils.sendRequestSync(req);
         final Gson gson = new Gson();
         try {
-            // TODO DELETE
-            System.out.println(jsonBody);
             return gson.fromJson(jsonBody, GameList.class);
         } catch (JsonSyntaxException e) {
-            System.out.println(e.getMessage());
-            throw new Exception("Received response from server with bad syntax. Try again.");
+            throw new Exception("Received response from server with bad syntax.\n" + e.getMessage());
         }
     }
 }

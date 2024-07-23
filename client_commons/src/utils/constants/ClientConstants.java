@@ -12,5 +12,5 @@ public class ClientConstants {
     public static final int STATUS_CODE_OK = 200;
     public static final int STATUS_CODE_BAD_REQUEST = 400;
     public static final int STATUS_CODE_CONFLICT = 409;
-    public static final int ERROR_NUM = -1;
+    public static final int ERROR_NUM = -127;
 }

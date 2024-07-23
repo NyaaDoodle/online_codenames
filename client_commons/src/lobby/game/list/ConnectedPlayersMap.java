@@ -7,31 +7,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConnectedPlayersMap {
-    private Map<Team, Integer> connectedDefinersPerTeam = new HashMap<>();
-    private Map<Team, Integer> connectedGuessersPerTeam = new HashMap<>();
+    private Map<String, Integer> connectedDefinersPerTeam = new HashMap<>();
+    private Map<String, Integer> connectedGuessersPerTeam = new HashMap<>();
 
-    public Map<Team, Integer> getConnectedDefinersPerTeam() {
+    public Map<String, Integer> getConnectedDefinersPerTeam() {
         return connectedDefinersPerTeam;
     }
 
-    public void setConnectedDefinersPerTeam(Map<Team, Integer> connectedDefinersPerTeam) {
+    public void setConnectedDefinersPerTeam(Map<String, Integer> connectedDefinersPerTeam) {
         this.connectedDefinersPerTeam = connectedDefinersPerTeam;
     }
 
-    public Map<Team, Integer> getConnectedGuessersPerTeam() {
+    public Map<String, Integer> getConnectedGuessersPerTeam() {
         return connectedGuessersPerTeam;
     }
 
-    public void setConnectedGuessersPerTeam(Map<Team, Integer> connectedGuessersPerTeam) {
+    public void setConnectedGuessersPerTeam(Map<String, Integer> connectedGuessersPerTeam) {
         this.connectedGuessersPerTeam = connectedGuessersPerTeam;
     }
 
-    public int getConnectedDefinersByTeam(final Team team) {
-        return connectedDefinersPerTeam.getOrDefault(team, ClientConstants.ERROR_NUM);
+    public int getConnectedDefinersByTeam(final String teamName) {
+        return connectedDefinersPerTeam.getOrDefault(teamName, ClientConstants.ERROR_NUM);
     }
 
-    public int getConnectedGuessersByTeam(final Team team) {
-        return connectedGuessersPerTeam.getOrDefault(team, ClientConstants.ERROR_NUM);
+    public int getConnectedGuessersByTeam(final String teamName) {
+        return connectedGuessersPerTeam.getOrDefault(teamName, ClientConstants.ERROR_NUM);
     }
 
     public int getTotalConnectedDefiners() {
@@ -46,12 +46,12 @@ public class ConnectedPlayersMap {
         return getTotalConnectedDefiners() + getTotalConnectedGuessers();
     }
 
-    public void incrementConnectedDefinersByTeam(final Team team) {
-        connectedDefinersPerTeam.replace(team, getConnectedDefinersByTeam(team) + 1);
+    public void incrementConnectedDefinersByTeam(final String teamName) {
+        connectedDefinersPerTeam.replace(teamName, getConnectedDefinersByTeam(teamName) + 1);
     }
 
-    public void incrementConnectedGuessersByTeam(final Team team) {
-        connectedGuessersPerTeam.replace(team, getConnectedGuessersByTeam(team) + 1);
+    public void incrementConnectedGuessersByTeam(final String teamName) {
+        connectedGuessersPerTeam.replace(teamName, getConnectedGuessersByTeam(teamName) + 1);
     }
 
 }

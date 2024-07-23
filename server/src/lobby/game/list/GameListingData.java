@@ -57,12 +57,12 @@ public class GameListingData {
     public List<Team> getTeams() {
         return gameStructure.getTeams();
     }
-    public int getConnectedDefinersByTeam(final Team team) {
-        return connectedPlayers.getConnectedDefinersByTeam(team);
+    public int getConnectedDefinersByTeam(final String teamName) {
+        return connectedPlayers.getConnectedDefinersByTeam(teamName);
     }
 
-    public int getConnectedGuessersByTeam(final Team team) {
-        return connectedPlayers.getConnectedGuessersByTeam(team);
+    public int getConnectedGuessersByTeam(final String teamName) {
+        return connectedPlayers.getConnectedGuessersByTeam(teamName);
     }
 
     public int getTotalConnectedPlayers() {

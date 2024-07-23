@@ -69,11 +69,12 @@ public class ClientUIElements {
     }
 
     public static void printGameList(final GameList gameList) {
-        System.out.println("Current game listings on the server:");
+        System.out.println((gameList.getGameAmount() > 0) ? "Current game listings on the server:" : "No games are available that fit the criteria currently.");
         final List<GameListingData> gameListings = gameList.getGameList();
         for (int i = 0; i < gameListings.size(); i++) {
             final GameListingData game = gameListings.get(i);
-            System.out.println('(' + (i+1) + ')');
+            final int listingNum = i+1;
+            System.out.println("(" + listingNum + ")");
             System.out.println("Game name: " + game.getName());
             System.out.println("Status: " + game.getState().toString());
             System.out.println("Board dimensions: " + game.getRows() + " X " + game.getColumns());
