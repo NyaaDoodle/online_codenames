@@ -1,6 +1,6 @@
 package input;
 
-import application.GameJoiner;
+import game.join.GameJoiner;
 import application.PlayerApplication;
 import login.LoginController;
 import login.exceptions.UsernameInputException;

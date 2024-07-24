@@ -29,8 +29,17 @@ public class ClientUIElements {
         System.out.println(e.getMessage());
     }
 
+    public static void unexpectedExceptionMessage(final Exception e) {
+        System.out.println("Unexpected error happened...");
+        System.out.println(e.getMessage());
+    }
+
     public static void pressEnterToContinue() {
         try { System.in.read(); } catch (IOException e) { unexpectedIOExceptionMessage(e); exit(-100); }
+    }
+
+    public static void goBackOptionMessage() {
+        System.out.println("(Enter \"BACK\" to go back to the previous menu)");
     }
 
     public static void logoutMessage() {
@@ -73,7 +82,7 @@ public class ClientUIElements {
         final List<GameListingData> gameListings = gameList.getGameList();
         for (int i = 0; i < gameListings.size(); i++) {
             final GameListingData game = gameListings.get(i);
-            final int listingNum = i+1;
+            final int listingNum = i + 1;
             System.out.println("(" + listingNum + ")");
             System.out.println("Game name: " + game.getName());
             System.out.println("Status: " + game.getState().toString());
@@ -85,8 +94,10 @@ public class ClientUIElements {
             for (Team team : game.getTeams()) {
                 System.out.println("Team name: " + team.getName());
                 System.out.println("Word count: " + team.getCardCount());
-                System.out.println("Definers count: " + team.getDefinersCount());
-                System.out.println("Guessers count: " + team.getGuessersCount());
+                final int definersSignedUp = game.getConnectedDefinersByTeam(team.getName());
+                final int guessersSignedUp = game.getConnectedGuessersByTeam(team.getName());
+                System.out.println("Definers signed up: " + definersSignedUp + " / " + team.getDefinersCount());
+                System.out.println("Guessers signed up: " + guessersSignedUp + " / " + team.getGuessersCount());
             }
             System.out.println();
         }

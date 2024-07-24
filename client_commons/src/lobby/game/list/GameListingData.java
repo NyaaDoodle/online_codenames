@@ -86,4 +86,16 @@ public class GameListingData {
     public int getTotalConnectedPlayers() {
         return connectedPlayers.getTotalConnectedPlayers();
     }
+
+    public boolean areDefinersFull(final Team team) {
+        return getConnectedDefinersByTeam(team.getName()) == team.getDefinersCount();
+    }
+
+    public boolean areGuessersFull(final Team team) {
+        return getConnectedGuessersByTeam(team.getName()) == team.getGuessersCount();
+    }
+
+    public boolean isTeamFull(final Team team) {
+        return areDefinersFull(team) && areGuessersFull(team);
+    }
 }
