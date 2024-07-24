@@ -15,6 +15,10 @@ public class GameJoiner {
     public static void selectGame() {
         final GameList gameList = getGameList();
         if (gameList == null) { return; }
+        if (gameList.getGameAmount() < 1) {
+            System.out.println("No games are available that fit the criteria currently.");
+            return;
+        }
 
         boolean joinedGame = false;
         boolean exitedMenu = false;

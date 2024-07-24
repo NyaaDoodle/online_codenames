@@ -6,6 +6,7 @@ public class GameStructure {
     private String name;
     private Board board;
     private List<Team> teams = new ArrayList<>();
+    private Map<String, Team> teamMap = new HashMap<>();
     private Set<String> words = new HashSet<>();
     private String dictionaryFileName;
 
@@ -17,13 +18,11 @@ public class GameStructure {
         return board;
     }
 
-    public List<Team> getTeams() {
-        return Collections.unmodifiableList(teams);
-    }
+    public List<Team> getTeams() { return teams; }
 
-    public Set<String> getWords() {
-        return Collections.unmodifiableSet(words);
-    }
+    public Map<String, Team> getTeamMap() { return teamMap; }
+
+    public Set<String> getWords() { return words; }
 
     public String getDictionaryFileName() {
         return dictionaryFileName;
@@ -41,11 +40,15 @@ public class GameStructure {
         this.teams = teams;
     }
 
-    public void setWords(Set<String> words) {
-        this.words = words;
-    }
+    public void setTeamMap(Map<String, Team> teamMap) { this.teamMap = teamMap; }
+
+    public void setWords(Set<String> words) { this.words = words; }
 
     public void setDictionaryFileName(String dictionaryFileName) {
         this.dictionaryFileName = dictionaryFileName;
+    }
+
+    public Team getTeam(final String teamName) {
+        return teamMap.get(teamName);
     }
 }

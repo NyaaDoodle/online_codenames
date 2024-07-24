@@ -1,9 +1,11 @@
 package ui;
 
 import game.structure.Team;
+import input.ClientInputController;
 import lobby.LobbyController;
 import lobby.game.list.GameList;
 import lobby.game.list.GameListingData;
+import utils.constants.ClientConstants;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,7 +41,7 @@ public class ClientUIElements {
     }
 
     public static void goBackOptionMessage() {
-        System.out.println("(Enter \"BACK\" to go back to the previous menu)");
+        System.out.println("(Enter \"" + ClientConstants.GO_BACK_STRING + "\" to go back to the previous menu)");
     }
 
     public static void logoutMessage() {

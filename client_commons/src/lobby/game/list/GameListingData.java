@@ -98,4 +98,8 @@ public class GameListingData {
     public boolean isTeamFull(final Team team) {
         return areDefinersFull(team) && areGuessersFull(team);
     }
+
+    public Team getTeam(final String teamName) {
+        return gameStructure.getTeam(teamName);
+    }
 }

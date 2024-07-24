@@ -9,6 +9,8 @@ public class ClientConstants {
     public static final String LOGOUT_RESOURCE_URI = "/logout";
     public static final String GAME_LIST_RESOURCE_URI = "/game-list";
 
+    public static final String GO_BACK_STRING = "BACK";
+
     public static final int STATUS_CODE_OK = 200;
     public static final int STATUS_CODE_BAD_REQUEST = 400;
     public static final int STATUS_CODE_CONFLICT = 409;

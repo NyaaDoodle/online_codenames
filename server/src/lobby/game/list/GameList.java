@@ -1,5 +1,7 @@
 package lobby.game.list;
 
+import game.structure.Team;
+
 import java.util.*;
 
 public class GameList {

@@ -1,13 +1,12 @@
 package game.structure;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GameStructure {
     private final String name;
     private final Board board;
     private final List<Team> teams;
+    private final Map<String, Team> teamMap = new HashMap<>();
     private final Set<String> words;
     private final String dictionaryFileName;
 
@@ -15,6 +14,7 @@ public class GameStructure {
         this.name = name;
         this.board = board;
         this.teams = teams;
+        teams.forEach(team -> teamMap.put(team.getName(), team));
         this.words = words;
         this.dictionaryFileName = dictionaryFileName;
     }
@@ -37,5 +37,9 @@ public class GameStructure {
 
     public String getDictionaryFileName() {
         return dictionaryFileName;
+    }
+
+    public Team getTeam(final String teamName) {
+        return teamMap.get(teamName);
     }
 }
