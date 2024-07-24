@@ -1,7 +1,4 @@
-package game.join;
-
-import game.structure.Team;
-import lobby.game.list.GameListingData;
+package lobby.game.join;
 
 public class PlayerState {
     private final String game;

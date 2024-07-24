@@ -27,12 +27,12 @@ public class ClientHttpClientUtils {
     @NotNull
     public static String sendRequestSync(final Request req) throws Exception {
         final Call call = HTTP_CLIENT.newCall(req);
-        try (Response res = call.execute()) {
+        try (final Response res = call.execute()) {
+            final String responseBody = (res.body() != null) ? res.body().string() : "";
             if (res.code() != ClientConstants.STATUS_CODE_OK) {
-                assert res.body() != null;
-                throw new Exception(res.body().string());
+                throw new Exception(responseBody);
             }
-            return (res.body() != null) ? res.body().string() : "";
+            return responseBody;
         }
     }
 

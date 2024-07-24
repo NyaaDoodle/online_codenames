@@ -13,12 +13,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import parsing.jaxb.JAXBConversion;
 import utils.ResponseUtils;
 import utils.ServletUtils;
+import utils.constants.Constants;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.io.InputStream;
 
-@WebServlet(name = "NewGameServlet", urlPatterns = {"/new-game"})
+@WebServlet(name = Constants.NEW_GAME_SERVLET_NAME, urlPatterns = {Constants.NEW_GAME_RESOURCE_URI})
 @MultipartConfig
 public class NewGameServlet extends HttpServlet {
     private static final String STRUCTURE_FILE_PART_NAME = "structure-file";
@@ -26,7 +27,9 @@ public class NewGameServlet extends HttpServlet {
     private static final String JAXB_EXCEPTION_ERROR_PREFIX = "Invalid XML file according to schema-layout. Please correct the file to fit the schema requirements.\nAdditional info: ";
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
+        // TODO check if the user sending this is the administrator...
+        // TODO AND IF THEY ARE LOGGED IN EVEN!!!
         try (InputStream structureStream = req.getPart(STRUCTURE_FILE_PART_NAME).getInputStream();
              InputStream dictionaryStream = req.getPart(DICTIONARY_FILE_PART_NAME).getInputStream()) {
             GameStructure gameStructure = JAXBConversion.parseToGameStructure(structureStream, dictionaryStream);

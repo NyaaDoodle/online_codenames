@@ -1,19 +1,37 @@
 package game.join;
 
+import exceptions.JoinGameException;
 import game.structure.Team;
 import input.InputController;
 import lobby.LobbyController;
 import lobby.game.list.GameList;
 import lobby.game.list.GameListingData;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import ui.UIElements;
 
 import utils.OtherUtils;
 import utils.constants.Constants;
+import utils.http.HttpClientUtils;
+import utils.json.JSONUtils;
+
+import java.util.Collection;
 
 public class GameJoiner {
     private static final int NUMBER_OF_ROLES = 2;
+    private static final int DEFINER_OPTION = 1;
+
+    private static final String GAME_FULL_ERROR = "GAME_FULL";
+    private static final String TEAM_FULL_ERROR = "TEAM_FULL";
+    private static final String ROLE_FULL_ERROR = "ROLE_FULL";
+    private static final String BAD_JSON_ERROR = "BAD_SYNTAX";
+    private static final String ALREADY_JOINED_GAME_ERROR = "ALREADY_JOINED";
+
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String JSON_TYPE = "application/json";
+
     public static void selectGame() {
-        final GameList gameList = getGameList();
+        GameList gameList = getGameList();
         if (gameList == null) { return; }
         if (gameList.getGameAmount() < 1) {
             System.out.println("No games are available that fit the criteria currently.");
@@ -26,7 +44,7 @@ public class GameJoiner {
         Team selectedTeam;
         GameRole selectedRole;
         JoinerMenuState menuState = JoinerMenuState.GAME;
-        PlayerState playerState = new PlayerState();
+        TemporaryPlayerState playerState = new TemporaryPlayerState();
 
         while (!joinedGame && !exitedMenu) {
             switch (menuState) {
@@ -34,7 +52,7 @@ public class GameJoiner {
                     selectGameMessage();
                     printGameList(gameList);
                     input = getInput(gameList.getGameAmount());
-                    if (input == Constants.GO_BACK_NUM) { exitedMenu = true; }
+                    if (input == Constants.GO_BACK_NUM) { menuState = JoinerMenuState.EXIT; }
                     else {
                         playerState.setSelectedGame(gameList.getGameList().get(input - 1));
                         menuState = JoinerMenuState.TEAM;
@@ -64,20 +82,39 @@ public class GameJoiner {
                     input = getInput(NUMBER_OF_ROLES);
                     if (input == Constants.GO_BACK_NUM) { menuState = JoinerMenuState.TEAM; }
                     else {
-                        selectedRole = input == 1 ? GameRole.DEFINER : GameRole.GUESSER;
+                        selectedRole = (input == DEFINER_OPTION) ? GameRole.DEFINER : GameRole.GUESSER;
                         if (checkRoleFull(playerState.getSelectedGame(), playerState.getSelectedTeam(), selectedRole)) {
                             selectedRoleIsFullMessage();
                         }
                         else {
                             playerState.setSelectedRole(input == 1 ? GameRole.DEFINER : GameRole.GUESSER);
-                            sendSelectionRequest(playerState);
-                            playerState.print();
-                            joinedGame = true;
-                            // TODO see what to do when error/not accepted by server
+                            try {
+                                sendSelectionRequest(new PlayerState(playerState.getGameName(), playerState.getTeamName(),
+                                        playerState.getSelectedRole().toString()));
+                                joinedGame = true;
+                            } catch (JoinGameException e) {
+                                menuState = handleException(e);
+                                gameList = getGameList();
+                                if (gameList == null) { return; }
+                                if (gameList.getGameAmount() < 1) {
+                                    System.out.println("No games are available that fit the criteria currently.");
+                                    return;
+                                }
+                            } catch (Exception e) {
+                                UIElements.unexpectedExceptionMessage(e);
+                                return;
+                            }
                         }
                     }
                     break;
+
+                case EXIT:
+                    exitedMenu = true;
+                    break;
             }
+        }
+        if (joinedGame) {
+            // TODO goto GameRoom
         }
     }
 
@@ -158,7 +195,31 @@ public class GameJoiner {
         System.out.println(indexGuessers + "Connected guessers: " + connectedGuessers + " / " + team.getGuessersCount());
     }
 
-    private static void sendSelectionRequest(final PlayerState playerState) {
+    private static void sendSelectionRequest(final PlayerState playerState) throws Exception {
+        final String json = JSONUtils.toJson(playerState);
+        final String finalUrl = Constants.BASE_URL + Constants.JOIN_GAME_RESOURCE_URI;
+        final RequestBody body = RequestBody.create(json.getBytes());
+        Request req = new Request.Builder().post(body).url(finalUrl).addHeader(CONTENT_TYPE, JSON_TYPE).build();
+        HttpClientUtils.sendJoinGameRequest(req);
+    }
 
+    private static JoinerMenuState handleException(final JoinGameException e) {
+        JoinerMenuState state;
+        switch (e.getErrorType()) {
+            case GAME_FULL_ERROR:
+                state = JoinerMenuState.GAME;
+                break;
+            case TEAM_FULL_ERROR:
+                state = JoinerMenuState.TEAM;
+                break;
+            case ROLE_FULL_ERROR:
+                state = JoinerMenuState.ROLE;
+                break;
+            default:
+                state = JoinerMenuState.EXIT;
+                break;
+        }
+        System.out.println(e.getMessage());
+        return state;
     }
 }

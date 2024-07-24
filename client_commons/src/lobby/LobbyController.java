@@ -8,6 +8,7 @@ import okhttp3.Request;
 import org.jetbrains.annotations.NotNull;
 import utils.constants.ClientConstants;
 import utils.http.ClientHttpClientUtils;
+import utils.json.ClientJSONUtils;
 
 import java.util.Objects;
 
@@ -43,9 +44,8 @@ public class LobbyController {
                 .build();
         final Request req = new Request.Builder().get().url(finalUrl).build();
         final String jsonBody = ClientHttpClientUtils.sendRequestSync(req);
-        final Gson gson = new Gson();
         try {
-            return gson.fromJson(jsonBody, GameList.class);
+            return ClientJSONUtils.fromJson(jsonBody, GameList.class);
         } catch (JsonSyntaxException e) {
             throw new Exception("Received response from server with bad syntax.\n" + e.getMessage());
         }

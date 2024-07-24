@@ -9,10 +9,11 @@ import lobby.LobbyManager;
 import lobby.game.list.GameList;
 import utils.ResponseUtils;
 import utils.ServletUtils;
+import utils.constants.Constants;
 
 import java.io.IOException;
 
-@WebServlet(name = "GameListServlet", urlPatterns = {"/game-list"})
+@WebServlet(name = Constants.GAME_LIST_SERVLET_NAME, urlPatterns = {Constants.GAME_LIST_RESOURCE_URI})
 public class GameListServlet extends HttpServlet {
 
     // only_actives takes priority over with_actives.
@@ -20,7 +21,8 @@ public class GameListServlet extends HttpServlet {
     private static final String ACTIVE_INCLUDE_QUERY_NAME = "with-actives";
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
+        // Non-logged-in users could also send requests, if they really want to.
         final boolean onlyActive = Boolean.parseBoolean(req.getParameter(ACTIVE_ONLY_QUERY_NAME));
         final boolean includeActive = Boolean.parseBoolean(req.getParameter(ACTIVE_INCLUDE_QUERY_NAME));
         final LobbyManager lobbyManager = ServletUtils.getLobbyManager(getServletContext());

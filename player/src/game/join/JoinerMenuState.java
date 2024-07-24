@@ -3,5 +3,6 @@ package game.join;
 public enum JoinerMenuState {
     GAME,
     TEAM,
-    ROLE
+    ROLE,
+    EXIT
 }

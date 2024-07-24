@@ -30,4 +30,12 @@ public class ResponseUtils {
         res.setContentType(JSON_TYPE);
         res.getWriter().println(json);
     }
+
+    public static void sendUnauthorized(final HttpServletResponse res) throws IOException {
+        res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    public static void sendJoinGameError(final HttpServletResponse res, final String errorType, final int statusCode) {
+        
+    }
 }

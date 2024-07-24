@@ -13,13 +13,14 @@ import utils.constants.Constants;
 
 import java.io.IOException;
 
-@WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
+@WebServlet(name = Constants.LOGIN_SERVLET_NAME, urlPatterns = {Constants.LOGIN_RESOURCE_URI})
 public class LoginServlet extends HttpServlet {
     private static final String USERNAME_QUERY_NAME = "username";
     private static final String USERNAME_BLANK_ERROR = "Username cannot be blank or unspecified.";
     private static final String CLIENT_ALREADY_LOGGED_IN_MESSAGE = "Client has already logged in, no need for additional logins.";
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
+        // TODO check reserved names on the server, and not on the client...
         final String sessionUsername = SessionUtils.getUsername(req);
         final UserManager userManager = ServletUtils.getUserManager(getServletContext());
         if (sessionUsername == null) {
@@ -30,7 +31,7 @@ public class LoginServlet extends HttpServlet {
                     if (!(userManager.doesUserExist(parameterUsername))) {
                         LogUtils.logToConsole("Adding user \"" + parameterUsername + "\" to users.");
                         userManager.addUser(parameterUsername);
-                        req.getSession(true).setAttribute(Constants.USERNAME_ATTRIBUTE_NAME, parameterUsername);
+                        SessionUtils.setUsername(req, parameterUsername);
                         res.setStatus(HttpServletResponse.SC_OK);
                     } else {
                         ResponseUtils.sendPlainTextConflict(res, "The user \"" + parameterUsername + "\" already exists. Please enter a different username.");
