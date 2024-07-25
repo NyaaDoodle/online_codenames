@@ -4,6 +4,8 @@ import game.structure.GameStructure;
 import lobby.game.list.GameList;
 import lobby.game.list.GameListing;
 import lobby.game.list.GameListingData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +23,8 @@ public class LobbyManager {
         gameListings.put(newGameListing.getName(), newGameListing);
     }
 
-    public GameListingData getGameListing(final String gameName) {
+    @Nullable
+    public GameListingData getGameListing(@NotNull final String gameName) {
         GameListing gameListing = gameListings.get(gameName);
         return (gameListing == null ? null : new GameListingData(gameListing));
     }

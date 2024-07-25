@@ -35,7 +35,7 @@ public class ResponseUtils {
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    public static void sendJoinGameError(final HttpServletResponse res, final String errorType, final int statusCode) {
+    public static void sendJoinGameError(final HttpServletResponse res, final String errorType, final String message, final int statusCode) {
         
     }
 }
