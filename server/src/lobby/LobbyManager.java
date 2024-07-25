@@ -1,17 +1,17 @@
 package lobby;
 
 import game.structure.GameStructure;
+import game.structure.Team;
+import lobby.game.join.GameRole;
 import lobby.game.list.GameList;
 import lobby.game.list.GameListing;
 import lobby.game.list.GameListingData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class LobbyManager {
@@ -29,7 +29,7 @@ public class LobbyManager {
         return (gameListing == null ? null : new GameListingData(gameListing));
     }
 
-    public boolean doesGameAlreadyExist(final String gameName) {
+    public boolean doesGameExist(final String gameName) {
         return gameListings.get(gameName) != null;
     }
 
@@ -42,5 +42,38 @@ public class LobbyManager {
             gameList = gameList.stream().filter(GameListingData::isGamePending).collect(Collectors.toList());
         }
         return new GameList(gameList);
+    }
+
+    public boolean isGameAvailable(final String gameName) {
+        final GameListingData gameListing = getGameListing(gameName);
+        return (gameListing != null && gameListing.isGamePending());
+    }
+
+    public boolean isTeamAvailable(final String gameName, final String teamName) {
+        final GameListingData gameListing = getGameListing(gameName);
+        if (gameListing != null) {
+            final Team team = gameListing.getTeam(teamName);
+            return (team != null) && (gameListing.isTeamFull(team));
+        }
+        else { return false; }
+    }
+
+    public boolean isRoleAvailable(final String gameName, final String teamName, final GameRole role) {
+        final GameListingData gameListing = getGameListing(gameName);
+        if (gameListing != null) {
+            final Team team = gameListing.getTeam(teamName);
+            if (team != null) {
+                switch (role) {
+                    case DEFINER:
+                        return gameListing.areDefinersFull(team);
+                    case GUESSER:
+                        return gameListing.areGuessersFull(team);
+                    default:
+                        return false;
+                }
+            }
+            else { return false; }
+        }
+        else { return false; }
     }
 }

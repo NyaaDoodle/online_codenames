@@ -47,7 +47,7 @@ public class NewGameServlet extends HttpServlet {
     private void addGameToLobby(final GameStructure gameStructure) throws GameListingException {
         LobbyManager lobbyManager = ServletUtils.getLobbyManager(getServletContext());
         synchronized (this) {
-            if (!(lobbyManager.doesGameAlreadyExist(gameStructure.getName()))) {
+            if (!(lobbyManager.doesGameExist(gameStructure.getName()))) {
                 lobbyManager.addGame(gameStructure);
             } else {
                 throw new GameListingException("There already is a game with the same name: " + gameStructure.getName()

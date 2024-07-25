@@ -1,5 +1,6 @@
 package utils;
 
+import exceptions.JoinGameException;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -37,5 +38,9 @@ public class ResponseUtils {
 
     public static void sendJoinGameError(final HttpServletResponse res, final String errorType, final String message, final int statusCode) {
         
+    }
+
+    public static void sendJoinGameError(final HttpServletResponse res, final JoinGameException e) {
+        sendJoinGameError(res, e.getErrorType(), e.getMessage(), e.getStatusCode());
     }
 }

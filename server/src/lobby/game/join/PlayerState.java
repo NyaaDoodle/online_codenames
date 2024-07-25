@@ -3,9 +3,9 @@ package lobby.game.join;
 public class PlayerState {
     private final String game;
     private final String team;
-    private final String role;
+    private final GameRole role;
 
-    public PlayerState(String game, String team, String role) {
+    public PlayerState(String game, String team, GameRole role) {
         this.game = game;
         this.team = team;
         this.role = role;
@@ -19,7 +19,7 @@ public class PlayerState {
         return team;
     }
 
-    public String getRole() {
+    public GameRole getRole() {
         return role;
     }
 }

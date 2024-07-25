@@ -6,9 +6,9 @@ import lobby.game.list.GameListingData;
 public class PlayerState {
     private final String game;
     private final String team;
-    private final String role;
+    private final GameRole role;
 
-    public PlayerState(String game, String team, String role) {
+    public PlayerState(final String game, final String team, final GameRole role) {
         this.game = game;
         this.team = team;
         this.role = role;
@@ -22,7 +22,7 @@ public class PlayerState {
         return team;
     }
 
-    public String getRole() {
+    public GameRole getRole() {
         return role;
     }
 }
