@@ -10,9 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lobby.LobbyManager;
 import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
-import lobby.game.join.PlayerStateIdentifiers;
 import lobby.game.list.GameListingData;
-import org.jetbrains.annotations.NotNull;
 import utils.LogUtils;
 import utils.ResponseUtils;
 import utils.ServletUtils;
@@ -37,13 +35,11 @@ public class JoinGameServlet extends HttpServlet {
             try {
                 synchronized (this) {
                     checkIfUserInAGame(req);
-                    final PlayerStateIdentifiers playerStateIdentifiers = JSONUtils.fromJson(ServletUtils.getRequestBody(req), PlayerStateIdentifiers.class);
+                    final PlayerState playerState = JSONUtils.fromJson(ServletUtils.getRequestBody(req), PlayerState.class);
                     final LobbyManager lobbyManager = ServletUtils.getLobbyManager(getServletContext());
-                    final PlayerState playerState = PlayerState.createFromPlayerStateIdentifiers(playerStateIdentifiers, lobbyManager);
-                    checkPlayerStateValidity(playerState);
                     checkJoinRequestAvailability(playerState, lobbyManager);
-                    LogUtils.logToConsole("Adding user \"" + SessionUtils.getUsername(req) + "\" to game \"" + playerState.getGameName() + "\""
-                    + " in team \"" + playerState.getTeamName() + "\" as a " + (playerState.getRole().equals(GameRole.DEFINER) ? "definer" : "guesser"));
+                    LogUtils.logToConsole("Adding user \"" + SessionUtils.getUsername(req) + "\" to game \"" + playerState.getGame() + "\""
+                    + " in team \"" + playerState.getTeam() + "\" as a " + (playerState.getRole().equals(GameRole.DEFINER) ? "definer" : "guesser"));
                     lobbyManager.joinGame(playerState);
                     SessionUtils.setPlayerState(req, playerState);
                     res.setStatus(HttpServletResponse.SC_OK);
@@ -63,33 +59,30 @@ public class JoinGameServlet extends HttpServlet {
     private void checkIfUserInAGame(final HttpServletRequest req) throws JoinGameException {
         final PlayerState playerState = SessionUtils.getPlayerState(req);
         if (playerState != null) {
-            final String message = "This user has already joined game \"" + playerState.getGameName() + "\".";
+            final String message = "This user has already joined game \"" + playerState.getGame() + "\".";
             throw new JoinGameException(ALREADY_JOINED_GAME_ERROR, message, HttpServletResponse.SC_CONFLICT);
         }
     }
 
-    private void checkPlayerStateValidity(final PlayerState playerState) throws JoinGameException {
+    private void checkJoinRequestAvailability(final PlayerState playerState, final LobbyManager lobbyManager) throws JoinGameException {
+        final GameListingData game = lobbyManager.getGameListing(playerState.getGame());
+        Team team = (game != null) ? game.getTeam(playerState.getTeam()) : null;
+        final GameRole role = playerState.getRole();
         String errorMessage;
-        if (playerState.getGame() == null) {
-            errorMessage = "The requested game \"" + playerState.getGameName() + "\" does not exist in the server.";
+        // Validity check
+        if (game == null) {
+            errorMessage = "The requested game \"" + playerState.getGame() + "\" does not exist in the server.";
             throw new JoinGameException(NOT_EXIST_ERROR, errorMessage, HttpServletResponse.SC_CONFLICT);
         }
-        else if (playerState.getTeam() == null) {
-            errorMessage = "The requested team \"" + playerState.getTeamName() + "\" does not exist in the game \"" + playerState.getGameName() + "\".";
+        else if (team == null) {
+            errorMessage = "The requested team \"" + playerState.getTeam() + "\" does not exist in the game \"" + playerState.getGame() + "\".";
             throw new JoinGameException(NOT_EXIST_ERROR, errorMessage, HttpServletResponse.SC_CONFLICT);
         }
-        else if (playerState.getRole() == null) {
+        else if (role == null) {
             errorMessage = "Invalid role: \"" + playerState.getRole().toString() +"\".";
             throw new JoinGameException(NOT_EXIST_ERROR, errorMessage, HttpServletResponse.SC_BAD_REQUEST);
         }
-    }
-
-    private void checkJoinRequestAvailability(final PlayerState playerState, final LobbyManager lobbyManager) throws JoinGameException {
-        // Assuming playerState has already been checked for validity of nulls.
-        @NotNull final GameListingData game = playerState.getGame();
-        @NotNull final Team team = playerState.getTeam();
-        @NotNull final GameRole role = playerState.getRole();
-        String errorMessage;
+        // Availability check
         if (game.isGameActive()) {
             errorMessage = "The requested game \"" + game.getName() + "\" is full and has already started. Please select a different game.";
             throw new JoinGameException(GAME_FULL_ERROR, errorMessage, HttpServletResponse.SC_CONFLICT);
@@ -113,7 +106,7 @@ public class JoinGameServlet extends HttpServlet {
                     }
                     break;
                 default:
-                    errorMessage = "Invalid role: \"" + role + "\".";
+                    errorMessage = "Invalid role: \"" + playerState.getRole().toString() + "\".";
                     throw new JoinGameException(NOT_EXIST_ERROR, errorMessage, HttpServletResponse.SC_BAD_REQUEST);
             }
         }

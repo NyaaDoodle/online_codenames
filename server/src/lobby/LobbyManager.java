@@ -1,8 +1,6 @@
 package lobby;
 
 import game.structure.GameStructure;
-import game.structure.Team;
-import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
 import lobby.game.list.GameList;
 import lobby.game.list.GameListing;
@@ -46,15 +44,15 @@ public class LobbyManager {
     }
 
     public void joinGame(final PlayerState playerState) {
-        // Assuming availability checks have been done before calling this.
-        final GameListing gameListing = gameListings.get(playerState.getGameName());
+        // Assuming availability and validity checks have been done before calling this.
+        final GameListing gameListing = gameListings.get(playerState.getGame());
         if (gameListing != null) {
             switch (playerState.getRole()) {
                 case DEFINER:
-                    gameListing.incrementConnectedDefinersByTeam(playerState.getTeamName());
+                    gameListing.incrementConnectedDefinersByTeam(playerState.getTeam());
                     break;
                 case GUESSER:
-                    gameListing.incrementConnectedGuessersByTeam(playerState.getTeamName());
+                    gameListing.incrementConnectedGuessersByTeam(playerState.getTeam());
                     break;
             }
         }

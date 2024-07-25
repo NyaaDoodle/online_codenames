@@ -1,42 +1,25 @@
 package game.join;
 
-import game.structure.Team;
-import lobby.game.list.GameListingData;
-
 public class PlayerState {
-    private GameListingData selectedGame = null;
-    private Team selectedTeam = null;
-    private GameRole selectedRole = null;
+    private final String game;
+    private final String team;
+    private final GameRole role;
 
-    public GameListingData getSelectedGame() {
-        return selectedGame;
+    public PlayerState(final String game, final String team, final GameRole role) {
+        this.game = game;
+        this.team = team;
+        this.role = role;
     }
 
-    public void setSelectedGame(GameListingData selectedGame) {
-        this.selectedGame = selectedGame;
+    public String getGame() {
+        return game;
     }
 
-    public Team getSelectedTeam() {
-        return selectedTeam;
+    public String getTeam() {
+        return team;
     }
 
-    public void setSelectedTeam(Team selectedTeam) {
-        this.selectedTeam = selectedTeam;
-    }
-
-    public GameRole getSelectedRole() {
-        return selectedRole;
-    }
-
-    public void setSelectedRole(GameRole selectedRole) {
-        this.selectedRole = selectedRole;
-    }
-
-    public String getGameName() {
-        return selectedGame.getName();
-    }
-
-    public String getTeamName() {
-        return selectedTeam.getName();
+    public GameRole getRole() {
+        return role;
     }
 }

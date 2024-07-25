@@ -3,7 +3,6 @@ package utils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lobby.game.join.PlayerState;
-import lobby.game.join.PlayerStateIdentifiers;
 import org.jetbrains.annotations.Nullable;
 
 public class SessionUtils {

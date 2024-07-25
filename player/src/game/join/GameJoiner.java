@@ -1,6 +1,7 @@
 package game.join;
 
 import exceptions.JoinGameException;
+import game.room.GameRoom;
 import game.structure.Team;
 import input.InputController;
 import lobby.LobbyController;
@@ -42,7 +43,7 @@ public class GameJoiner {
         Team selectedTeam;
         GameRole selectedRole;
         JoinerMenuState menuState = JoinerMenuState.GAME;
-        PlayerState playerState = new PlayerState();
+        TempPlayerState playerState = new TempPlayerState();
 
         while (!joinedGame && !exitedMenu) {
             switch (menuState) {
@@ -87,7 +88,7 @@ public class GameJoiner {
                         else {
                             playerState.setSelectedRole(input == 1 ? GameRole.DEFINER : GameRole.GUESSER);
                             try {
-                                sendSelectionRequest(new PlayerStateIdentifiers(playerState.getGameName(), playerState.getTeamName(),
+                                sendSelectionRequest(new PlayerState(playerState.getGameName(), playerState.getTeamName(),
                                         playerState.getSelectedRole()));
                                 joinedGame = true;
                             } catch (JoinGameException e) {
@@ -113,6 +114,8 @@ public class GameJoiner {
         }
         if (joinedGame) {
             // TODO goto GameRoom
+            GameRoom gameRoom = new GameRoom(gameList.getGameListing(playerState.getGameName()));
+            gameRoom.goToGameRoom();
         }
     }
 
@@ -193,7 +196,7 @@ public class GameJoiner {
         System.out.println(indexGuessers + "Connected guessers: " + connectedGuessers + " / " + team.getGuessersCount());
     }
 
-    private static void sendSelectionRequest(final PlayerStateIdentifiers playerState) throws Exception {
+    private static void sendSelectionRequest(final PlayerState playerState) throws Exception {
         final String json = JSONUtils.toJson(playerState);
         final String finalUrl = Constants.BASE_URL + Constants.JOIN_GAME_RESOURCE_URI;
         final RequestBody body = RequestBody.create(json.getBytes());
