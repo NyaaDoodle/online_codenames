@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import parsing.jaxb.JAXBConversion;
+import utils.LogUtils;
 import utils.ResponseUtils;
 import utils.ServletUtils;
 import utils.constants.Constants;
@@ -33,6 +34,7 @@ public class NewGameServlet extends HttpServlet {
         try (InputStream structureStream = req.getPart(STRUCTURE_FILE_PART_NAME).getInputStream();
              InputStream dictionaryStream = req.getPart(DICTIONARY_FILE_PART_NAME).getInputStream()) {
             GameStructure gameStructure = JAXBConversion.parseToGameStructure(structureStream, dictionaryStream);
+            LogUtils.logToConsole("Adding game \"" + gameStructure.getName() + "\" to game list.");
             addGameToLobby(gameStructure);
             ResponseUtils.sendPlainTextSuccess(res, "New game \"" + gameStructure.getName() + "\" was added successfully");
         } catch (final JAXBException e) {

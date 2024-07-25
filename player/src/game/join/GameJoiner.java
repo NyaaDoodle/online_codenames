@@ -15,8 +15,6 @@ import utils.constants.Constants;
 import utils.http.HttpClientUtils;
 import utils.json.JSONUtils;
 
-import java.util.Collection;
-
 public class GameJoiner {
     private static final int NUMBER_OF_ROLES = 2;
     private static final int DEFINER_OPTION = 1;
@@ -44,7 +42,7 @@ public class GameJoiner {
         Team selectedTeam;
         GameRole selectedRole;
         JoinerMenuState menuState = JoinerMenuState.GAME;
-        TemporaryPlayerState playerState = new TemporaryPlayerState();
+        PlayerState playerState = new PlayerState();
 
         while (!joinedGame && !exitedMenu) {
             switch (menuState) {
@@ -89,8 +87,8 @@ public class GameJoiner {
                         else {
                             playerState.setSelectedRole(input == 1 ? GameRole.DEFINER : GameRole.GUESSER);
                             try {
-                                sendSelectionRequest(new PlayerState(playerState.getGameName(), playerState.getTeamName(),
-                                        playerState.getSelectedRole().toString()));
+                                sendSelectionRequest(new PlayerStateIdentifiers(playerState.getGameName(), playerState.getTeamName(),
+                                        playerState.getSelectedRole()));
                                 joinedGame = true;
                             } catch (JoinGameException e) {
                                 menuState = handleException(e);
@@ -195,7 +193,7 @@ public class GameJoiner {
         System.out.println(indexGuessers + "Connected guessers: " + connectedGuessers + " / " + team.getGuessersCount());
     }
 
-    private static void sendSelectionRequest(final PlayerState playerState) throws Exception {
+    private static void sendSelectionRequest(final PlayerStateIdentifiers playerState) throws Exception {
         final String json = JSONUtils.toJson(playerState);
         final String finalUrl = Constants.BASE_URL + Constants.JOIN_GAME_RESOURCE_URI;
         final RequestBody body = RequestBody.create(json.getBytes());

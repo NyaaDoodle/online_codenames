@@ -3,6 +3,7 @@ package lobby;
 import game.structure.GameStructure;
 import game.structure.Team;
 import lobby.game.join.GameRole;
+import lobby.game.join.PlayerState;
 import lobby.game.list.GameList;
 import lobby.game.list.GameListing;
 import lobby.game.list.GameListingData;
@@ -44,36 +45,18 @@ public class LobbyManager {
         return new GameList(gameList);
     }
 
-    public boolean isGameAvailable(final String gameName) {
-        final GameListingData gameListing = getGameListing(gameName);
-        return (gameListing != null && gameListing.isGamePending());
-    }
-
-    public boolean isTeamAvailable(final String gameName, final String teamName) {
-        final GameListingData gameListing = getGameListing(gameName);
+    public void joinGame(final PlayerState playerState) {
+        // Assuming availability checks have been done before calling this.
+        final GameListing gameListing = gameListings.get(playerState.getGameName());
         if (gameListing != null) {
-            final Team team = gameListing.getTeam(teamName);
-            return (team != null) && (gameListing.isTeamFull(team));
-        }
-        else { return false; }
-    }
-
-    public boolean isRoleAvailable(final String gameName, final String teamName, final GameRole role) {
-        final GameListingData gameListing = getGameListing(gameName);
-        if (gameListing != null) {
-            final Team team = gameListing.getTeam(teamName);
-            if (team != null) {
-                switch (role) {
-                    case DEFINER:
-                        return gameListing.areDefinersFull(team);
-                    case GUESSER:
-                        return gameListing.areGuessersFull(team);
-                    default:
-                        return false;
-                }
+            switch (playerState.getRole()) {
+                case DEFINER:
+                    gameListing.incrementConnectedDefinersByTeam(playerState.getTeamName());
+                    break;
+                case GUESSER:
+                    gameListing.incrementConnectedGuessersByTeam(playerState.getTeamName());
+                    break;
             }
-            else { return false; }
         }
-        else { return false; }
     }
 }

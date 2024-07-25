@@ -3,7 +3,6 @@ package utils;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lobby.LobbyManager;
-import okhttp3.Request;
 import users.UserManager;
 import utils.constants.Constants;
 

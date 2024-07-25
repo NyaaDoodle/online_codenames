@@ -43,7 +43,7 @@ public class GameListing {
         return connectedPlayers.getTotalConnectedPlayers();
     }
 
-    public synchronized void incrementConnectedDefinersByTeam(final String teamName) {
+    public void incrementConnectedDefinersByTeam(final String teamName) {
         final Team team = FindUtils.getTeam(teamName, gameStructure.getTeams());
         if (team != null) {
             if (state.equals(ListingState.PENDING)) {
@@ -55,7 +55,7 @@ public class GameListing {
         checkIfListingFull();
     }
 
-    public synchronized void incrementConnectedGuessersByTeam(final String teamName) {
+    public void incrementConnectedGuessersByTeam(final String teamName) {
         final Team team = FindUtils.getTeam(teamName, gameStructure.getTeams());
         if (state.equals(ListingState.PENDING)) {
             if (getConnectedGuessersByTeam(teamName) < team.getGuessersCount()) {
@@ -74,7 +74,7 @@ public class GameListing {
     private void checkIfListingFull() {
         int expectedTotalPlayers = gameStructure.getTeams().stream()
                 .mapToInt(team -> team.getDefinersCount() + team.getGuessersCount()).sum();
-        if (connectedPlayers.getTotalConnectedPlayers() == expectedTotalPlayers) {
+        if (getTotalConnectedPlayers() == expectedTotalPlayers) {
             setGameAsActive();
         }
     }

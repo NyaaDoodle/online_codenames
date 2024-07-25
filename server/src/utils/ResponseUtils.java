@@ -8,6 +8,8 @@ import java.io.IOException;
 public class ResponseUtils {
     private static final String PLAIN_TEXT = "text/plain";
     private static final String JSON_TYPE = "application/json";
+    private static final String JOIN_GAME_ERROR_HEADER = "Error-Type";
+
     public static void sendPlainTextConflict(final HttpServletResponse res, final String errorMessage) throws IOException {
         res.setStatus(HttpServletResponse.SC_CONFLICT);
         res.setContentType(PLAIN_TEXT);
@@ -32,15 +34,18 @@ public class ResponseUtils {
         res.getWriter().println(json);
     }
 
-    public static void sendUnauthorized(final HttpServletResponse res) throws IOException {
+    public static void sendUnauthorized(final HttpServletResponse res) {
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    public static void sendJoinGameError(final HttpServletResponse res, final String errorType, final String message, final int statusCode) {
-        
+    public static void sendJoinGameError(final HttpServletResponse res, final String errorType, final String message, final int statusCode) throws IOException {
+        res.setStatus(statusCode);
+        res.setContentType(PLAIN_TEXT);
+        res.addHeader(JOIN_GAME_ERROR_HEADER, errorType);
+        res.getWriter().println(message);
     }
 
-    public static void sendJoinGameError(final HttpServletResponse res, final JoinGameException e) {
+    public static void sendJoinGameError(final HttpServletResponse res, final JoinGameException e) throws IOException {
         sendJoinGameError(res, e.getErrorType(), e.getMessage(), e.getStatusCode());
     }
 }
