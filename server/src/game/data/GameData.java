@@ -1,6 +1,5 @@
 package game.data;
 
-import game.instance.GameInstanceData;
 import lobby.game.list.GameListingData;
 
 public class GameData {

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 public class ClientGameRoom {
     private GameListingData gameListingData;
     private GameInstanceData gameInstanceData;
+    private PlayerState playerState;
     private boolean gameEnded = false;
 
     public ClientGameRoom(@NotNull final GameListingData gameListingData) {
