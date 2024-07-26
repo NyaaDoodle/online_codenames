@@ -16,6 +16,7 @@ public class GameInstance {
     private final TurnOrder turnOrder;
     private Hint currentHint;
     private boolean hasGameEnded = false;
+    private int guessesLeft = 0;
     private final WinOrder winOrder;
 
     public GameInstance(final GameStructure gameStructure, final LinkedList<Team> turnOrder) {
@@ -37,6 +38,7 @@ public class GameInstance {
 
     public void setCurrentHint(final Hint hint) {
         this.currentHint = hint;
+        this.guessesLeft = hint.getNumber();
     }
 
     public List<WordCardData> getWordCards() {
@@ -59,6 +61,14 @@ public class GameInstance {
         turnOrder.moveToNextTurn();
     }
 
+    public int getGuessesLeft() {
+        return guessesLeft;
+    }
+
+    public void setGuessesLeft(final int guessesCount) {
+        this.guessesLeft = guessesCount;
+    }
+
     public MoveEvent makeMove(final int wordIndex) {
         final WordCardData selectedWord = wordCards.getWordCardData(wordIndex);
         final Team cardTeam = selectedWord.getTeam();
@@ -77,6 +87,7 @@ public class GameInstance {
         else {
             isNeutralCard = true;
         }
+        guessesLeft--;
         return new MoveEvent(selectedWord.getWord(), wordIndex, cardTeam, selectingTeam, isNeutralCard, isBlackCard);
     }
 

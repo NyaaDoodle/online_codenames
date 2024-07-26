@@ -65,6 +65,10 @@ public class GameListing {
         checkIfListingFull();
     }
 
+    public boolean isGamePending() { return state == ListingState.PENDING; }
+
+    public boolean isGameActive() { return state == ListingState.ACTIVE; }
+
     private void setGameAsActive() {
         if (state.equals(ListingState.PENDING)) {
             this.state = ListingState.ACTIVE;

@@ -57,4 +57,9 @@ public class LobbyManager {
             }
         }
     }
+
+    public boolean isGameActive(final String gameName) {
+        final GameListing gameListing = gameListings.get(gameName);
+        return gameListing != null && gameListing.isGameActive();
+    }
 }

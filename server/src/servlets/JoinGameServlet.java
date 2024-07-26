@@ -2,6 +2,7 @@ package servlets;
 
 import com.google.gson.JsonSyntaxException;
 import exceptions.JoinGameException;
+import game.engine.GameEngine;
 import game.structure.Team;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lobby.LobbyManager;
 import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
+import lobby.game.list.GameListing;
 import lobby.game.list.GameListingData;
 import utils.LogUtils;
 import utils.ResponseUtils;
@@ -19,6 +21,7 @@ import utils.constants.Constants;
 import utils.json.JSONUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @WebServlet(name = Constants.JOIN_GAME_SERVLET_NAME, urlPatterns = {Constants.JOIN_GAME_RESOURCE_URI})
 public class JoinGameServlet extends HttpServlet {
@@ -40,8 +43,8 @@ public class JoinGameServlet extends HttpServlet {
                     checkJoinRequestAvailability(playerState, lobbyManager);
                     LogUtils.logToConsole("Adding user \"" + SessionUtils.getUsername(req) + "\" to game \"" + playerState.getGame() + "\""
                     + " in team \"" + playerState.getTeam() + "\" as a " + (playerState.getRole().equals(GameRole.DEFINER) ? "definer" : "guesser"));
-                    lobbyManager.joinGame(playerState);
-                    SessionUtils.setPlayerState(req, playerState);
+                    joinGame(playerState, req, lobbyManager);
+                    checkIfGameIsFull(playerState.getGame(), lobbyManager);
                     res.setStatus(HttpServletResponse.SC_OK);
                 }
             } catch (JoinGameException e) {
@@ -110,5 +113,22 @@ public class JoinGameServlet extends HttpServlet {
                     throw new JoinGameException(NOT_EXIST_ERROR, errorMessage, HttpServletResponse.SC_BAD_REQUEST);
             }
         }
+    }
+
+    private void joinGame(final PlayerState playerState, final HttpServletRequest req, final LobbyManager lobbyManager) {
+        lobbyManager.joinGame(playerState);
+        SessionUtils.setPlayerState(req, playerState);
+    }
+
+    private void checkIfGameIsFull(final String gameName, final LobbyManager lobbyManager) {
+        if (lobbyManager.isGameActive(gameName)) {
+            tellToCreateGameInstance(Objects.requireNonNull(lobbyManager.getGameListing(gameName)));
+        }
+    }
+
+    private void tellToCreateGameInstance(final GameListingData game) {
+        final GameEngine gameEngine = ServletUtils.getGameEngine(getServletContext());
+        LogUtils.logToConsole("Creating game instance of \"" + game.getName() + "\"");
+        gameEngine.addGame(game);
     }
 }

@@ -1,34 +1,65 @@
 package utils;
 
+import chat.ChatManager;
+import game.engine.GameEngine;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lobby.LobbyManager;
+import org.jetbrains.annotations.NotNull;
 import users.UserManager;
-import utils.constants.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
 public class ServletUtils {
+    private static final String LOBBY_MANAGER_ATTRIBUTE_NAME = "lobbyManager";
+    private static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";
+    private static final String CHAT_MANAGER_ATTRIBUTE_NAME = "chatManager";
+    private static final String GAME_ENGINE_ATTRIBUTE_NAME = "gameEngine";
+
     private static final Object initLobbyManagerLock = new Object();
     private static final Object initUserManagerLock = new Object();
+    private static final Object initChatManagerLock = new Object();
+    private static final Object initGameEngineLock = new Object();
 
+    @NotNull
     public static LobbyManager getLobbyManager(final ServletContext servletContext) {
         synchronized (initLobbyManagerLock) {
-            if (servletContext.getAttribute(Constants.LOBBY_MANAGER_ATTRIBUTE_NAME) == null) {
-                servletContext.setAttribute(Constants.LOBBY_MANAGER_ATTRIBUTE_NAME, new LobbyManager());
+            if (servletContext.getAttribute(LOBBY_MANAGER_ATTRIBUTE_NAME) == null) {
+                servletContext.setAttribute(LOBBY_MANAGER_ATTRIBUTE_NAME, new LobbyManager());
             }
-            return (LobbyManager) servletContext.getAttribute(Constants.LOBBY_MANAGER_ATTRIBUTE_NAME);
         }
+        return (LobbyManager) servletContext.getAttribute(LOBBY_MANAGER_ATTRIBUTE_NAME);
     }
 
+    @NotNull
     public static UserManager getUserManager(final ServletContext servletContext) {
         synchronized (initUserManagerLock) {
-            if (servletContext.getAttribute(Constants.USER_MANAGER_ATTRIBUTE_NAME) == null) {
-                servletContext.setAttribute(Constants.USER_MANAGER_ATTRIBUTE_NAME, new UserManager());
+            if (servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME) == null) {
+                servletContext.setAttribute(USER_MANAGER_ATTRIBUTE_NAME, new UserManager());
             }
-            return (UserManager) servletContext.getAttribute(Constants.USER_MANAGER_ATTRIBUTE_NAME);
         }
+        return (UserManager) servletContext.getAttribute(USER_MANAGER_ATTRIBUTE_NAME);
+    }
+
+    @NotNull
+    public static GameEngine getGameEngine(final ServletContext servletContext) {
+        synchronized (initGameEngineLock) {
+            if (servletContext.getAttribute(GAME_ENGINE_ATTRIBUTE_NAME) == null) {
+                servletContext.setAttribute(GAME_ENGINE_ATTRIBUTE_NAME, new GameEngine());
+            }
+        }
+        return (GameEngine) servletContext.getAttribute(GAME_ENGINE_ATTRIBUTE_NAME);
+    }
+
+    @NotNull
+    public static ChatManager getChatManager(final ServletContext servletContext) {
+        synchronized (initChatManagerLock) {
+            if (servletContext.getAttribute(CHAT_MANAGER_ATTRIBUTE_NAME) == null) {
+                servletContext.setAttribute(CHAT_MANAGER_ATTRIBUTE_NAME, new ChatManager());
+            }
+        }
+        return (ChatManager) servletContext.getAttribute(CHAT_MANAGER_ATTRIBUTE_NAME);
     }
 
     public static boolean isUserLoggedIn(final HttpServletRequest req, final ServletContext servletContext) {

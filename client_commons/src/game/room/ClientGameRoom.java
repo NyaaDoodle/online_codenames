@@ -45,7 +45,7 @@ public abstract class ClientGameRoom {
 
     public void updateGameData() {
         // TODO fetch game data from GET game servlet request
-        final String finalUrl = ClientConstants.BASE_URL + ClientConstants.GAME_RESOURCE_URI;
+        final String finalUrl = ClientConstants.BASE_URL + ClientConstants.GAME_DATA_RESOURCE_URI;
         final Request req = new Request.Builder().get().url(finalUrl).build();
         try {
             final String jsonBody = ClientHttpClientUtils.sendRequestSync(req);

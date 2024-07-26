@@ -9,6 +9,7 @@ public class ClientConstants {
     public static final String LOGOUT_RESOURCE_URI = "/logout";
     public static final String GAME_LIST_RESOURCE_URI = "/game-list";
     public static final String GAME_RESOURCE_URI = "/game";
+    public static final String GAME_DATA_RESOURCE_URI = "/game-data";
 
     public static final String GO_BACK_STRING = "BACK";
 

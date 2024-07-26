@@ -1,6 +1,5 @@
 package lobby;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import lobby.game.list.GameList;
 import okhttp3.HttpUrl;
@@ -16,8 +15,8 @@ public class LobbyController {
     private static final String GAME_LIST_URL = ClientConstants.BASE_URL + ClientConstants.GAME_LIST_RESOURCE_URI;
 
     // At the server, only_actives takes priority over with_actives.
-    private static final String ACTIVE_ONLY_QUERY_NAME = "only-actives";
-    private static final String ACTIVE_INCLUDE_QUERY_NAME = "with-actives";
+    private static final String ACTIVE_ONLY_PARAMETER_NAME = "only-actives";
+    private static final String ACTIVE_INCLUDE_PARAMETER_NAME = "with-actives";
 
     @NotNull
     public static GameList getGameListOnlyPending() throws Exception {
@@ -39,8 +38,8 @@ public class LobbyController {
         // If activeOnly is set, retrieve game list with only active games. Otherwise, include pending games.
         // If activeIncluded is set, active games are included in the list. Otherwise, only pending games will be retrieved.
         final HttpUrl finalUrl = Objects.requireNonNull(HttpUrl.parse(GAME_LIST_URL)).newBuilder()
-                .addQueryParameter(ACTIVE_ONLY_QUERY_NAME, String.valueOf(activeOnly))
-                .addQueryParameter(ACTIVE_INCLUDE_QUERY_NAME, String.valueOf(activeIncluded))
+                .addQueryParameter(ACTIVE_ONLY_PARAMETER_NAME, String.valueOf(activeOnly))
+                .addQueryParameter(ACTIVE_INCLUDE_PARAMETER_NAME, String.valueOf(activeIncluded))
                 .build();
         final Request req = new Request.Builder().get().url(finalUrl).build();
         final String jsonBody = ClientHttpClientUtils.sendRequestSync(req);

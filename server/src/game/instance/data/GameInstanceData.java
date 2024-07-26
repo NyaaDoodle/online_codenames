@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 public class GameInstanceData {
+    // TODO RECOPY TO CLIENT_COMMONS
     private final GameStructure gameStructure;
     private final List<WordCardData> wordCards;
     private final Map<String, Integer> teamNameToScore;
     private final TurnOrder turnOrder;
     private final Hint currentHint;
     private final boolean hasGameEnded;
+    private final int guessesLeft;
     private final List<Pair<Team, EndPlayCause>> winOrder;
 
     public GameInstanceData(final GameInstance gameInstance) {
@@ -24,6 +26,7 @@ public class GameInstanceData {
         turnOrder = gameInstance.getTurnOrder();
         currentHint = gameInstance.getCurrentHint();
         hasGameEnded = gameInstance.hasGameEnded();
+        guessesLeft = gameInstance.getGuessesLeft();
         winOrder = gameInstance.getWinOrder();
     }
 
@@ -51,6 +54,10 @@ public class GameInstanceData {
         return hasGameEnded;
     }
 
+    public int getGuessesLeft() {
+        return guessesLeft;
+    }
+
     public List<Pair<Team, EndPlayCause>> getWinOrder() {
         return winOrder;
     }
@@ -73,5 +80,17 @@ public class GameInstanceData {
 
     public Integer getTeamScore(final String teamName) {
         return teamNameToScore.get(teamName);
+    }
+
+    public void censorWordCards() {
+        // Every card that hasn't been revealed, becomes a neutral card.
+        // This is to prevent guessers to get the full board just by looking at the JSON response using Postman or something.
+        final Team NEUTRAL_TEAM = new Team();
+        for (int i = 0; i < wordCards.size(); i++) {
+            final WordCardData originalCard = wordCards.get(i);
+            if (!originalCard.isFound()) {
+                wordCards.add(i, new WordCardData(new WordCard(originalCard.getWord(), NEUTRAL_TEAM, false)));
+            }
+        }
     }
 }
