@@ -1,61 +1,64 @@
 package game.room;
 
-import game.instance.GameInstanceData;
+import game.data.GameData;
 import lobby.game.list.GameListingData;
+import okhttp3.Request;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import ui.ClientUIElements;
+import utils.constants.ClientConstants;
+import utils.http.ClientHttpClientUtils;
+import utils.json.ClientJSONUtils;
 
-public class ClientGameRoom {
-    private GameListingData gameListingData;
-    private GameInstanceData gameInstanceData;
-    private PlayerState playerState;
+public abstract class ClientGameRoom {
+    private GameData gameData;
+    private final PlayerState playerState;
     private boolean gameEnded = false;
 
-    public ClientGameRoom(@NotNull final GameListingData gameListingData) {
-        this.gameListingData = gameListingData;
-        this.gameInstanceData = null;
+    public ClientGameRoom(@NotNull final GameListingData gameListingData, @NotNull PlayerState playerState) {
+        this.gameData = new GameData(gameListingData, null);
+        this.playerState = playerState;
+    }
+
+    public GameData getGameData() {
+        return gameData;
+    }
+
+    public PlayerState getPlayerState() {
+        return playerState;
+    }
+
+    public boolean hasGameEnded() {
+        return gameEnded;
+    }
+
+    public void setGameEnded() {
+        this.gameEnded = true;
     }
 
     public void goToGameRoom() {
+        gameRoomGreeter(playerState.getGame());
         while (!gameEnded) {
-            hasGameEnded();
+            printGameRoomMenu();
+            gameRoomMenuSelection();
         }
     }
 
-    @NotNull
-    private GameListingData getGameListingData() {
-        return gameListingData;
-    }
-
-    @Nullable
-    private GameInstanceData getGameInstanceData() {
-        return gameInstanceData;
-    }
-
-    private void updateGameData() {
+    public void updateGameData() {
         // TODO fetch game data from GET game servlet request
-
-    }
-
-    @NotNull
-    private String getGameName() {
-        return gameListingData.getName();
-    }
-
-    private boolean hasGameEnded() {
-        // TODO that's not what it's supposed to do.........
-        gameEnded = true;
-        return true;
+        final String finalUrl = ClientConstants.BASE_URL + ClientConstants.GAME_RESOURCE_URI;
+        final Request req = new Request.Builder().get().url(finalUrl).build();
+        try {
+            final String jsonBody = ClientHttpClientUtils.sendRequestSync(req);
+            gameData = ClientJSONUtils.fromJson(jsonBody, GameData.class);
+        } catch (Exception e) {
+            ClientUIElements.unexpectedExceptionMessage(e);
+        }
     }
 
     private static void gameRoomGreeter(final String gameName) {
         System.out.println("Successfully joined game \"" + gameName +"\"!");
     }
 
-    private static void printGameRoomMenu() {
-        System.out.println("Select an option:");
-        System.out.println("(1) Retrieve current game status");
-        System.out.println("(2) Perform a move");
-    }
-
+    abstract protected void printGameRoomMenu();
+    abstract protected void gameRoomMenuSelection();
 }

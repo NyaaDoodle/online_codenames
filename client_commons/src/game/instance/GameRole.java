@@ -1,4 +1,4 @@
-package game.join;
+package game.instance;
 
 public enum GameRole {
     GUESSER,

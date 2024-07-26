@@ -1,5 +1,6 @@
 package game.join;
 
+import game.instance.GameRole;
 import game.structure.Team;
 import lobby.game.list.GameListingData;
 

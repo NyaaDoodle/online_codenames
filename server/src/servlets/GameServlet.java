@@ -1,6 +1,7 @@
 package servlets;
 
 import game.data.GameData;
+import game.instance.data.GameInstanceData;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

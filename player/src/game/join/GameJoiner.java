@@ -1,7 +1,9 @@
 package game.join;
 
 import exceptions.JoinGameException;
+import game.instance.GameRole;
 import game.room.GameRoom;
+import game.room.PlayerState;
 import game.structure.Team;
 import input.InputController;
 import lobby.LobbyController;
@@ -43,8 +45,9 @@ public class GameJoiner {
         Team selectedTeam;
         GameRole selectedRole;
         JoinerMenuState menuState = JoinerMenuState.GAME;
-        TempPlayerState playerState = new TempPlayerState();
-
+        TempPlayerState tempPlayerState = new TempPlayerState();
+        PlayerState playerState = null;
+        // TODO refactor this mess...
         while (!joinedGame && !exitedMenu) {
             switch (menuState) {
                 case GAME:
@@ -53,23 +56,23 @@ public class GameJoiner {
                     input = getInput(gameList.getGameAmount());
                     if (input == Constants.GO_BACK_NUM) { menuState = JoinerMenuState.EXIT; }
                     else {
-                        playerState.setSelectedGame(gameList.getGameList().get(input - 1));
+                        tempPlayerState.setSelectedGame(gameList.getGameList().get(input - 1));
                         menuState = JoinerMenuState.TEAM;
                     }
                     break;
 
                 case TEAM:
                     selectTeamMessage();
-                    printTeamList(playerState.getSelectedGame(), true);
-                    input = getInput(playerState.getSelectedGame().getTeams().size());
+                    printTeamList(tempPlayerState.getSelectedGame(), true);
+                    input = getInput(tempPlayerState.getSelectedGame().getTeams().size());
                     if (input == Constants.GO_BACK_NUM) { menuState = JoinerMenuState.GAME; }
                     else {
-                        selectedTeam = playerState.getSelectedGame().getTeams().get(input - 1);
-                        if (checkTeamFull(playerState.getSelectedGame(), selectedTeam)) {
+                        selectedTeam = tempPlayerState.getSelectedGame().getTeams().get(input - 1);
+                        if (checkTeamFull(tempPlayerState.getSelectedGame(), selectedTeam)) {
                             selectedTeamIsFullMessage();
                         }
                         else {
-                            playerState.setSelectedTeam(selectedTeam);
+                            tempPlayerState.setSelectedTeam(selectedTeam);
                             menuState = JoinerMenuState.ROLE;
                         }
                     }
@@ -77,19 +80,20 @@ public class GameJoiner {
 
                 case ROLE:
                     selectRoleMessage();
-                    printRoles(playerState.getSelectedGame(), playerState.getSelectedTeam(), true);
+                    printRoles(tempPlayerState.getSelectedGame(), tempPlayerState.getSelectedTeam(), true);
                     input = getInput(NUMBER_OF_ROLES);
                     if (input == Constants.GO_BACK_NUM) { menuState = JoinerMenuState.TEAM; }
                     else {
                         selectedRole = (input == DEFINER_OPTION) ? GameRole.DEFINER : GameRole.GUESSER;
-                        if (checkRoleFull(playerState.getSelectedGame(), playerState.getSelectedTeam(), selectedRole)) {
+                        if (checkRoleFull(tempPlayerState.getSelectedGame(), tempPlayerState.getSelectedTeam(), selectedRole)) {
                             selectedRoleIsFullMessage();
                         }
                         else {
-                            playerState.setSelectedRole(input == 1 ? GameRole.DEFINER : GameRole.GUESSER);
+                            tempPlayerState.setSelectedRole(input == 1 ? GameRole.DEFINER : GameRole.GUESSER);
                             try {
-                                sendSelectionRequest(new PlayerState(playerState.getGameName(), playerState.getTeamName(),
-                                        playerState.getSelectedRole()));
+                                playerState = new PlayerState(tempPlayerState.getGameName(), tempPlayerState.getTeamName(),
+                                        tempPlayerState.getSelectedRole());
+                                sendSelectionRequest(playerState);
                                 joinedGame = true;
                             } catch (JoinGameException e) {
                                 menuState = handleException(e);
@@ -113,8 +117,7 @@ public class GameJoiner {
             }
         }
         if (joinedGame) {
-            // TODO goto GameRoom
-            GameRoom gameRoom = new GameRoom(gameList.getGameListing(playerState.getGameName()));
+            GameRoom gameRoom = new GameRoom(gameList.getGameListing(tempPlayerState.getGameName()), playerState);
             gameRoom.goToGameRoom();
         }
     }

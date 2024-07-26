@@ -1,5 +1,6 @@
 package game.instance;
 
+import game.instance.data.WordCardData;
 import game.structure.GameStructure;
 import game.structure.Team;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,19 @@ public class GameWordCards {
     }
 
     @NotNull
-    public List<WordCard> getWordCardList() { return Collections.unmodifiableList(wordCards); }
+    public List<WordCardData> getWordCardList() {
+        final List<WordCardData> wordCardData = new ArrayList<>();
+        wordCards.forEach(wordCard -> wordCardData.add(new WordCardData(wordCard)));
+        return wordCardData;
+    }
+
+    public void setFoundCard(final int cardIndex) {
+        wordCards.get(cardIndex).setFound();
+    }
+
+    public WordCardData getWordCardData(final int cardIndex) {
+        return new WordCardData(wordCards.get(cardIndex));
+    }
 
     @NotNull
     private List<WordCard> makeWordCards(final Set<String> wordBank, final List<Team> teams, final int gameCardsCount, final int blackCardsCount) {
@@ -36,9 +49,6 @@ public class GameWordCards {
         drawnGameWords.stream().skip(skipCount).forEach((word) -> wordCardList.add(new WordCard(word, NEUTRAL_TEAM, false)));
         drawnBlackWords.forEach((word) -> wordCardList.add(new WordCard(word, NEUTRAL_TEAM, true)));
         Collections.shuffle(wordCardList);
-        for (int i = 0; i < wordCardList.size(); i++) {
-            wordCardList.get(i).setIndex(i);
-        }
         return wordCardList;
     }
 

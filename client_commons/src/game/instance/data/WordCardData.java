@@ -1,17 +1,18 @@
-package game.instance;
+package game.instance.data;
 
 import game.structure.Team;
 
-public class WordCard {
+public class WordCardData {
     private final String word;
     private final Team team;
     private final boolean isBlackWord;
-    private boolean found = false;
+    private final boolean found;
 
-    public WordCard(String word, Team team, boolean isBlackWord) {
+    public WordCardData(String word, Team team, boolean isBlackWord, boolean found) {
         this.word = word;
         this.team = team;
         this.isBlackWord = isBlackWord;
+        this.found = found;
     }
 
     public String getWord() {
@@ -22,13 +23,11 @@ public class WordCard {
         return team;
     }
 
-    public boolean isBlackWord() { return isBlackWord; }
+    public boolean isBlackWord() {
+        return isBlackWord;
+    }
 
     public boolean isFound() {
         return found;
-    }
-
-    public void setFound() {
-        this.found = true;
     }
 }

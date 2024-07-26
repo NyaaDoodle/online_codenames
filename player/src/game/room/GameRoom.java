@@ -1,10 +1,27 @@
 package game.room;
 
+import input.InputController;
 import lobby.game.list.GameListingData;
 import org.jetbrains.annotations.NotNull;
 
 public class GameRoom extends ClientGameRoom {
-    public GameRoom(@NotNull GameListingData gameListingData) {
-        super(gameListingData);
+    public GameRoom(@NotNull GameListingData gameListingData, @NotNull PlayerState playerState) {
+        super(gameListingData, playerState);
+    }
+
+    public void makeMove() {
+
+    }
+
+    @Override
+    protected void printGameRoomMenu() {
+        System.out.println("Select an option:");
+        System.out.println("(1) Retrieve current game status");
+        System.out.println("(2) Perform a move");
+    }
+
+    @Override
+    protected void gameRoomMenuSelection() {
+        InputController.gameRoomMenuSelection();
     }
 }

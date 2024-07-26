@@ -1,8 +1,8 @@
 package game.instance;
 
+import game.instance.data.WordCardData;
 import game.structure.GameStructure;
 import game.structure.Team;
-import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -39,7 +39,7 @@ public class GameInstance {
         this.currentHint = hint;
     }
 
-    public List<WordCard> getWordCards() {
+    public List<WordCardData> getWordCards() {
         return wordCards.getWordCardList();
     }
 
@@ -60,13 +60,12 @@ public class GameInstance {
     }
 
     public MoveEvent makeMove(final int wordIndex) {
-        final WordCard selectedWord = getWordCards().get(wordIndex);
+        final WordCardData selectedWord = wordCards.getWordCardData(wordIndex);
         final Team cardTeam = selectedWord.getTeam();
         final Team selectingTeam = turnOrder.getCurrentTurn();
         boolean isNeutralCard = false;
         boolean isBlackCard = false;
-        // TODO Tell the list to update, not the wordcard
-        selectedWord.setFound(true);
+        wordCards.setFoundCard(wordIndex);
         if (gameStructure.getTeams().contains(cardTeam) && isTeamInPlay(cardTeam)) {
             addPointToTeam(cardTeam);
             checkIfTeamWon(cardTeam);

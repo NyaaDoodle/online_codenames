@@ -1,7 +1,6 @@
 package game.instance;
 
 import game.structure.Team;
-import javafx.util.Pair;
 import org.jetbrains.annotations.NotNull;
 import utils.constants.Constants;
 

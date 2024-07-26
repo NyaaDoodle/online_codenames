@@ -1,5 +1,7 @@
 package game.room;
 
+import game.instance.GameRole;
+
 public class PlayerState {
     private final String game;
     private final String team;
