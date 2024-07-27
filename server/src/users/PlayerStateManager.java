@@ -34,4 +34,13 @@ public class PlayerStateManager {
             }
         });
     }
+
+    public synchronized void nullifyPlayerStateByteam(final String teamName) {
+        playerStateMap.keySet().forEach(user -> {
+            final PlayerState playerState = playerStateMap.get(user);
+            if (playerState != null && playerState.getTeam().equals(teamName)) {
+                nullifyPlayerState(user);
+            }
+        });
+    }
 }

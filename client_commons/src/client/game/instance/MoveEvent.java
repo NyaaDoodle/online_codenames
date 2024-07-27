@@ -3,6 +3,11 @@ package client.game.instance;
 import client.game.structure.Team;
 import client.utils.constants.ClientConstants;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 public class MoveEvent {
     private String word;
     private int index;
@@ -12,20 +17,19 @@ public class MoveEvent {
     private boolean isNeutralCard;
     private boolean isBlackCard;
 
-    private boolean didSelectingTeamLeavePlay;
-    private EndPlayCause endPlayCause;
-    private int winPosition;
+    private Map<String, TeamLeftEntry> teamsThatLeftPlay;
 
-    public MoveEvent(final String word, final int index, final Team cardTeam, final Team selectingTeam) {
+    private boolean hasGameEnded;
+
+    public MoveEvent(String word, int index, Team cardTeam, Team selectingTeam, boolean isNeutralCard, boolean isBlackCard, Map<String, TeamLeftEntry> teamsThatLeftPlay, boolean hasGameEnded) {
         this.word = word;
         this.index = index;
         this.cardTeam = cardTeam;
         this.selectingTeam = selectingTeam;
-        this.isNeutralCard = false;
-        this.isBlackCard = false;
-        didSelectingTeamLeavePlay = false;
-        endPlayCause= null;
-        winPosition = ClientConstants.ERROR_NUM;
+        this.isNeutralCard = isNeutralCard;
+        this.isBlackCard = isBlackCard;
+        this.teamsThatLeftPlay = teamsThatLeftPlay;
+        this.hasGameEnded = hasGameEnded;
     }
 
     public String getWord() {
@@ -76,31 +80,19 @@ public class MoveEvent {
         isBlackCard = blackCard;
     }
 
-    public boolean isDidSelectingTeamLeavePlay() {
-        return didSelectingTeamLeavePlay;
+    public Map<String, TeamLeftEntry> getTeamsThatLeftPlay() {
+        return teamsThatLeftPlay;
     }
 
-    public void setDidSelectingTeamLeavePlay(boolean didSelectingTeamLeavePlay) {
-        this.didSelectingTeamLeavePlay = didSelectingTeamLeavePlay;
+    public void setTeamsThatLeftPlay(Map<String, TeamLeftEntry> teamsThatLeftPlay) {
+        this.teamsThatLeftPlay = teamsThatLeftPlay;
     }
 
-    public EndPlayCause getEndPlayCause() {
-        return endPlayCause;
+    public boolean isHasGameEnded() {
+        return hasGameEnded;
     }
 
-    public void setEndPlayCause(EndPlayCause endPlayCause) {
-        this.endPlayCause = endPlayCause;
-    }
-
-    public int getWinPosition() {
-        return winPosition;
-    }
-
-    public void setWinPosition(int winPosition) {
-        this.winPosition = winPosition;
-    }
-
-    public boolean wasItMyTeam() {
-        return cardTeam.equals(selectingTeam);
+    public void setHasGameEnded(boolean hasGameEnded) {
+        this.hasGameEnded = hasGameEnded;
     }
 }

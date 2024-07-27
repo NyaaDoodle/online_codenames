@@ -132,7 +132,7 @@ public class ClientUIElements {
         }
     }
 
-    private static void printBoard(@NotNull final GameInstanceData gameInstanceData, @NotNull final GameRole gameRole) {
+    public static void printBoard(@NotNull final GameInstanceData gameInstanceData, @NotNull final GameRole gameRole) {
         final GameStructure gameStructure = gameInstanceData.getGameStructure();
         final Board board = gameStructure.getBoard();
         final int boardRows = board.getRows();

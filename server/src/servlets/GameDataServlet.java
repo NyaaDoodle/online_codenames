@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
 import lobby.game.list.GameListingData;
+import okhttp3.internal.ws.RealWebSocket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import users.PlayerStateManager;
@@ -27,8 +28,9 @@ public class GameDataServlet extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
         if (ServletUtils.isUserLoggedIn(req, getServletContext())) {
+            final String username = SessionUtils.getUsername(req);
             final PlayerStateManager playerStateManager = ServletUtils.getPlayerStateManager(getServletContext());
-            final PlayerState playerState = playerStateManager.getPlayerState(SessionUtils.getUsername(req));
+            final PlayerState playerState = playerStateManager.getPlayerState(username);
             if (playerState != null) {
                 final GameListingData gameListingData = ServletUtils.getLobbyManager(getServletContext()).getGameListing(playerState.getGame());
                 if (gameListingData != null) {
@@ -42,7 +44,7 @@ public class GameDataServlet extends HttpServlet {
                 }
             }
             else {
-                ResponseUtils.sendUnauthorized(res);
+                ResponseUtils.sendNoPlayerStatusError(res);
             }
         }
         else {

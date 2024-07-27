@@ -18,7 +18,7 @@ public class InputController extends ClientInputController {
     private static final int OPTIONS_IN_MAIN_MENU = 3;
     private static final Set<Integer> INTEGERS_FOR_MAIN_MENU
             = OtherUtils.makeSetFromOneToN(OPTIONS_IN_MAIN_MENU);
-    private static final int OPTIONS_IN_GAME_ROOM_MENU = 2;
+    private static final int OPTIONS_IN_GAME_ROOM_MENU = 3;
     private static final Set<Integer> INTEGERS_FOR_GAME_ROOM_MENU
             = OtherUtils.makeSetFromOneToN(OPTIONS_IN_GAME_ROOM_MENU);
 
@@ -42,6 +42,7 @@ public class InputController extends ClientInputController {
         switch (input) {
             case 1:
                 gameRoom.updateGameData();
+                UIElements.printGameData(gameRoom.getGameData(), gameRoom.getPlayerState().getRole());
                 break;
             case 2:
                 gameRoom.makeMove();
@@ -63,5 +64,10 @@ public class InputController extends ClientInputController {
             }
         }
         return input;
+    }
+
+    @NotNull
+    public static String getStringTrimmed() {
+        return SCANNER.nextLine().trim();
     }
 }

@@ -4,10 +4,13 @@ import application.AdminApplication;
 import application.GameAdder;
 import application.GameSpectator;
 import client.input.ClientInputController;
+import client.lobby.game.list.GameListingData;
 import exceptions.UnsupportedFileTypeException;
 import client.lobby.game.list.GameList;
+import game.room.GameRoom;
 import org.jetbrains.annotations.NotNull;
 import ui.UIElements;
+import utils.OtherUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,6 +24,9 @@ public class InputController extends ClientInputController {
     private static final int OPTIONS_IN_MAIN_MENU = 4;
     private static final Set<Integer> INTEGERS_FOR_MAIN_MENU
             = IntStream.rangeClosed(1, OPTIONS_IN_MAIN_MENU).boxed().collect(Collectors.toSet());
+    private static final int OPTIONS_IN_GAME_ROOM_MENU = 2;
+    private static final Set<Integer> INTEGERS_FOR_GAME_ROOM_MENU
+            = OtherUtils.makeSetFromOneToN(OPTIONS_IN_GAME_ROOM_MENU);
 
     public static void mainMenuSelection() {
         int input = intMenuInput(INTEGERS_FOR_MAIN_MENU);
@@ -41,11 +47,29 @@ public class InputController extends ClientInputController {
         }
     }
 
-    public static String spectateGameSelection(final GameList gameList) {
-        final Set<Integer> integersForGameSelection = IntStream.rangeClosed(1, gameList.getGameAmount())
-                .boxed().collect(Collectors.toSet());
+    public static void gameRoomMenuSelection(final GameRoom gameRoom) {
+        int input = intMenuInput(INTEGERS_FOR_GAME_ROOM_MENU);
+        switch (input) {
+            case 1:
+                gameRoom.updateGameData();
+                if (gameRoom.getGameData().getGameListingData().isGameActive()) {
+                    UIElements.printGameData(gameRoom.getGameData(), gameRoom.getPlayerState().getRole());
+                }
+                else {
+                    System.out.println("The game has ended and has returned to pending status. Exiting game room.");
+                    gameRoom.setGameEnded();
+                }
+                break;
+            case 2:
+                gameRoom.exitGame();
+                break;
+        }
+    }
+
+    public static GameListingData spectateGameSelection(final GameList gameList) {
+        final Set<Integer> integersForGameSelection = OtherUtils.makeSetFromOneToN(gameList.getGameAmount());
         int input = intMenuInput(integersForGameSelection);
-        return gameList.getGameList().get(input - 1).getName();
+        return gameList.getGameList().get(input - 1);
     }
 
     @NotNull

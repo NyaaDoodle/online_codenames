@@ -86,4 +86,8 @@ public class GameInstanceData {
     public Integer getTurnCountByTeam(final String teamName) {
         return turnOrder.getTurnCountByTeam(teamName);
     }
+
+    public boolean isCardFound(final int cardIndex) {
+        return wordCards.get(cardIndex).isFound();
+    }
 }

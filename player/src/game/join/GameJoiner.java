@@ -1,6 +1,6 @@
 package game.join;
 
-import exceptions.JoinGameException;
+import client.exceptions.JoinGameException;
 import client.game.instance.GameRole;
 import game.room.GameRoom;
 import client.game.room.PlayerState;

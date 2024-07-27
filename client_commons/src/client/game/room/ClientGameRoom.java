@@ -1,5 +1,6 @@
 package client.game.room;
 
+import client.exceptions.NoPlayerStatusAtServerException;
 import client.game.data.GameData;
 import client.lobby.game.list.GameListingData;
 import client.utils.constants.ClientConstants;
@@ -14,7 +15,7 @@ public abstract class ClientGameRoom {
     private final PlayerState playerState;
     private boolean gameEnded = false;
 
-    public ClientGameRoom(@NotNull final GameListingData gameListingData, @NotNull PlayerState playerState) {
+    public ClientGameRoom(@NotNull final GameListingData gameListingData, @NotNull final PlayerState playerState) {
         this.gameData = new GameData(gameListingData, null);
         this.playerState = playerState;
     }
@@ -41,23 +42,29 @@ public abstract class ClientGameRoom {
             printGameRoomMenu();
             gameRoomMenuSelection();
         }
+        leftGameRoomMessage();
     }
 
     public void updateGameData() {
-        // TODO fetch game data from GET game servlet request
         final String finalUrl = ClientConstants.BASE_URL + ClientConstants.GAME_DATA_RESOURCE_URI;
         final Request req = new Request.Builder().get().url(finalUrl).build();
         try {
-            final String jsonBody = ClientHttpClientUtils.sendRequestSync(req);
+            final String jsonBody = ClientHttpClientUtils.sendGameRequest(req);
             gameData = ClientJSONUtils.fromJson(jsonBody, GameData.class);
-            ClientUIElements.printGameData(gameData, playerState.getRole());
+        } catch (NoPlayerStatusAtServerException e) {
+            System.out.println(e.getMessage());
+            setGameEnded();
         } catch (Exception e) {
-            ClientUIElements.unexpectedExceptionMessage(e);
+            System.out.println(e.getMessage());
         }
     }
 
     private static void gameRoomGreeter(final String gameName) {
         System.out.println("Successfully joined game \"" + gameName +"\"!");
+    }
+
+    private static void leftGameRoomMessage() {
+        System.out.println("You have left the game room.");
     }
 
     abstract protected void printGameRoomMenu();

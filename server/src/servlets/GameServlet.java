@@ -5,6 +5,7 @@ import game.instance.Hint;
 import game.instance.MoveEvent;
 import game.instance.data.GameInstanceData;
 import game.structure.Team;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,11 +26,11 @@ import java.io.IOException;
 public class GameServlet extends HttpServlet {
     private static final String HINT_WORDS_PARAMETER_NAME = "hint-words";
     private static final String GUESSES_COUNT_PARAMETER_NAME = "number";
-    private static final String CARD_INDEX_PARAMETER_NAME = "card-index";
+    private static final String CARD_NUMBER_PARAMETER_NAME = "card-number";
     private static final String QUIT_GUESSING = "END";
 
     @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
+    protected void doGet(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
         String message;
         if (ServletUtils.isUserLoggedIn(req, getServletContext())) {
             final String username = SessionUtils.getUsername(req);
@@ -54,35 +55,36 @@ public class GameServlet extends HttpServlet {
                                             res.setStatus(HttpServletResponse.SC_OK);
                                             break;
                                         case GUESSER:
-                                            final int cardIndex = parseCardIndexFromBody(req);
+                                            final int cardIndex = parseCardNumberFromBody(req, gameInstanceData);
                                             if (cardIndex == Constants.QUIT_NUM) {
                                                 gameEngine.endTurnAtGame(gameName);
                                                 res.setStatus(HttpServletResponse.SC_OK);
                                             } else {
-                                                if (isIndexInBounds(cardIndex, gameInstanceData)) {
+                                                if (!gameEngine.isCardFoundAtGame(gameName, cardIndex)) {
                                                     if (gameInstanceData.getGuessesLeft() > 0) {
                                                         final MoveEvent moveEvent = gameEngine.makeMoveAtGame(gameName, cardIndex);
                                                         if (moveEvent != null) {
                                                             if (gameEngine.hasGameEnded(gameName)) {
                                                                 endGame(gameName, gameEngine, lobbyManager, playerStateManager);
+                                                            } else if (!moveEvent.getTeamsThatLeftPlay().isEmpty()) {
+                                                                moveEvent.getTeamsThatLeftPlay().forEach(team -> playerStateManager.nullifyPlayerStateByteam(team.getName()));
                                                             }
                                                             sendMoveEvent(res, moveEvent);
                                                         } else {
-                                                            ResponseUtils.sendPlainTextConflict(res, "The performed move was illegal - guesses have run out.");
+                                                            throw new ServletException("The performed move was illegal - moveEvent was null");
                                                         }
                                                     } else {
                                                         message = "Your team has run out of guesses. The turn has moved on to the next team.";
                                                         ResponseUtils.sendPlainTextConflict(res, message);
                                                     }
                                                 } else {
-                                                    message = "The card index specified is out of bounds. Please select a number between 1 and "
-                                                            + gameInstanceData.getWordCards().size();
-                                                    ResponseUtils.sendPlainTextBadRequest(res, message);
+                                                    message = "This card has already been found. Select a different card.";
+                                                    ResponseUtils.sendPlainTextConflict(res, message);
                                                 }
                                             }
                                             break;
                                     }
-                                } catch (IOException e) {
+                                } catch (ServletException | IOException e) {
                                     throw e;
                                 } catch (Exception e) {
                                     ResponseUtils.sendPlainTextBadRequest(res, e.getMessage());
@@ -92,7 +94,7 @@ public class GameServlet extends HttpServlet {
                                 ResponseUtils.sendPlainTextConflict(res, message);
                             }
                         } else {
-                            message = "It is not team \"" + playerState.getTeam() + "\"'s turn yet or it has ended. Current team: \"" + currentTeam.getName() + "\"";
+                            message = "It is not your team's turn yet or it has ended. Current team: \"" + currentTeam.getName() + "\"";
                             ResponseUtils.sendPlainTextConflict(res, message);
                         }
                     } else {
@@ -100,7 +102,7 @@ public class GameServlet extends HttpServlet {
                         ResponseUtils.sendPlainTextConflict(res, message);
                     }
                 } else {
-                    ResponseUtils.sendUnauthorized(res);
+                    ResponseUtils.sendNoPlayerStatusError(res);
                 }
             }
         }
@@ -121,14 +123,21 @@ public class GameServlet extends HttpServlet {
         return new Hint(hintWords, number);
     }
 
-    private int parseCardIndexFromBody(final HttpServletRequest req) throws Exception {
-        final String cardIndexRaw = req.getParameter(CARD_INDEX_PARAMETER_NAME);
-        if (cardIndexRaw.equals(QUIT_GUESSING)) {
+    private int parseCardNumberFromBody(final HttpServletRequest req, final GameInstanceData gameInstanceData) throws Exception {
+        final String cardNumberRaw = req.getParameter(CARD_NUMBER_PARAMETER_NAME);
+        if (cardNumberRaw.equals(QUIT_GUESSING)) {
             return Constants.QUIT_NUM;
         }
         else {
             try {
-                return Integer.parseInt(cardIndexRaw) - 1;
+                final int index = Integer.parseInt(cardNumberRaw) - 1;
+                if (isIndexInBounds(index, gameInstanceData)) {
+                    return index;
+                }
+                else {
+                    throw new Exception("The card index specified is out of bounds. Please select a number between 1 and "
+                            + gameInstanceData.getWordCards().size());
+                }
             } catch (NumberFormatException e) {
                 throw new Exception("The card index input specified was not a number.");
             }

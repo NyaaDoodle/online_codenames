@@ -1,4 +1,4 @@
-package exceptions;
+package client.exceptions;
 
 public class JoinGameException extends Exception {
     private final String errorType;

@@ -64,6 +64,11 @@ public class GameEngine {
 
     public boolean hasGameEnded(@NotNull final String gameName) {
         final GameInstance gameInstance = gameInstances.get(gameName);
-        return (gameInstance != null) && gameInstance.hasGameEnded();
+        return (gameInstance != null) && (gameInstance.hasGameEnded());
+    }
+
+    public boolean isCardFoundAtGame(@NotNull final String gameName, final int cardIndex) {
+        final GameInstance gameInstance = gameInstances.get(gameName);
+        return (gameInstance != null) && (gameInstance.isCardFound(cardIndex));
     }
 }

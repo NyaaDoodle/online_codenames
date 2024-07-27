@@ -12,6 +12,7 @@ import lobby.LobbyManager;
 import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
 import lobby.game.list.GameListingData;
+import org.jetbrains.annotations.NotNull;
 import users.PlayerStateManager;
 import utils.LogUtils;
 import utils.ResponseUtils;
@@ -38,16 +39,24 @@ public class JoinGameServlet extends HttpServlet {
             try {
                 synchronized (this) {
                     final String username = SessionUtils.getUsername(req);
+                    assert username != null;
                     final PlayerStateManager playerStateManager = ServletUtils.getPlayerStateManager(getServletContext());
                     checkIfUserInAGame(username, playerStateManager);
                     final PlayerState playerState = JSONUtils.fromJson(ServletUtils.getRequestBody(req), PlayerState.class);
                     final LobbyManager lobbyManager = ServletUtils.getLobbyManager(getServletContext());
-                    checkJoinRequestAvailability(playerState, lobbyManager);
-                    LogUtils.logToConsole("Adding user \"" + SessionUtils.getUsername(req) + "\" to game \"" + playerState.getGame() + "\""
-                    + " in team \"" + playerState.getTeam() + "\" as a " + (playerState.getRole().equals(GameRole.DEFINER) ? "definer" : "guesser"));
-                    joinGame(playerState, username, lobbyManager, playerStateManager);
-                    checkIfGameIsFull(playerState.getGame(), lobbyManager);
-                    res.setStatus(HttpServletResponse.SC_OK);
+                    final boolean isAdmin = Constants.ADMIN_USERNAMES.contains(username);
+                    if (isAdmin) {
+                        logToConsole(username, playerState);
+                        joinGameAsAdmin(playerState, username, playerStateManager);
+                        res.setStatus(HttpServletResponse.SC_OK);
+                    }
+                    else {
+                        checkJoinRequestAvailability(playerState, lobbyManager);
+                        logToConsole(username, playerState);
+                        joinGame(playerState, username, lobbyManager, playerStateManager);
+                        checkIfGameIsFull(playerState.getGame(), lobbyManager);
+                        res.setStatus(HttpServletResponse.SC_OK);
+                    }
                 }
             } catch (JoinGameException e) {
                 ResponseUtils.sendJoinGameError(res, e);
@@ -122,6 +131,10 @@ public class JoinGameServlet extends HttpServlet {
         playerStateManager.setPlayerState(username, playerState);
     }
 
+    private void joinGameAsAdmin(final PlayerState playerState, final String username, final PlayerStateManager playerStateManager) {
+        playerStateManager.setPlayerState(username, playerState);
+    }
+
     private void checkIfGameIsFull(final String gameName, final LobbyManager lobbyManager) {
         if (lobbyManager.isGameActive(gameName)) {
             tellToCreateGameInstance(Objects.requireNonNull(lobbyManager.getGameListing(gameName)));
@@ -132,5 +145,10 @@ public class JoinGameServlet extends HttpServlet {
         final GameEngine gameEngine = ServletUtils.getGameEngine(getServletContext());
         LogUtils.logToConsole("Creating game instance of \"" + game.getName() + "\"");
         gameEngine.addGame(game);
+    }
+
+    private void logToConsole(@NotNull final String username, @NotNull final PlayerState playerState) {
+        LogUtils.logToConsole("Adding user \"" + username + "\" to game \"" + playerState.getGame() + "\""
+                + " in team \"" + playerState.getTeam() + "\" as a " + (playerState.getRole().equals(GameRole.DEFINER) ? "definer" : "guesser"));
     }
 }

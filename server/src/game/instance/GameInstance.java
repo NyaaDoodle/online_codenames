@@ -70,8 +70,12 @@ public class GameInstance {
         this.guessesLeft = guessesCount;
     }
 
+    public boolean isCardFound(final int cardIndex) {
+        return wordCards.getWordCardData(cardIndex).isFound();
+    }
+
     public MoveEvent makeMove(final int wordIndex) {
-        if (guessesLeft > 0) {
+        if (guessesLeft > 0 && !isCardFound(wordIndex)) {
             final WordCardData selectedWord = wordCards.getWordCardData(wordIndex);
             final Team cardTeam = selectedWord.getTeam();
             final Team selectingTeam = turnOrder.getCurrentTurn();
@@ -110,18 +114,14 @@ public class GameInstance {
     private void removeWinningTeamFromPlay(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause, @NotNull final MoveEvent moveEvent) {
         winOrder.addWinningTeam(team, endPlayCause);
         turnOrder.removeTeam(team);
-        moveEvent.setDidSelectingTeamLeavePlay(true);
-        moveEvent.setEndPlayCause(endPlayCause);
-        moveEvent.setWinPosition(winOrder.getWinNumberOfTeam(team));
+        moveEvent.addLeavingTeam(team, endPlayCause, winOrder.getWinNumberOfTeam(team));
         checkIfOneTeamLeft(moveEvent);
     }
 
     private void removeLosingTeamFromPlay(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause, @NotNull final MoveEvent moveEvent) {
         winOrder.addLosingTeam(team, endPlayCause);
         turnOrder.removeTeam(team);
-        moveEvent.setDidSelectingTeamLeavePlay(true);
-        moveEvent.setEndPlayCause(endPlayCause);
-        moveEvent.setWinPosition(winOrder.getWinNumberOfTeam(team));
+        moveEvent.addLeavingTeam(team, endPlayCause, winOrder.getWinNumberOfTeam(team));
         checkIfOneTeamLeft(moveEvent);
     }
 
@@ -143,6 +143,7 @@ public class GameInstance {
         if (turnOrder.isOneTeamLeft()) {
             assert turnOrder.getCurrentTurn() != null;
             removeLosingTeamFromPlay(turnOrder.getCurrentTurn(), EndPlayCause.LAST_TEAM_LEFT, moveEvent);
+            moveEvent.setGameEnded();
             hasGameEnded = true;
         }
     }
