@@ -1,14 +1,14 @@
 package game.join;
 
 import exceptions.JoinGameException;
-import game.instance.GameRole;
+import client.game.instance.GameRole;
 import game.room.GameRoom;
-import game.room.PlayerState;
-import game.structure.Team;
+import client.game.room.PlayerState;
+import client.game.structure.Team;
 import input.InputController;
-import lobby.LobbyController;
-import lobby.game.list.GameList;
-import lobby.game.list.GameListingData;
+import client.lobby.LobbyController;
+import client.lobby.game.list.GameList;
+import client.lobby.game.list.GameListingData;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import ui.UIElements;

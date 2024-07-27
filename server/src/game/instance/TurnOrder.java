@@ -10,11 +10,11 @@ public class TurnOrder {
     private final LinkedList<Team> queue;
     private Team currentTurn = null;
     private GameRole currentRole = null;
-    private final Map<Team, Integer> teamToTurnCount = new HashMap<>();
+    private final Map<String, Integer> teamNameToTurnCount = new HashMap<>();
 
     public TurnOrder(@NotNull final LinkedList<Team> turnOrder) {
         this.queue = turnOrder;
-        turnOrder.forEach(team -> teamToTurnCount.put(team, 0));
+        turnOrder.forEach(team -> teamNameToTurnCount.put(team.getName(), 0));
     }
 
     public void moveToNextTurn() {
@@ -22,11 +22,15 @@ public class TurnOrder {
             currentRole = GameRole.GUESSER;
         }
         else {
-            currentTurn = queue.remove();
-            currentRole = GameRole.DEFINER;
-            queue.add(currentTurn);
-            teamToTurnCount.put(currentTurn, teamToTurnCount.get(currentTurn) + 1);
+            moveToNextDefinersTurn();
         }
+    }
+
+    public void moveToNextDefinersTurn() {
+        currentTurn = queue.remove();
+        currentRole = GameRole.DEFINER;
+        queue.add(currentTurn);
+        teamNameToTurnCount.put(currentTurn.getName(), teamNameToTurnCount.get(currentTurn.getName()) + 1);
     }
 
     public Queue<Team> getQueue() {
@@ -45,12 +49,16 @@ public class TurnOrder {
         return queue.element();
     }
 
-    public Map<Team, Integer> getTeamToTurnCount() {
-        return Collections.unmodifiableMap(teamToTurnCount);
+    public Map<String, Integer> getTeamNameToTurnCount() {
+        return Collections.unmodifiableMap(teamNameToTurnCount);
+    }
+
+    public int getTurnCountByTeam(final String teamName) {
+        return teamNameToTurnCount.get(teamName);
     }
 
     public int getTotalTurns() {
-        return teamToTurnCount.values().stream().mapToInt(i -> i).sum();
+        return teamNameToTurnCount.values().stream().mapToInt(i -> i).sum();
     }
 
     public void removeTeam(final Team team) {

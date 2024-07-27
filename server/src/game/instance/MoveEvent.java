@@ -8,8 +8,10 @@ public class MoveEvent {
     private int index;
     private Team cardTeam;
     private Team selectingTeam;
+
     private boolean isNeutralCard;
     private boolean isBlackCard;
+
     private boolean didSelectingTeamLeavePlay;
     private EndPlayCause endPlayCause;
     private int winPosition;

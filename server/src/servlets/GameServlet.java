@@ -1,10 +1,8 @@
 package servlets;
 
-import game.data.GameData;
 import game.engine.GameEngine;
 import game.instance.Hint;
 import game.instance.MoveEvent;
-import game.instance.Pair;
 import game.instance.data.GameInstanceData;
 import game.structure.Team;
 import jakarta.servlet.annotation.WebServlet;
@@ -14,9 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lobby.LobbyManager;
 import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
-import lobby.game.list.GameListingData;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import users.PlayerStateManager;
 import utils.ResponseUtils;
 import utils.ServletUtils;
 import utils.SessionUtils;
@@ -34,76 +30,82 @@ public class GameServlet extends HttpServlet {
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
-        // TODO am i allowed to send this?
+        String message;
         if (ServletUtils.isUserLoggedIn(req, getServletContext())) {
-            final PlayerState playerState = SessionUtils.getPlayerState(req);
-            if (playerState != null) {
-                final LobbyManager lobbyManager = ServletUtils.getLobbyManager(getServletContext());
-                if (lobbyManager.isGameActive(playerState.getGame())) {
-                    final GameEngine gameEngine = ServletUtils.getGameEngine(getServletContext());
-                    checkIfOnCorrectTurn(playerState, gameEngine);
-                    if (currentRole.equals(playerState.getRole())) {
-                        try {
-                            switch (playerState.getRole()) {
-                                case DEFINER:
-                                    final Hint hint = parseHintFromBody(req);
-                                    gameEngine.setHintAtGame(playerState.getGame(), hint);
-                                    // TODO is this enough?
-                                    res.setStatus(HttpServletResponse.SC_OK);
-                                    break;
-                                case GUESSER:
-                                    final int cardIndex = parseCardIndexFromBody(req);
-                                    if (cardIndex == Constants.QUIT_NUM) {
-                                        // TODO quit guessing
+            final String username = SessionUtils.getUsername(req);
+            final PlayerStateManager playerStateManager = ServletUtils.getPlayerStateManager(getServletContext());
+            final PlayerState playerState = playerStateManager.getPlayerState(username);
+            synchronized (this) {
+                if (playerState != null) {
+                    final LobbyManager lobbyManager = ServletUtils.getLobbyManager(getServletContext());
+                    if (lobbyManager.isGameActive(playerState.getGame())) {
+                        final GameEngine gameEngine = ServletUtils.getGameEngine(getServletContext());
+                        final String gameName = playerState.getGame();
+                        final GameInstanceData gameInstanceData = gameEngine.getGameInstanceDataFull(gameName);
+                        final Team currentTeam = gameInstanceData.getCurrentTurn();
+                        if (!currentTeam.getName().equals(playerState.getTeam())) {
+                            final GameRole currentRole = gameInstanceData.getCurrentRole();
+                            if (currentRole.equals(playerState.getRole())) {
+                                try {
+                                    switch (playerState.getRole()) {
+                                        case DEFINER:
+                                            final Hint hint = parseHintFromBody(req);
+                                            gameEngine.setHintAtGame(gameName, hint);
+                                            res.setStatus(HttpServletResponse.SC_OK);
+                                            break;
+                                        case GUESSER:
+                                            final int cardIndex = parseCardIndexFromBody(req);
+                                            if (cardIndex == Constants.QUIT_NUM) {
+                                                gameEngine.endTurnAtGame(gameName);
+                                                res.setStatus(HttpServletResponse.SC_OK);
+                                            } else {
+                                                if (isIndexInBounds(cardIndex, gameInstanceData)) {
+                                                    if (gameInstanceData.getGuessesLeft() > 0) {
+                                                        final MoveEvent moveEvent = gameEngine.makeMoveAtGame(gameName, cardIndex);
+                                                        if (moveEvent != null) {
+                                                            if (gameEngine.hasGameEnded(gameName)) {
+                                                                endGame(gameName, gameEngine, lobbyManager, playerStateManager);
+                                                            }
+                                                            sendMoveEvent(res, moveEvent);
+                                                        } else {
+                                                            ResponseUtils.sendPlainTextConflict(res, "The performed move was illegal - guesses have run out.");
+                                                        }
+                                                    } else {
+                                                        message = "Your team has run out of guesses. The turn has moved on to the next team.";
+                                                        ResponseUtils.sendPlainTextConflict(res, message);
+                                                    }
+                                                } else {
+                                                    message = "The card index specified is out of bounds. Please select a number between 1 and "
+                                                            + gameInstanceData.getWordCards().size();
+                                                    ResponseUtils.sendPlainTextBadRequest(res, message);
+                                                }
+                                            }
+                                            break;
                                     }
-                                    else {
-                                        if (isIndexInBounds(cardIndex, gameInstanceData)) {
-                                            final MoveEvent moveEvent = gameEngine.makeMoveAtGame(playerState.getGame(), cardIndex);
-                                            // TODO did the game end, was the moveEvent valid??
-                                        }
-                                        else {
-                                            // TODO out of bounds
-                                        }
-                                    }
-                                    break;
-                                default:
-                                    // TODO see what to do here...
-                                    break;
+                                } catch (IOException e) {
+                                    throw e;
+                                } catch (Exception e) {
+                                    ResponseUtils.sendPlainTextBadRequest(res, e.getMessage());
+                                }
+                            } else {
+                                message = "It is not the " + ((playerState.getRole().equals(GameRole.DEFINER)) ? "definers'" : "guessers'") + "turn yet or it has ended.";
+                                ResponseUtils.sendPlainTextConflict(res, message);
                             }
-                        } catch (Exception e) {
-                            // TODO exception
+                        } else {
+                            message = "It is not team \"" + playerState.getTeam() + "\"'s turn yet or it has ended. Current team: \"" + currentTeam.getName() + "\"";
+                            ResponseUtils.sendPlainTextConflict(res, message);
                         }
+                    } else {
+                        message = "The game isn't active yet. Please wait until all players have connected.";
+                        ResponseUtils.sendPlainTextConflict(res, message);
                     }
-                    else {
-                        // TODO tell the user it isnt this role's turn yet
-                        }
+                } else {
+                    ResponseUtils.sendUnauthorized(res);
                 }
-                else {
-                    // TODO tell the user it isnt this team's turn yet
-                }
-                }
-                else {
-                    // TODO tell the user the game isnt active yet
-                }
-            }
-            else {
-                ResponseUtils.sendUnauthorized(res);
             }
         }
         else {
             ResponseUtils.sendUnauthorized(res);
-        }
-    }
-
-    private void checkIfOnCorrectTurn(final PlayerState playerState, final GameEngine gameEngine) throws Exception {
-        final GameInstanceData gameInstanceData = gameEngine.getGameInstanceDataFull(playerState.getGame());
-        final Team currentTeam = gameInstanceData.getCurrentTurn();
-        if (!currentTeam.getName().equals(playerState.getTeam())) {
-            throw new Exception("It is not team \"" + playerState.getTeam() + "\"'s turn yet."
-                    + "Current team: \"" + currentTeam.getName() + "\"");
-        }
-        else {
-
         }
     }
 
@@ -136,5 +138,16 @@ public class GameServlet extends HttpServlet {
     private boolean isIndexInBounds(final int cardIndex, final GameInstanceData gameInstanceData) {
         // This takes the "real" index, instead of the one the user sees.
         return (cardIndex >= 0) && (cardIndex < gameInstanceData.getWordCards().size());
+    }
+
+    private void endGame(final String gameName, final GameEngine gameEngine, final LobbyManager lobbyManager, final PlayerStateManager playerStateManager) {
+        gameEngine.removeGame(gameName);
+        lobbyManager.resetGame(gameName);
+        playerStateManager.nullifyPlayerStateByGame(gameName);
+    }
+
+    private void sendMoveEvent(final HttpServletResponse res, final MoveEvent moveEvent) throws IOException {
+        final String jsonBody = JSONUtils.toJson(moveEvent);
+        ResponseUtils.sendJSONSuccess(res, jsonBody);
     }
 }

@@ -32,6 +32,7 @@ public class LobbyManager {
         return gameListings.get(gameName) != null;
     }
 
+    @NotNull
     public GameList getGameList(final boolean onlyActive, final boolean includeActive) {
         List<GameListingData> gameList = gameListings.values().stream().map(GameListingData::new).collect(Collectors.toList());
         if (onlyActive) {
@@ -61,5 +62,12 @@ public class LobbyManager {
     public boolean isGameActive(final String gameName) {
         final GameListing gameListing = gameListings.get(gameName);
         return gameListing != null && gameListing.isGameActive();
+    }
+
+    public void resetGame(final String gameName) {
+        final GameListing gameListing = gameListings.get(gameName);
+        if (gameListing != null) {
+            gameListing.resetGameListing();
+        }
     }
 }

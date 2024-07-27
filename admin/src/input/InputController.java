@@ -3,9 +3,9 @@ package input;
 import application.AdminApplication;
 import application.GameAdder;
 import application.GameSpectator;
+import client.input.ClientInputController;
 import exceptions.UnsupportedFileTypeException;
-import lobby.LobbyController;
-import lobby.game.list.GameList;
+import client.lobby.game.list.GameList;
 import org.jetbrains.annotations.NotNull;
 import ui.UIElements;
 

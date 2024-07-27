@@ -1,6 +1,7 @@
 package game.room;
 
-import lobby.game.list.GameListingData;
+import client.game.room.ClientGameRoom;
+import client.lobby.game.list.GameListingData;
 import org.jetbrains.annotations.NotNull;
 
 public class GameRoom extends ClientGameRoom {

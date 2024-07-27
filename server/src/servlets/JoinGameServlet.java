@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lobby.LobbyManager;
 import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
-import lobby.game.list.GameListing;
 import lobby.game.list.GameListingData;
+import users.PlayerStateManager;
 import utils.LogUtils;
 import utils.ResponseUtils;
 import utils.ServletUtils;
@@ -37,13 +37,15 @@ public class JoinGameServlet extends HttpServlet {
         if (ServletUtils.isUserLoggedIn(req, getServletContext())) {
             try {
                 synchronized (this) {
-                    checkIfUserInAGame(req);
+                    final String username = SessionUtils.getUsername(req);
+                    final PlayerStateManager playerStateManager = ServletUtils.getPlayerStateManager(getServletContext());
+                    checkIfUserInAGame(username, playerStateManager);
                     final PlayerState playerState = JSONUtils.fromJson(ServletUtils.getRequestBody(req), PlayerState.class);
                     final LobbyManager lobbyManager = ServletUtils.getLobbyManager(getServletContext());
                     checkJoinRequestAvailability(playerState, lobbyManager);
                     LogUtils.logToConsole("Adding user \"" + SessionUtils.getUsername(req) + "\" to game \"" + playerState.getGame() + "\""
                     + " in team \"" + playerState.getTeam() + "\" as a " + (playerState.getRole().equals(GameRole.DEFINER) ? "definer" : "guesser"));
-                    joinGame(playerState, req, lobbyManager);
+                    joinGame(playerState, username, lobbyManager, playerStateManager);
                     checkIfGameIsFull(playerState.getGame(), lobbyManager);
                     res.setStatus(HttpServletResponse.SC_OK);
                 }
@@ -59,8 +61,8 @@ public class JoinGameServlet extends HttpServlet {
 
     }
 
-    private void checkIfUserInAGame(final HttpServletRequest req) throws JoinGameException {
-        final PlayerState playerState = SessionUtils.getPlayerState(req);
+    private void checkIfUserInAGame(final String username, final PlayerStateManager playerStateManager) throws JoinGameException {
+        final PlayerState playerState = playerStateManager.getPlayerState(username);
         if (playerState != null) {
             final String message = "This user has already joined game \"" + playerState.getGame() + "\".";
             throw new JoinGameException(ALREADY_JOINED_GAME_ERROR, message, HttpServletResponse.SC_CONFLICT);
@@ -115,9 +117,9 @@ public class JoinGameServlet extends HttpServlet {
         }
     }
 
-    private void joinGame(final PlayerState playerState, final HttpServletRequest req, final LobbyManager lobbyManager) {
+    private void joinGame(final PlayerState playerState, final String username, final LobbyManager lobbyManager, final PlayerStateManager playerStateManager) {
         lobbyManager.joinGame(playerState);
-        SessionUtils.setPlayerState(req, playerState);
+        playerStateManager.setPlayerState(username, playerState);
     }
 
     private void checkIfGameIsFull(final String gameName, final LobbyManager lobbyManager) {

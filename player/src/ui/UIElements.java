@@ -1,5 +1,7 @@
 package ui;
 
+import client.ui.ClientUIElements;
+
 public class UIElements extends ClientUIElements {
     public static void AskForUsernameMessage() {
         System.out.println("Please enter your username: ");

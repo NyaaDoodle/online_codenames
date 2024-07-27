@@ -1,9 +1,6 @@
 package utils.http;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-
-import java.io.File;
+import client.utils.http.ClientHttpClientUtils;
 
 public class HttpClientUtils extends ClientHttpClientUtils {
 

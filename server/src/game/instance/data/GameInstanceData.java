@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public class GameInstanceData {
-    // TODO RECOPY TO CLIENT_COMMONS
     private final GameStructure gameStructure;
     private final List<WordCardData> wordCards;
     private final Map<String, Integer> teamNameToScore;

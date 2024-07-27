@@ -6,6 +6,7 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lobby.LobbyManager;
 import org.jetbrains.annotations.NotNull;
+import users.PlayerStateManager;
 import users.UserManager;
 
 import java.io.BufferedReader;
@@ -16,11 +17,13 @@ public class ServletUtils {
     private static final String USER_MANAGER_ATTRIBUTE_NAME = "userManager";
     private static final String CHAT_MANAGER_ATTRIBUTE_NAME = "chatManager";
     private static final String GAME_ENGINE_ATTRIBUTE_NAME = "gameEngine";
+    private static final String PLAYER_STATE_MANAGER_ATTRIBUTE_NAME = "playerStateManager";
 
     private static final Object initLobbyManagerLock = new Object();
     private static final Object initUserManagerLock = new Object();
     private static final Object initChatManagerLock = new Object();
     private static final Object initGameEngineLock = new Object();
+    private static final Object initPlayerStateManagerLock = new Object();
 
     @NotNull
     public static LobbyManager getLobbyManager(final ServletContext servletContext) {
@@ -60,6 +63,16 @@ public class ServletUtils {
             }
         }
         return (ChatManager) servletContext.getAttribute(CHAT_MANAGER_ATTRIBUTE_NAME);
+    }
+
+    @NotNull
+    public static PlayerStateManager getPlayerStateManager(final ServletContext servletContext) {
+        synchronized (initPlayerStateManagerLock) {
+            if (servletContext.getAttribute(PLAYER_STATE_MANAGER_ATTRIBUTE_NAME) == null) {
+                servletContext.setAttribute(PLAYER_STATE_MANAGER_ATTRIBUTE_NAME, new PlayerStateManager(getUserManager(servletContext)));
+            }
+        }
+        return (PlayerStateManager) servletContext.getAttribute(PLAYER_STATE_MANAGER_ATTRIBUTE_NAME);
     }
 
     public static boolean isUserLoggedIn(final HttpServletRequest req, final ServletContext servletContext) {

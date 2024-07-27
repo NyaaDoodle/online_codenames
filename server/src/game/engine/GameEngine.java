@@ -7,13 +7,14 @@ import game.instance.data.GameInstanceData;
 import game.structure.GameStructure;
 import game.structure.Team;
 import lobby.game.list.GameListingData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class GameEngine {
     private final Map<String, GameInstance> gameInstances = new HashMap<>();
 
-    public void addGame(final GameListingData gameListingData) {
+    public void addGame(@NotNull final GameListingData gameListingData) {
         // Assuming all games in the game list have unique names.
         final GameStructure gameStructure = gameListingData.getGameStructure();
         final List<Team> teamList = gameStructure.getTeams();
@@ -23,21 +24,21 @@ public class GameEngine {
         gameInstances.put(gameListingData.getName(), gameInstance);
     }
 
-    public void removeGame(final String gameName) {
+    public void removeGame(@NotNull final String gameName) {
         gameInstances.remove(gameName);
     }
 
-    public GameInstanceData getGameInstanceDataFull(final String gameName) {
+    public GameInstanceData getGameInstanceDataFull(@NotNull final String gameName) {
         return new GameInstanceData(gameInstances.get(gameName));
     }
 
-    public GameInstanceData getGameInstanceDataGuessers(final String gameName) {
+    public GameInstanceData getGameInstanceDataGuessers(@NotNull final String gameName) {
         final GameInstanceData gameInstanceData = new GameInstanceData(gameInstances.get(gameName));
         gameInstanceData.censorWordCards();
         return gameInstanceData;
     }
 
-    public void setHintAtGame(final String gameName, final Hint hint) {
+    public void setHintAtGame(@NotNull final String gameName, @NotNull final Hint hint) {
         final GameInstance gameInstance = gameInstances.get(gameName);
         if (gameInstance != null) {
             gameInstance.setCurrentHint(hint);
@@ -45,13 +46,24 @@ public class GameEngine {
         }
     }
 
-    public MoveEvent makeMoveAtGame(final String gameName, final int cardIndex) {
+    public MoveEvent makeMoveAtGame(@NotNull final String gameName, final int cardIndex) {
         final GameInstance gameInstance = gameInstances.get(gameName);
         MoveEvent moveEvent = null;
         if (gameInstance != null) {
             moveEvent = gameInstance.makeMove(cardIndex);
-            // TODO did the game end check via moveEvent
         }
         return moveEvent;
+    }
+
+    public void endTurnAtGame(@NotNull final String gameName) {
+        final GameInstance gameInstance = gameInstances.get(gameName);
+        if (gameInstance != null) {
+            gameInstance.endTurn();
+        }
+    }
+
+    public boolean hasGameEnded(@NotNull final String gameName) {
+        final GameInstance gameInstance = gameInstances.get(gameName);
+        return (gameInstance != null) && gameInstance.hasGameEnded();
     }
 }

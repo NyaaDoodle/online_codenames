@@ -8,13 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 public class ConnectedPlayersMap {
+    private static final int STARTING_USER_COUNT = 0;
     private final Map<String, Integer> connectedDefinersPerTeam = new HashMap<>();
     private final Map<String, Integer> connectedGuessersPerTeam = new HashMap<>();
 
     public ConnectedPlayersMap(final List<Team> teams) {
         teams.forEach(team -> {
-            connectedDefinersPerTeam.put(team.getName(), 0);
-            connectedGuessersPerTeam.put(team.getName(), 0);
+            connectedDefinersPerTeam.put(team.getName(), STARTING_USER_COUNT);
+            connectedGuessersPerTeam.put(team.getName(), STARTING_USER_COUNT);
         });
     }
 
@@ -46,4 +47,8 @@ public class ConnectedPlayersMap {
         connectedGuessersPerTeam.replace(teamName, getConnectedGuessersByTeam(teamName) + 1);
     }
 
+    public void resetMap() {
+        connectedDefinersPerTeam.keySet().forEach(key -> connectedDefinersPerTeam.put(key, STARTING_USER_COUNT));
+        connectedGuessersPerTeam.keySet().forEach(key -> connectedGuessersPerTeam.put(key, STARTING_USER_COUNT));
+    }
 }

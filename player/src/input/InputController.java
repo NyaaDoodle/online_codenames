@@ -1,18 +1,17 @@
 package input;
 
+import client.input.ClientInputController;
 import game.join.GameJoiner;
 import application.PlayerApplication;
 import game.room.GameRoom;
 import login.LoginController;
-import login.exceptions.UsernameInputException;
+import client.login.exceptions.UsernameInputException;
 import org.jetbrains.annotations.NotNull;
 import ui.UIElements;
 import utils.OtherUtils;
 
 import java.util.Scanner;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class InputController extends ClientInputController {
     private static final Scanner SCANNER = getScanner();

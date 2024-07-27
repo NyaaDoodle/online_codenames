@@ -1,7 +1,8 @@
 package login;
 
+import client.login.ClientLoginController;
 import input.InputController;
-import login.exceptions.UsernameInputException;
+import client.login.exceptions.UsernameInputException;
 import ui.UIElements;
 import utils.http.HttpClientUtils;
 

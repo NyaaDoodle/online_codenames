@@ -1,8 +1,8 @@
 package game.join;
 
-import game.instance.GameRole;
-import game.structure.Team;
-import lobby.game.list.GameListingData;
+import client.game.instance.GameRole;
+import client.game.structure.Team;
+import client.lobby.game.list.GameListingData;
 
 public class TempPlayerState {
     private GameListingData selectedGame = null;

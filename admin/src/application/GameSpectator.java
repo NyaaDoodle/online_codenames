@@ -1,8 +1,8 @@
 package application;
 
 import input.InputController;
-import lobby.LobbyController;
-import lobby.game.list.GameList;
+import client.lobby.LobbyController;
+import client.lobby.game.list.GameList;
 import ui.UIElements;
 
 public class GameSpectator {

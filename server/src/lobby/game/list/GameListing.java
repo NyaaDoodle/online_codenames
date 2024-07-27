@@ -75,6 +75,11 @@ public class GameListing {
         }
     }
 
+    public void resetGameListing(){
+        state = ListingState.PENDING;
+        connectedPlayers.resetMap();
+    }
+
     private void checkIfListingFull() {
         int expectedTotalPlayers = gameStructure.getTeams().stream()
                 .mapToInt(team -> team.getDefinersCount() + team.getGuessersCount()).sum();

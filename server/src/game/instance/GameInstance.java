@@ -9,6 +9,7 @@ import java.util.*;
 
 public class GameInstance {
     private final static int STARTING_TEAM_SCORE = 0;
+    private final static int STARTING_GUESSES_COUNT = 0;
 
     private final GameStructure gameStructure;
     private final GameWordCards wordCards;
@@ -16,7 +17,7 @@ public class GameInstance {
     private final TurnOrder turnOrder;
     private Hint currentHint;
     private boolean hasGameEnded = false;
-    private int guessesLeft = 0;
+    private int guessesLeft = STARTING_GUESSES_COUNT;
     private final WinOrder winOrder;
 
     public GameInstance(final GameStructure gameStructure, final LinkedList<Team> turnOrder) {
@@ -38,7 +39,7 @@ public class GameInstance {
 
     public void setCurrentHint(final Hint hint) {
         this.currentHint = hint;
-        this.guessesLeft = hint.getNumber();
+        setGuessesLeft(hint.getNumber());
     }
 
     public List<WordCardData> getWordCards() {
@@ -70,61 +71,78 @@ public class GameInstance {
     }
 
     public MoveEvent makeMove(final int wordIndex) {
-        final WordCardData selectedWord = wordCards.getWordCardData(wordIndex);
-        final Team cardTeam = selectedWord.getTeam();
-        final Team selectingTeam = turnOrder.getCurrentTurn();
-        boolean isNeutralCard = false;
-        boolean isBlackCard = false;
-        wordCards.setFoundCard(wordIndex);
-        if (gameStructure.getTeams().contains(cardTeam) && isTeamInPlay(cardTeam)) {
-            addPointToTeam(cardTeam);
-            checkIfTeamWon(cardTeam);
-        }
-        else if (selectedWord.isBlackWord()) {
-            removeLosingTeamFromPlay(selectingTeam, EndPlayCause.BLACK_CARD);
-            isBlackCard = true;
+        if (guessesLeft > 0) {
+            final WordCardData selectedWord = wordCards.getWordCardData(wordIndex);
+            final Team cardTeam = selectedWord.getTeam();
+            final Team selectingTeam = turnOrder.getCurrentTurn();
+            final MoveEvent moveEvent = new MoveEvent(selectedWord.getWord(), wordIndex, cardTeam, selectingTeam);
+            wordCards.setFoundCard(wordIndex);
+            if (gameStructure.getTeams().contains(cardTeam) && isTeamInPlay(cardTeam)) {
+                addPointToTeam(cardTeam);
+                checkIfTeamWon(cardTeam, moveEvent);
+            } else if (selectedWord.isBlackWord()) {
+                removeLosingTeamFromPlay(selectingTeam, EndPlayCause.BLACK_CARD, moveEvent);
+                moveEvent.setBlackCard(true);
+            } else {
+                moveEvent.setNeutralCard(true);
+            }
+            guessesLeft--;
+            if (guessesLeft < 1) {
+                endTurn();
+            }
+            return moveEvent;
         }
         else {
-            isNeutralCard = true;
+            return null;
         }
-        guessesLeft--;
-        return new MoveEvent(selectedWord.getWord(), wordIndex, cardTeam, selectingTeam, isNeutralCard, isBlackCard);
+    }
+
+    public void endTurn() {
+        currentHint = null;
+        guessesLeft = STARTING_GUESSES_COUNT;
+        turnOrder.moveToNextDefinersTurn();
     }
 
     public List<Pair<Team, EndPlayCause>> getWinOrder() {
         return winOrder.getWinOrder();
     }
 
-    private void removeWinningTeamFromPlay(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause) {
+    private void removeWinningTeamFromPlay(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause, @NotNull final MoveEvent moveEvent) {
         winOrder.addWinningTeam(team, endPlayCause);
         turnOrder.removeTeam(team);
-        checkIfOneTeamLeft();
+        moveEvent.setDidSelectingTeamLeavePlay(true);
+        moveEvent.setEndPlayCause(endPlayCause);
+        moveEvent.setWinPosition(winOrder.getWinNumberOfTeam(team));
+        checkIfOneTeamLeft(moveEvent);
     }
 
-    private void removeLosingTeamFromPlay(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause) {
+    private void removeLosingTeamFromPlay(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause, @NotNull final MoveEvent moveEvent) {
         winOrder.addLosingTeam(team, endPlayCause);
         turnOrder.removeTeam(team);
-        checkIfOneTeamLeft();
+        moveEvent.setDidSelectingTeamLeavePlay(true);
+        moveEvent.setEndPlayCause(endPlayCause);
+        moveEvent.setWinPosition(winOrder.getWinNumberOfTeam(team));
+        checkIfOneTeamLeft(moveEvent);
     }
 
-    private boolean isTeamInPlay(final Team team) {
+    private boolean isTeamInPlay(@NotNull final Team team) {
         return turnOrder.isTeamInPlay(team);
     }
 
-    private void addPointToTeam(final Team team) {
+    private void addPointToTeam(@NotNull final Team team) {
         teamNameToScore.put(team.getName(), teamNameToScore.get(team.getName()) + 1);
     }
 
-    private void checkIfTeamWon(final Team team) {
+    private void checkIfTeamWon(@NotNull final Team team, @NotNull final MoveEvent moveEvent) {
         if (teamNameToScore.get(team.getName()).equals(team.getCardCount())) {
-            removeWinningTeamFromPlay(team, EndPlayCause.FOUND_ALL_MY_CARDS);
+            removeWinningTeamFromPlay(team, EndPlayCause.FOUND_ALL_MY_CARDS, moveEvent);
         }
     }
 
-    private void checkIfOneTeamLeft() {
+    private void checkIfOneTeamLeft(@NotNull final MoveEvent moveEvent) {
         if (turnOrder.isOneTeamLeft()) {
             assert turnOrder.getCurrentTurn() != null;
-            removeLosingTeamFromPlay(turnOrder.getCurrentTurn(), EndPlayCause.LAST_TEAM_LEFT);
+            removeLosingTeamFromPlay(turnOrder.getCurrentTurn(), EndPlayCause.LAST_TEAM_LEFT, moveEvent);
             hasGameEnded = true;
         }
     }

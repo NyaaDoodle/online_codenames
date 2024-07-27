@@ -1,5 +1,6 @@
 package utils.http;
 
+import client.utils.http.ClientHttpClientUtils;
 import exceptions.JoinGameException;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
