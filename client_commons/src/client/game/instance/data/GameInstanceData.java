@@ -2,7 +2,6 @@ package client.game.instance.data;
 
 import client.game.instance.*;
 import client.game.structure.GameStructure;
-import game.instance.*;
 import client.game.structure.Team;
 
 import java.util.List;

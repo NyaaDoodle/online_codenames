@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
 import lobby.game.list.GameListingData;
-import okhttp3.internal.ws.RealWebSocket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import users.PlayerStateManager;

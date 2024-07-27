@@ -15,6 +15,7 @@ public class TurnOrder {
     public TurnOrder(@NotNull final LinkedList<Team> turnOrder) {
         this.queue = turnOrder;
         turnOrder.forEach(team -> teamNameToTurnCount.put(team.getName(), 0));
+        moveToNextDefinersTurn();
     }
 
     public void moveToNextTurn() {
@@ -71,6 +72,10 @@ public class TurnOrder {
 
     public boolean isOneTeamLeft() {
         return numberOfTeamsInPlay() == 1;
+    }
+
+    public boolean isAnyTeamLeft() {
+        return numberOfTeamsInPlay() != 0;
     }
 
     public boolean isTeamInPlay(final Team team) {

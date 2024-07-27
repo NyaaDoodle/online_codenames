@@ -30,6 +30,6 @@ public class Constants {
     // In case we have more than just the admins as reserved usernames, for now it's only the admins.
     public static final Set<String> RESERVED_USERNAMES = new HashSet<>(ADMIN_USERNAMES);
 
-    public static final int QUIT_NUM = -10;
+    public static final int QUIT_NUM = -20;
     public static final int ERROR_NUM = -127;
 }

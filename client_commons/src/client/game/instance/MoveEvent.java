@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MoveEvent {
     private String word;
@@ -94,5 +95,16 @@ public class MoveEvent {
 
     public void setHasGameEnded(boolean hasGameEnded) {
         this.hasGameEnded = hasGameEnded;
+    }
+
+    public TeamLeftEntry getTeamThatLeftPlay(final String teamName) {
+        return teamsThatLeftPlay.get(teamName);
+    }
+
+    public String getOtherTeamName(final String notThisTeamName) {
+        if (teamsThatLeftPlay.size() > 1) {
+            return teamsThatLeftPlay.keySet().stream().filter(name -> !name.equals(notThisTeamName)).collect(Collectors.toList()).get(0);
+        }
+        return null;
     }
 }

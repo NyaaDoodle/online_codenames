@@ -88,7 +88,7 @@ public class GameInstanceData {
         for (int i = 0; i < wordCards.size(); i++) {
             final WordCardData originalCard = wordCards.get(i);
             if (!originalCard.isFound()) {
-                wordCards.add(i, new WordCardData(new WordCard(originalCard.getWord(), NEUTRAL_TEAM, false)));
+                wordCards.set(i, new WordCardData(new WordCard(originalCard.getWord(), NEUTRAL_TEAM, false)));
             }
         }
     }

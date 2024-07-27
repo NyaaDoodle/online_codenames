@@ -90,9 +90,11 @@ public class GameInstance {
             } else {
                 moveEvent.setNeutralCard(true);
             }
-            guessesLeft--;
-            if (guessesLeft < 1) {
-                endTurn();
+            if (isTeamInPlay(selectingTeam)) {
+                guessesLeft--;
+                if (guessesLeft < 1) {
+                    endTurn();
+                }
             }
             return moveEvent;
         }
@@ -115,14 +117,20 @@ public class GameInstance {
         winOrder.addWinningTeam(team, endPlayCause);
         turnOrder.removeTeam(team);
         moveEvent.addLeavingTeam(team, endPlayCause, winOrder.getWinNumberOfTeam(team));
-        checkIfOneTeamLeft(moveEvent);
+        if (turnOrder.isAnyTeamLeft()) {
+            turnOrder.moveToNextDefinersTurn();
+            checkIfOneTeamLeft(moveEvent);
+        }
     }
 
     private void removeLosingTeamFromPlay(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause, @NotNull final MoveEvent moveEvent) {
         winOrder.addLosingTeam(team, endPlayCause);
         turnOrder.removeTeam(team);
         moveEvent.addLeavingTeam(team, endPlayCause, winOrder.getWinNumberOfTeam(team));
-        checkIfOneTeamLeft(moveEvent);
+        if (turnOrder.isAnyTeamLeft()) {
+            turnOrder.moveToNextDefinersTurn();
+            checkIfOneTeamLeft(moveEvent);
+        }
     }
 
     private boolean isTeamInPlay(@NotNull final Team team) {

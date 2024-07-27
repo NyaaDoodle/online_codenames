@@ -44,7 +44,7 @@ public class GameServlet extends HttpServlet {
                         final String gameName = playerState.getGame();
                         final GameInstanceData gameInstanceData = gameEngine.getGameInstanceDataFull(gameName);
                         final Team currentTeam = gameInstanceData.getCurrentTurn();
-                        if (!currentTeam.getName().equals(playerState.getTeam())) {
+                        if (currentTeam.getName().equals(playerState.getTeam())) {
                             final GameRole currentRole = gameInstanceData.getCurrentRole();
                             if (currentRole.equals(playerState.getRole())) {
                                 try {
@@ -67,7 +67,7 @@ public class GameServlet extends HttpServlet {
                                                             if (gameEngine.hasGameEnded(gameName)) {
                                                                 endGame(gameName, gameEngine, lobbyManager, playerStateManager);
                                                             } else if (!moveEvent.getTeamsThatLeftPlay().isEmpty()) {
-                                                                moveEvent.getTeamsThatLeftPlay().forEach(team -> playerStateManager.nullifyPlayerStateByteam(team.getName()));
+                                                                moveEvent.getTeamsThatLeftPlay().keySet().forEach(playerStateManager::nullifyPlayerStateByTeam);
                                                             }
                                                             sendMoveEvent(res, moveEvent);
                                                         } else {
@@ -90,7 +90,7 @@ public class GameServlet extends HttpServlet {
                                     ResponseUtils.sendPlainTextBadRequest(res, e.getMessage());
                                 }
                             } else {
-                                message = "It is not the " + ((playerState.getRole().equals(GameRole.DEFINER)) ? "definers'" : "guessers'") + "turn yet or it has ended.";
+                                message = "It is not the " + ((playerState.getRole().equals(GameRole.DEFINER)) ? "definers'" : "guessers'") + " turn yet or it has ended.";
                                 ResponseUtils.sendPlainTextConflict(res, message);
                             }
                         } else {

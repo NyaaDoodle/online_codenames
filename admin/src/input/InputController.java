@@ -29,7 +29,7 @@ public class InputController extends ClientInputController {
             = OtherUtils.makeSetFromOneToN(OPTIONS_IN_GAME_ROOM_MENU);
 
     public static void mainMenuSelection() {
-        int input = intMenuInput(INTEGERS_FOR_MAIN_MENU);
+        int input = intMenuInputRegular(INTEGERS_FOR_MAIN_MENU);
         switch (input) {
             case 1:
                 GameAdder.addNewGame();
@@ -48,27 +48,24 @@ public class InputController extends ClientInputController {
     }
 
     public static void gameRoomMenuSelection(final GameRoom gameRoom) {
-        int input = intMenuInput(INTEGERS_FOR_GAME_ROOM_MENU);
-        switch (input) {
-            case 1:
-                gameRoom.updateGameData();
-                if (gameRoom.getGameData().getGameListingData().isGameActive()) {
+        int input = intMenuInputRegular(INTEGERS_FOR_GAME_ROOM_MENU);
+        gameRoom.updateGameData();
+        final boolean inGame = !gameRoom.hasGameEnded() && gameRoom.getGameData().getGameListingData().isGameActive();
+        if (inGame) {
+            switch (input) {
+                case 1:
                     UIElements.printGameData(gameRoom.getGameData(), gameRoom.getPlayerState().getRole());
-                }
-                else {
-                    System.out.println("The game has ended and has returned to pending status. Exiting game room.");
-                    gameRoom.setGameEnded();
-                }
-                break;
-            case 2:
-                gameRoom.exitGame();
-                break;
+                    break;
+                case 2:
+                    gameRoom.exitGame();
+                    break;
+            }
         }
     }
 
     public static GameListingData spectateGameSelection(final GameList gameList) {
         final Set<Integer> integersForGameSelection = OtherUtils.makeSetFromOneToN(gameList.getGameAmount());
-        int input = intMenuInput(integersForGameSelection);
+        int input = intMenuInputRegular(integersForGameSelection);
         return gameList.getGameList().get(input - 1);
     }
 

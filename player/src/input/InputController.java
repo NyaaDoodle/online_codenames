@@ -23,7 +23,7 @@ public class InputController extends ClientInputController {
             = OtherUtils.makeSetFromOneToN(OPTIONS_IN_GAME_ROOM_MENU);
 
     public static void mainMenuSelection() {
-        int input = intMenuInput(INTEGERS_FOR_MAIN_MENU);
+        int input = intMenuInputRegular(INTEGERS_FOR_MAIN_MENU);
         switch (input) {
             case 1:
                 UIElements.printGameListAll();
@@ -38,15 +38,18 @@ public class InputController extends ClientInputController {
     }
 
     public static void gameRoomMenuSelection(final GameRoom gameRoom) {
-        int input = intMenuInput(INTEGERS_FOR_GAME_ROOM_MENU);
-        switch (input) {
-            case 1:
-                gameRoom.updateGameData();
-                UIElements.printGameData(gameRoom.getGameData(), gameRoom.getPlayerState().getRole());
-                break;
-            case 2:
-                gameRoom.makeMove();
-                break;
+        int input = intMenuInputRegular(INTEGERS_FOR_GAME_ROOM_MENU);
+        gameRoom.updateGameData();
+        final boolean inGame = !gameRoom.hasGameEnded() && gameRoom.getGameData().getGameListingData().isGameActive();
+        if (inGame) {
+            switch (input) {
+                case 1:
+                    UIElements.printGameData(gameRoom.getGameData(), gameRoom.getPlayerState().getRole());
+                    break;
+                case 2:
+                    gameRoom.makeMove();
+                    break;
+            }
         }
     }
 

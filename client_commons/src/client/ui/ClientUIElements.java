@@ -124,7 +124,7 @@ public class ClientUIElements {
             final int currentScore = gameInstanceData.getTeamScore(currentTeam.getName());
             final int numberOfTurns = gameInstanceData.getTurnCountByTeam(currentTeam.getName());
             System.out.println("Current turn: Team \"" + currentTeam.getName() + "\", "
-            + " at " + (currentRole.equals(GameRole.DEFINER) ? "definers'" : "guessers'") + " turn.");
+            + "at the " + (currentRole.equals(GameRole.DEFINER) ? "definers'" : "guessers'") + " turn.");
             System.out.println("Team \"" + currentTeam.getName() + "\"'s score: " + currentScore + " / " + currentTeam.getCardCount());
             System.out.println("Team \"" + currentTeam.getName() + "\"'s turn count: " + numberOfTurns);
             System.out.println("Next team's turn: Team \"" + nextTeam.getName() + "\"");

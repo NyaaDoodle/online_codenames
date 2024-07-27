@@ -13,18 +13,34 @@ public class ClientInputController {
 
     public static void closeScanner() { SCANNER.close(); }
 
-    public static int intMenuInput(final Set<Integer> acceptedIntegers) {
+    public static int intMenuInputRegular(final Set<Integer> acceptedIntegers) {
+        return intMenuInput(acceptedIntegers, false, false);
+    }
+
+    public static int intMenuInputWithBack(final Set<Integer> acceptedIntegers) {
+        return intMenuInput(acceptedIntegers, true, false);
+    }
+
+    public static int intMenuInputWithQuit(final Set<Integer> acceptedIntegers) {
+        return intMenuInput(acceptedIntegers, false, true);
+    }
+
+    private static int intMenuInput(final Set<Integer> acceptedIntegers, final boolean withBack, final boolean withQuit) {
         int input = ClientConstants.ERROR_NUM;
         String rawInput;
         boolean validInput = false;
-        boolean goBack = false;
-        while (!validInput && !goBack) {
+        boolean exitLoop = false;
+        while (!validInput && !exitLoop) {
             rawInput = SCANNER.nextLine();
-            if (rawInput.equals(ClientConstants.GO_BACK_STRING)) {
+            if (withBack && rawInput.equals(ClientConstants.GO_BACK_STRING)) {
                 input = ClientConstants.GO_BACK_NUM;
-                goBack = true;
+                exitLoop = true;
             }
-            else {
+            if (withQuit && rawInput.equals(ClientConstants.QUIT_STRING)) {
+                input = ClientConstants.QUIT_NUM;
+                exitLoop = true;
+            }
+            if (!exitLoop) {
                 try {
                     input = Integer.parseInt(rawInput);
                     if (acceptedIntegers.contains(input)) {

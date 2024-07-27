@@ -27,21 +27,22 @@ public class WinOrder {
 
     public void addWinningTeam(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause) {
         if (currentNextWin <= currentNextLose) {
-            winOrder.add(currentNextWin, new Pair<>(team, endPlayCause));
+            winOrder.set(currentNextWin, new Pair<>(team, endPlayCause));
             currentNextWin++;
         }
     }
 
     public void addLosingTeam(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause) {
         if (currentNextWin <= currentNextLose) {
-            winOrder.add(currentNextLose, new Pair<>(team, endPlayCause));
+            winOrder.set(currentNextLose, new Pair<>(team, endPlayCause));
             currentNextLose--;
         }
     }
 
     public int getWinNumberOfTeam(@NotNull final Team team) {
         for (int i = 0; i < winOrder.size(); i++) {
-            if (winOrder.get(i).getKey().equals(team)) { return i; }
+            final Pair<Team, EndPlayCause> entry = winOrder.get(i);
+            if (entry != null && entry.getKey().equals(team)) { return i + 1; }
         }
         return Constants.ERROR_NUM;
     }
@@ -50,7 +51,7 @@ public class WinOrder {
         for (int i = 0; i < winOrder.size(); i++) {
             final String checkTeamName = winOrder.get(i).getKey().getName();
             if (teamName.equals(checkTeamName)) {
-                return i;
+                return i + 1;
             }
         }
         return Constants.ERROR_NUM;

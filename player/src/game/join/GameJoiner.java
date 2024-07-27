@@ -155,7 +155,7 @@ public class GameJoiner {
     }
 
     private static int getInput(final int upperLimit) {
-        return InputController.intMenuInput(OtherUtils.makeSetFromOneToN(upperLimit));
+        return InputController.intMenuInputWithBack(OtherUtils.makeSetFromOneToN(upperLimit));
     }
 
     private static boolean checkTeamFull(final GameListingData gameListing, final Team team) {

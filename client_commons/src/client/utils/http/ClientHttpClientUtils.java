@@ -59,6 +59,9 @@ public class ClientHttpClientUtils {
         try (final Response res = call.execute()) {
             final String responseBody = (res.body() != null) ? res.body().string() : "";
             if (res.code() != ClientConstants.STATUS_CODE_OK) {
+                if (res.code() == ClientConstants.INTERNAL_SERVER_ERROR) {
+                    throw new Exception(responseBody);
+                }
                 final String errorType = res.header(JOIN_GAME_ERROR_HEADER);
                 throw new JoinGameException(errorType, responseBody);
             }

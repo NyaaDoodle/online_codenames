@@ -17,7 +17,7 @@ public class GameEngine {
     public void addGame(@NotNull final GameListingData gameListingData) {
         // Assuming all games in the game list have unique names.
         final GameStructure gameStructure = gameListingData.getGameStructure();
-        final List<Team> teamList = gameStructure.getTeams();
+        final List<Team> teamList = new ArrayList<>(gameStructure.getTeams());
         Collections.shuffle(teamList);
         final LinkedList<Team> teamOrderList = new LinkedList<>(teamList);
         final GameInstance gameInstance = new GameInstance(gameStructure, teamOrderList);
