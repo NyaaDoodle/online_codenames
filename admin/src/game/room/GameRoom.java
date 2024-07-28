@@ -1,6 +1,5 @@
 package game.room;
 
-import client.game.instance.GameRole;
 import client.game.room.ClientGameRoom;
 import client.game.room.PlayerState;
 import client.lobby.game.list.GameListingData;

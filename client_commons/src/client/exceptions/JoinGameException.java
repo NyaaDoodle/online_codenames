@@ -7,10 +7,6 @@ public class JoinGameException extends Exception {
         super(message);
         this.errorType = errorType;
     }
-    @Override
-    public String getMessage() {
-        return super.getMessage();
-    }
 
     public String getErrorType() {
         return errorType;

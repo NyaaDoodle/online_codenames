@@ -11,6 +11,7 @@ import game.room.GameRoom;
 import org.jetbrains.annotations.NotNull;
 import ui.UIElements;
 import utils.OtherUtils;
+import utils.constants.Constants;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,7 +39,6 @@ public class InputController extends ClientInputController {
                 UIElements.printGameListAll();
                 break;
             case 3:
-                // TODO spectate game - after player-client work
                 GameSpectator.selectGame();
                 break;
             case 4:
@@ -65,14 +65,23 @@ public class InputController extends ClientInputController {
 
     public static GameListingData spectateGameSelection(final GameList gameList) {
         final Set<Integer> integersForGameSelection = OtherUtils.makeSetFromOneToN(gameList.getGameAmount());
-        int input = intMenuInputRegular(integersForGameSelection);
-        return gameList.getGameList().get(input - 1);
+        int input = intMenuInputWithBack(integersForGameSelection);
+        if (input != Constants.GO_BACK_NUM) {
+            return gameList.getGameList().get(input - 1);
+        }
+        else {
+            return null;
+        }
     }
 
-    @NotNull
     public static File fileInput(final Set<String> supportedFileTypes) throws FileNotFoundException, UnsupportedFileTypeException {
         String inputPath = SCANNER.nextLine();
-        return fileInput(supportedFileTypes, inputPath);
+        if (!inputPath.equals(Constants.GO_BACK_STRING)) {
+            return fileInput(supportedFileTypes, inputPath);
+        }
+        else {
+            return null;
+        }
     }
 
     @NotNull

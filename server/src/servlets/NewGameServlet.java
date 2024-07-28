@@ -29,20 +29,23 @@ public class NewGameServlet extends HttpServlet {
 
     @Override
     protected void doPost(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
-        // TODO check if the user sending this is the administrator...
-        // TODO AND IF THEY ARE LOGGED IN EVEN!!!
-        try (InputStream structureStream = req.getPart(STRUCTURE_FILE_PART_NAME).getInputStream();
-             InputStream dictionaryStream = req.getPart(DICTIONARY_FILE_PART_NAME).getInputStream()) {
-            GameStructure gameStructure = JAXBConversion.parseToGameStructure(structureStream, dictionaryStream);
-            LogUtils.logToConsole("Adding game \"" + gameStructure.getName() + "\" to game list.");
-            addGameToLobby(gameStructure);
-            ResponseUtils.sendPlainTextSuccess(res, "New game \"" + gameStructure.getName() + "\" was added successfully");
-        } catch (final JAXBException e) {
-            ResponseUtils.sendPlainTextBadRequest(res, JAXB_EXCEPTION_ERROR_PREFIX + e.getMessage());
-        } catch (final GameStructureFileException e) {
-            ResponseUtils.sendPlainTextBadRequest(res, e.getMessage());
-        } catch (final GameListingException e) {
-            ResponseUtils.sendPlainTextConflict(res, e.getMessage());
+        if (ServletUtils.isUserLoggedIn(req, getServletContext()) && ServletUtils.isAdmin(req)) {
+            try (InputStream structureStream = req.getPart(STRUCTURE_FILE_PART_NAME).getInputStream();
+                 InputStream dictionaryStream = req.getPart(DICTIONARY_FILE_PART_NAME).getInputStream()) {
+                GameStructure gameStructure = JAXBConversion.parseToGameStructure(structureStream, dictionaryStream);
+                LogUtils.logToConsole("Adding game \"" + gameStructure.getName() + "\" to game list.");
+                addGameToLobby(gameStructure);
+                ResponseUtils.sendPlainTextSuccess(res, "New game \"" + gameStructure.getName() + "\" was added successfully");
+            } catch (final JAXBException e) {
+                ResponseUtils.sendPlainTextBadRequest(res, JAXB_EXCEPTION_ERROR_PREFIX + e.getMessage());
+            } catch (final GameStructureFileException e) {
+                ResponseUtils.sendPlainTextBadRequest(res, e.getMessage());
+            } catch (final GameListingException e) {
+                ResponseUtils.sendPlainTextConflict(res, e.getMessage());
+            }
+        }
+        else {
+            ResponseUtils.sendUnauthorized(res);
         }
     }
 

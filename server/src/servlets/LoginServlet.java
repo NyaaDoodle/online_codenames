@@ -20,7 +20,6 @@ public class LoginServlet extends HttpServlet {
     private static final String CLIENT_ALREADY_LOGGED_IN_MESSAGE = "Client has already logged in, no need for additional logins.";
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
-        // TODO check reserved names on the server, and not on the client...
         final String sessionUsername = SessionUtils.getUsername(req);
         final UserManager userManager = ServletUtils.getUserManager(getServletContext());
         if (sessionUsername == null) {

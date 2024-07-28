@@ -6,7 +6,6 @@ import okhttp3.HttpUrl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class SimpleCookieManager implements CookieJar {
 

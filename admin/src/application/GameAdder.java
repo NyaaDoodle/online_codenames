@@ -8,6 +8,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import ui.UIElements;
 import utils.constants.Constants;
@@ -44,19 +45,28 @@ public class GameAdder {
     public static void addNewGame() {
         File structureFile, dictionaryFile;
         boolean addGameSuccess = false;
-        while (!addGameSuccess) {
+        boolean goBack = false;
+        while (!addGameSuccess && !goBack) {
             newFilePromptMessage();
+            UIElements.goBackOptionMessage();
             try {
                 structureFile = loadStructureFile();
-                dictionaryFile = loadDictionaryFile(structureFile);
-                Request req = buildAddGameRequest(structureFile, dictionaryFile);
-                HttpClientUtils.sendRequestSync(req);
-                addGameSuccess = true;
+                if (structureFile != null) {
+                    dictionaryFile = loadDictionaryFile(structureFile);
+                    Request req = buildAddGameRequest(structureFile, dictionaryFile);
+                    HttpClientUtils.sendRequestSync(req);
+                    addGameSuccess = true;
+                }
+                else {
+                    goBack = true;
+                }
             } catch (final Exception e) {
                 System.out.println(e.getMessage());
             }
         }
-        gameAddedSuccessfullyMessage();
+        if (addGameSuccess) {
+            gameAddedSuccessfullyMessage();
+        }
     }
 
     private static void newFilePromptMessage() {
@@ -67,7 +77,6 @@ public class GameAdder {
         System.out.println("New game has been added successfully!");
     }
 
-    @NotNull
     private static File loadStructureFile() throws Exception {
         File inputFile = null;
         boolean validInput = false;
@@ -104,11 +113,17 @@ public class GameAdder {
 
     @NotNull
     private static String getDictionaryFileName(final File structureFile) throws Exception {
-        String fileName = null;
+        String fileName;
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document doc = builder.parse(structureFile);
-            fileName = doc.getElementsByTagName(XML_DICTIONARY_NODE_NAME).item(0).getFirstChild().getNodeValue();
+            Node node = doc.getElementsByTagName(XML_DICTIONARY_NODE_NAME).item(0);
+            if (node != null) {
+                fileName = node.getFirstChild().getNodeValue();
+            }
+            else {
+                throw new Exception(DICTIONARY_FILE_NULL);
+            }
         } catch (IOException e) {
             throw new Exception(IO_EXCEPTION_ERROR);
         } catch (ParserConfigurationException e) {

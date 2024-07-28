@@ -6,7 +6,6 @@ import client.lobby.game.list.GameListingData;
 import client.utils.constants.ClientConstants;
 import okhttp3.Request;
 import org.jetbrains.annotations.NotNull;
-import client.ui.ClientUIElements;
 import client.utils.http.ClientHttpClientUtils;
 import client.utils.json.ClientJSONUtils;
 

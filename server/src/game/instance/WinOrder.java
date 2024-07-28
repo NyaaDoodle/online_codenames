@@ -17,7 +17,7 @@ public class WinOrder {
     }
 
     public WinOrder(final int teamCount) {
-        winOrder = new ArrayList<Pair<Team, EndPlayCause>>(teamCount);
+        winOrder = new ArrayList<>(teamCount);
         for (int i = 0; i < teamCount; i++) {
             winOrder.add(i, null);
         }

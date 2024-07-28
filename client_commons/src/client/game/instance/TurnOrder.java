@@ -1,7 +1,6 @@
 package client.game.instance;
 
 import client.game.structure.Team;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 

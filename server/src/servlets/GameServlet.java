@@ -14,6 +14,7 @@ import lobby.LobbyManager;
 import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
 import users.PlayerStateManager;
+import utils.LogUtils;
 import utils.ResponseUtils;
 import utils.ServletUtils;
 import utils.SessionUtils;
@@ -32,7 +33,7 @@ public class GameServlet extends HttpServlet {
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
         String message;
-        if (ServletUtils.isUserLoggedIn(req, getServletContext())) {
+        if (ServletUtils.isUserLoggedIn(req, getServletContext()) && !ServletUtils.isAdmin(req)) {
             final String username = SessionUtils.getUsername(req);
             final PlayerStateManager playerStateManager = ServletUtils.getPlayerStateManager(getServletContext());
             final PlayerState playerState = playerStateManager.getPlayerState(username);
@@ -67,7 +68,10 @@ public class GameServlet extends HttpServlet {
                                                             if (gameEngine.hasGameEnded(gameName)) {
                                                                 endGame(gameName, gameEngine, lobbyManager, playerStateManager);
                                                             } else if (!moveEvent.getTeamsThatLeftPlay().isEmpty()) {
-                                                                moveEvent.getTeamsThatLeftPlay().keySet().forEach(playerStateManager::nullifyPlayerStateByTeam);
+                                                                moveEvent.getTeamsThatLeftPlay().keySet().forEach(teamName -> {
+                                                                    LogUtils.logToConsole("Ejecting team \"" + teamName + "\" from play in game \"" + gameName + "\"");
+                                                                    playerStateManager.nullifyPlayerStateByTeam(teamName, gameName);
+                                                                });
                                                             }
                                                             sendMoveEvent(res, moveEvent);
                                                         } else {
@@ -150,6 +154,7 @@ public class GameServlet extends HttpServlet {
     }
 
     private void endGame(final String gameName, final GameEngine gameEngine, final LobbyManager lobbyManager, final PlayerStateManager playerStateManager) {
+        LogUtils.logToConsole("Ending game \"" + gameName + "\" and returning it to pending state.");
         gameEngine.removeGame(gameName);
         lobbyManager.resetGame(gameName);
         playerStateManager.nullifyPlayerStateByGame(gameName);

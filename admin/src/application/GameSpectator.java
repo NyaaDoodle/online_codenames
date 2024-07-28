@@ -22,6 +22,7 @@ public class GameSpectator {
     private static final String JSON_TYPE = "application/json";
     public static void selectGame() {
         selectActiveGameMessage();
+        UIElements.goBackOptionMessage();
         GameList activeGameList;
         try {
             activeGameList = LobbyController.getGameListOnlyActive();
@@ -32,13 +33,15 @@ public class GameSpectator {
         UIElements.printGameList(activeGameList);
         if (activeGameList.getGameAmount() > 0) {
             final GameListingData selectedGame = InputController.spectateGameSelection(activeGameList);
-            final PlayerState adminPlayerState = new PlayerState(selectedGame.getName(), ADMIN_TEAM.getName(), ADMIN_GAME_ROLE);
-            try {
-                sendSelectionRequest(adminPlayerState);
-                final GameRoom gameRoom = new GameRoom(selectedGame, adminPlayerState);
-                gameRoom.goToGameRoom();
-            } catch (Exception e) {
-                UIElements.unexpectedExceptionMessage(e);
+            if (selectedGame != null) {
+                final PlayerState adminPlayerState = new PlayerState(selectedGame.getName(), ADMIN_TEAM.getName(), ADMIN_GAME_ROLE);
+                try {
+                    sendSelectionRequest(adminPlayerState);
+                    final GameRoom gameRoom = new GameRoom(selectedGame, adminPlayerState);
+                    gameRoom.goToGameRoom();
+                } catch (Exception e) {
+                    UIElements.unexpectedExceptionMessage(e);
+                }
             }
         }
     }

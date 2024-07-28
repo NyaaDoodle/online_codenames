@@ -35,8 +35,9 @@ public class GameRoom extends ClientGameRoom {
     }
 
     public void makeMove() {
-        final GameData gameData = getGameData();
+        GameData gameData = getGameData();
         final PlayerState playerState = getPlayerState();
+        boolean quitGuessing = false;
         if (gameData.getGameListingData().isGameActive()) {
             final GameInstanceData gameInstanceData = gameData.getGameInstanceData();
             assert gameInstanceData != null;
@@ -66,12 +67,13 @@ public class GameRoom extends ClientGameRoom {
                             System.out.println("Please enter the number under each card to select the word, or enter \"" + ClientConstants.QUIT_STRING + "\" to move to the next turn:");
                             int cardNumber;
                             boolean validInput = false;
-                            while (!validInput) {
+                            while (!validInput && !quitGuessing) {
                                 cardNumber = InputController.intMenuInputWithQuit(OtherUtils.makeSetFromOneToN(upperLimit));
                                 if (cardNumber == ClientConstants.QUIT_NUM) {
                                     finalUrl = Objects.requireNonNull(HttpUrl.parse(GAME_URL)).newBuilder().
                                             addQueryParameter(CARD_NUMBER_PARAMETER_NAME, ClientConstants.QUIT_STRING)
                                             .build();
+                                    quitGuessing = true;
                                 }
                                 else {
                                     if (!gameInstanceData.isCardFound(cardNumber - 1)) {
@@ -90,8 +92,17 @@ public class GameRoom extends ClientGameRoom {
                     try {
                         String responseBody = ClientHttpClientUtils.sendGameRequest(req);
                         if (playerState.getRole().equals(GameRole.GUESSER)) {
-                            final MoveEvent moveEvent = JSONUtils.fromJson(responseBody, MoveEvent.class);
-                            checkMoveEvent(moveEvent, gameInstanceData.getGameStructure());
+                            if (!quitGuessing) {
+                                final MoveEvent moveEvent = JSONUtils.fromJson(responseBody, MoveEvent.class);
+                                checkMoveEvent(moveEvent, gameInstanceData.getGameStructure());
+                            }
+                            updateGameData();
+                            gameData = getGameData();
+                            if (gameData.getGameListingData().isGameActive()) {
+                                if (!gameData.getGameInstanceData().getCurrentTurn().equals(currentTeam)) {
+                                    System.out.println("It is now Team \"" + gameData.getGameInstanceData().getCurrentTurn().getName() + "\"'s turn!");
+                                }
+                            }
                         }
                         else {
                             System.out.println("Hint added successfully!");
@@ -104,7 +115,7 @@ public class GameRoom extends ClientGameRoom {
                     }
                 }
                 else {
-                    System.out.println("It is not the " + ((playerState.getRole().equals(GameRole.DEFINER)) ? "definers'" : "guessers'") + "turn yet or it has ended.");
+                    System.out.println("It is not the " + ((playerState.getRole().equals(GameRole.DEFINER)) ? "definers'" : "guessers'") + " turn yet or it has ended.");
                 }
             }
             else {
@@ -122,7 +133,6 @@ public class GameRoom extends ClientGameRoom {
         System.out.println("Select an option:");
         System.out.println("(1) Retrieve current game status");
         System.out.println("(2) Perform a move");
-        System.out.println("(3) ");
     }
 
     @Override

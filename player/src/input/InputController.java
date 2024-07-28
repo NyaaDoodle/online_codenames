@@ -4,12 +4,12 @@ import client.input.ClientInputController;
 import game.join.GameJoiner;
 import application.PlayerApplication;
 import game.room.GameRoom;
-import login.LoginController;
-import client.login.exceptions.UsernameInputException;
 import org.jetbrains.annotations.NotNull;
 import ui.UIElements;
 import utils.OtherUtils;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -21,6 +21,8 @@ public class InputController extends ClientInputController {
     private static final int OPTIONS_IN_GAME_ROOM_MENU = 3;
     private static final Set<Integer> INTEGERS_FOR_GAME_ROOM_MENU
             = OtherUtils.makeSetFromOneToN(OPTIONS_IN_GAME_ROOM_MENU);
+
+    private static final Set<String> RESERVED_USERNAMES = new HashSet<>(Collections.singletonList("admin"));
 
     public static void mainMenuSelection() {
         int input = intMenuInputRegular(INTEGERS_FOR_MAIN_MENU);
@@ -59,11 +61,15 @@ public class InputController extends ClientInputController {
         boolean validInput = false;
         while (!validInput) {
             input = SCANNER.nextLine().trim().toLowerCase();
-            try {
-                LoginController.validateUsernameInput(input);
-                validInput = true;
-            } catch (UsernameInputException e) {
-                System.out.println(e.getMessage());
+            if (!input.isEmpty()) {
+                if (!RESERVED_USERNAMES.contains(input)) {
+                    validInput = true;
+                }
+                else {
+                    System.out.println("The username \"" + input + "\" is reserved. Please enter a different username.");
+                }
+            } else {
+                System.out.println("A blank username cannot be used.");
             }
         }
         return input;

@@ -2,8 +2,6 @@ package utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lobby.game.join.PlayerState;
-import org.jetbrains.annotations.Nullable;
 
 public class SessionUtils {
     private static final String USERNAME_ATTRIBUTE_NAME = "username";

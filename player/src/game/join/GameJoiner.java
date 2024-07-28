@@ -47,7 +47,6 @@ public class GameJoiner {
         JoinerMenuState menuState = JoinerMenuState.GAME;
         TempPlayerState tempPlayerState = new TempPlayerState();
         PlayerState playerState = null;
-        // TODO refactor this mess...
         while (!joinedGame && !exitedMenu) {
             switch (menuState) {
                 case GAME:

@@ -2,9 +2,7 @@ package game.instance;
 
 import game.structure.Team;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MoveEvent {

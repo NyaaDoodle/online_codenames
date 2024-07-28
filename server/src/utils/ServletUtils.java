@@ -8,6 +8,7 @@ import lobby.LobbyManager;
 import org.jetbrains.annotations.NotNull;
 import users.PlayerStateManager;
 import users.UserManager;
+import utils.constants.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -87,5 +88,10 @@ public class ServletUtils {
             reader.lines().forEach(stringBuilder::append);
             return stringBuilder.toString();
         }
+    }
+
+    public static boolean isAdmin(final HttpServletRequest req) {
+        final String sessionUsername = SessionUtils.getUsername(req);
+        return Constants.ADMIN_USERNAMES.contains(sessionUsername);
     }
 }
