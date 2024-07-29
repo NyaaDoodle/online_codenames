@@ -90,9 +90,13 @@ public class GameInstance {
             } else {
                 moveEvent.setNeutralCard(true);
             }
-            if (isTeamInPlay(selectingTeam)) {
-                guessesLeft--;
-                if (guessesLeft < 1) {
+            if (!hasGameEnded) {
+                if (isTeamInPlay(selectingTeam)) {
+                    guessesLeft--;
+                    if (guessesLeft < 1) {
+                        endTurn();
+                    }
+                } else {
                     endTurn();
                 }
             }
@@ -115,21 +119,26 @@ public class GameInstance {
 
     private void removeWinningTeamFromPlay(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause, @NotNull final MoveEvent moveEvent) {
         winOrder.addWinningTeam(team, endPlayCause);
-        turnOrder.removeTeam(team);
-        moveEvent.addLeavingTeam(team, endPlayCause, winOrder.getWinNumberOfTeam(team));
-        if (turnOrder.isAnyTeamLeft()) {
-            turnOrder.moveToNextDefinersTurn();
-            checkIfOneTeamLeft(moveEvent);
-        }
+        removeTeamAndCheckForLastTeam(team, endPlayCause, moveEvent);
     }
 
     private void removeLosingTeamFromPlay(@NotNull final Team team, @NotNull final EndPlayCause endPlayCause, @NotNull final MoveEvent moveEvent) {
         winOrder.addLosingTeam(team, endPlayCause);
+        removeTeamAndCheckForLastTeam(team, endPlayCause, moveEvent);
+    }
+
+    private void removeTeamAndCheckForLastTeam(@NotNull Team team, @NotNull EndPlayCause endPlayCause, @NotNull MoveEvent moveEvent) {
         turnOrder.removeTeam(team);
         moveEvent.addLeavingTeam(team, endPlayCause, winOrder.getWinNumberOfTeam(team));
-        if (turnOrder.isAnyTeamLeft()) {
-            turnOrder.moveToNextDefinersTurn();
-            checkIfOneTeamLeft(moveEvent);
+        if (turnOrder.isOneTeamLeft()) {
+            endTurn();
+            final Team lastTeam = turnOrder.getCurrentTurn();
+            assert lastTeam != null;
+            winOrder.addLosingTeam(lastTeam, EndPlayCause.LAST_TEAM_LEFT);
+            turnOrder.removeTeam(lastTeam);
+            moveEvent.addLeavingTeam(lastTeam, EndPlayCause.LAST_TEAM_LEFT, winOrder.getWinNumberOfTeam(lastTeam));
+            moveEvent.setGameEnded();
+            hasGameEnded = true;
         }
     }
 
@@ -144,15 +153,6 @@ public class GameInstance {
     private void checkIfTeamWon(@NotNull final Team team, @NotNull final MoveEvent moveEvent) {
         if (teamNameToScore.get(team.getName()).equals(team.getCardCount())) {
             removeWinningTeamFromPlay(team, EndPlayCause.FOUND_ALL_MY_CARDS, moveEvent);
-        }
-    }
-
-    private void checkIfOneTeamLeft(@NotNull final MoveEvent moveEvent) {
-        if (turnOrder.isOneTeamLeft()) {
-            assert turnOrder.getCurrentTurn() != null;
-            removeLosingTeamFromPlay(turnOrder.getCurrentTurn(), EndPlayCause.LAST_TEAM_LEFT, moveEvent);
-            moveEvent.setGameEnded();
-            hasGameEnded = true;
         }
     }
 }

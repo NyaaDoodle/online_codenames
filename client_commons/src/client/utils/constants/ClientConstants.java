@@ -13,7 +13,7 @@ public class ClientConstants {
     public static final String JOIN_GAME_RESOURCE_URI = "/join-game";
 
     public static final String GO_BACK_STRING = "BACK";
-    public static final String QUIT_STRING = "END";
+    public static final String QUIT_STRING = "EXIT";
 
     public static final int STATUS_CODE_OK = 200;
     public static final int STATUS_CODE_BAD_REQUEST = 400;

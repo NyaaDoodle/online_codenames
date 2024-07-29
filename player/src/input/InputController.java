@@ -1,5 +1,6 @@
 package input;
 
+import client.game.instance.GameRole;
 import client.input.ClientInputController;
 import game.join.GameJoiner;
 import application.PlayerApplication;
@@ -18,9 +19,8 @@ public class InputController extends ClientInputController {
     private static final int OPTIONS_IN_MAIN_MENU = 3;
     private static final Set<Integer> INTEGERS_FOR_MAIN_MENU
             = OtherUtils.makeSetFromOneToN(OPTIONS_IN_MAIN_MENU);
-    private static final int OPTIONS_IN_GAME_ROOM_MENU = 3;
-    private static final Set<Integer> INTEGERS_FOR_GAME_ROOM_MENU
-            = OtherUtils.makeSetFromOneToN(OPTIONS_IN_GAME_ROOM_MENU);
+    private static final int OPTIONS_FOR_GUESSERS = 3;
+    private static final int OPTIONS_FOR_DEFINERS = 4;
 
     private static final Set<String> RESERVED_USERNAMES = new HashSet<>(Collections.singletonList("admin"));
 
@@ -40,16 +40,25 @@ public class InputController extends ClientInputController {
     }
 
     public static void gameRoomMenuSelection(final GameRoom gameRoom) {
-        int input = intMenuInputRegular(INTEGERS_FOR_GAME_ROOM_MENU);
+        final int optionsCount = (gameRoom.getPlayerState().getRole().equals(GameRole.DEFINER)) ? OPTIONS_FOR_DEFINERS : OPTIONS_FOR_GUESSERS;
+        int input = intMenuInputRegular(OtherUtils.makeSetFromOneToN(optionsCount));
         gameRoom.updateGameData();
-        final boolean inGame = !gameRoom.hasGameEnded() && gameRoom.getGameData().getGameListingData().isGameActive();
-        if (inGame) {
+        if (!gameRoom.hasGameEnded()) {
             switch (input) {
                 case 1:
                     UIElements.printGameData(gameRoom.getGameData(), gameRoom.getPlayerState().getRole());
                     break;
                 case 2:
-                    gameRoom.makeMove();
+                    if (gameRoom.getGameData().getGameListingData().isGameActive()) {
+                        gameRoom.makeMove();
+                    }
+                    break;
+                case 3:
+                    // TODO all-team chat
+                    break;
+
+                case 4:
+                    // TODO definers-only chat
                     break;
             }
         }

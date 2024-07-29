@@ -11,6 +11,7 @@ public class ResponseUtils {
     private static final String JOIN_GAME_ERROR_HEADER = "Error-Type";
     private static final String NO_PLAYER_STATUS_HEADER = "No-Player-Status";
     private static final String NO_PLAYER_STATUS_MESSAGE = "The requested game has ended and returned to pending, or you haven't signed up to a game yet.";
+    private static final String UNAUTHORIZED_MESSAGE = "You are unauthorized to use this service.";
 
     public static void sendPlainTextConflict(final HttpServletResponse res, final String errorMessage) throws IOException {
         res.setStatus(HttpServletResponse.SC_CONFLICT);
@@ -36,8 +37,10 @@ public class ResponseUtils {
         res.getWriter().println(json);
     }
 
-    public static void sendUnauthorized(final HttpServletResponse res) {
+    public static void sendUnauthorized(final HttpServletResponse res) throws IOException {
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        res.setContentType(PLAIN_TEXT);
+        res.getWriter().println(UNAUTHORIZED_MESSAGE);
     }
 
     public static void sendJoinGameError(final HttpServletResponse res, final String errorType, final String message, final int statusCode) throws IOException {

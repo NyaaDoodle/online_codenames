@@ -133,6 +133,10 @@ public class GameRoom extends ClientGameRoom {
         System.out.println("Select an option:");
         System.out.println("(1) Retrieve current game status");
         System.out.println("(2) Perform a move");
+        System.out.println("(3) Join team chat (with definers and guessers)");
+        if (getPlayerState().getRole().equals(GameRole.DEFINER)) {
+            System.out.println("(4) Join definers-only chat");
+        }
     }
 
     @Override
@@ -178,7 +182,6 @@ public class GameRoom extends ClientGameRoom {
             }
         }
         if (hasGameEnded) {
-            System.out.println("The game has ended.");
             setGameEnded();
         }
     }

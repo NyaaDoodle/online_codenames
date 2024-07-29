@@ -37,6 +37,7 @@ public abstract class ClientGameRoom {
 
     public void goToGameRoom() {
         gameRoomGreeter(playerState.getGame());
+        updateGameData();
         while (!gameEnded) {
             printGameRoomMenu();
             gameRoomMenuSelection();
@@ -49,7 +50,11 @@ public abstract class ClientGameRoom {
         final Request req = new Request.Builder().get().url(finalUrl).build();
         try {
             final String jsonBody = ClientHttpClientUtils.sendGameRequest(req);
-            gameData = ClientJSONUtils.fromJson(jsonBody, GameData.class);
+            final GameData newGameData = ClientJSONUtils.fromJson(jsonBody, GameData.class);
+            if (newGameData.getGameInstanceData() != null && gameData.getGameInstanceData() == null) {
+                System.out.println("The game has started! It is Team \"" + newGameData.getGameInstanceData().getCurrentTurn().getName() + "\"'s turn.");
+            }
+            gameData = newGameData;
         } catch (NoPlayerStatusAtServerException e) {
             System.out.println(e.getMessage());
             setGameEnded();

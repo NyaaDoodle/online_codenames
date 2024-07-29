@@ -70,7 +70,7 @@ public class ServletUtils {
     public static PlayerStateManager getPlayerStateManager(final ServletContext servletContext) {
         synchronized (initPlayerStateManagerLock) {
             if (servletContext.getAttribute(PLAYER_STATE_MANAGER_ATTRIBUTE_NAME) == null) {
-                servletContext.setAttribute(PLAYER_STATE_MANAGER_ATTRIBUTE_NAME, new PlayerStateManager(getUserManager(servletContext)));
+                servletContext.setAttribute(PLAYER_STATE_MANAGER_ATTRIBUTE_NAME, new PlayerStateManager());
             }
         }
         return (PlayerStateManager) servletContext.getAttribute(PLAYER_STATE_MANAGER_ATTRIBUTE_NAME);

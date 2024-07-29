@@ -50,8 +50,7 @@ public class InputController extends ClientInputController {
     public static void gameRoomMenuSelection(final GameRoom gameRoom) {
         int input = intMenuInputRegular(INTEGERS_FOR_GAME_ROOM_MENU);
         gameRoom.updateGameData();
-        final boolean inGame = !gameRoom.hasGameEnded() && gameRoom.getGameData().getGameListingData().isGameActive();
-        if (inGame) {
+        if (!gameRoom.hasGameEnded()) {
             switch (input) {
                 case 1:
                     UIElements.printGameData(gameRoom.getGameData(), gameRoom.getPlayerState().getRole());
