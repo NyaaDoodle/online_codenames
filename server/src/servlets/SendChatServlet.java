@@ -30,6 +30,9 @@ public class SendChatServlet extends HttpServlet {
                     if (playerState.getRole().equals(GameRole.DEFINER) && chatRoomType.equals(ChatRoomType.ALL_TEAM_CHAT)) {
                         ResponseUtils.sendPlainTextBadRequest(res, "Definers are not allowed to send messages on the team chat, only in definers-only chat.");
                     }
+                    else if (!playerState.getRole().equals(GameRole.DEFINER) && chatRoomType.equals(ChatRoomType.DEFINERS_CHAT)) {
+                        ResponseUtils.sendPlainTextBadRequest(res, "Guessers are not allowed in the definers-only chatroom.");
+                    }
                     else {
                         String message = req.getParameter(CHAT_MESSAGE_PARAMETER);
                         if (message != null && !message.trim().isEmpty()) {
@@ -46,7 +49,7 @@ public class SendChatServlet extends HttpServlet {
                     }
                 } else {
                     ResponseUtils.sendPlainTextBadRequest(res, "The provided chat type was not specified or was not valid, "
-                            + "only \"" + ChatRoomType.ALL_TEAM_CHAT.toString() + "\" or \"" + ChatRoomType.ALL_TEAM_CHAT.toString() + "\" are allowed.");
+                            + "only \"" + ChatRoomType.ALL_TEAM_CHAT + "\" or \"" + ChatRoomType.ALL_TEAM_CHAT + "\" are allowed.");
                 }
             }
             else {

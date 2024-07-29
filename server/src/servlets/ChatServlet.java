@@ -8,7 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lobby.LobbyManager;
+import lobby.game.join.GameRole;
 import lobby.game.join.PlayerState;
 import utils.ResponseUtils;
 import utils.ServletUtils;
@@ -33,21 +33,26 @@ public class ChatServlet extends HttpServlet {
                 if (lastPos != Constants.ERROR_NUM) {
                     final ChatRoomType chatRoomType = ServletUtils.parseChatType(req);
                     if (chatRoomType != null) {
-                        final ChatRoomManager chatRoomManager = ServletUtils.getChatManager(getServletContext())
-                                .getChatRoomManager(playerState.getGame(), playerState.getTeam(), chatRoomType);
-                        assert chatRoomManager != null;
-                        int chatRoomFinalPos;
-                        List<ChatEntry> chatEntries;
-                        synchronized (getServletContext()) {
-                            chatRoomFinalPos = chatRoomManager.getLastPosition();
-                            chatEntries = chatRoomManager.getChatEntries(lastPos);
+                        if (!playerState.getRole().equals(GameRole.DEFINER) && chatRoomType.equals(ChatRoomType.DEFINERS_CHAT)) {
+                            ResponseUtils.sendPlainTextBadRequest(res, "Guessers are not allowed in the definers-only chatroom.");
                         }
-                        final ChatPackage chatPackage = new ChatPackage(chatEntries, chatRoomFinalPos);
-                        final String jsonBody = JSONUtils.toJson(chatPackage);
-                        ResponseUtils.sendJSONSuccess(res, jsonBody);
+                        else {
+                            final ChatRoomManager chatRoomManager = ServletUtils.getChatManager(getServletContext())
+                                    .getChatRoomManager(playerState.getGame(), playerState.getTeam(), chatRoomType);
+                            assert chatRoomManager != null;
+                            int chatRoomFinalPos;
+                            List<ChatEntry> chatEntries;
+                            synchronized (getServletContext()) {
+                                chatRoomFinalPos = chatRoomManager.getLastPosition();
+                                chatEntries = chatRoomManager.getChatEntries(lastPos);
+                            }
+                            final ChatPackage chatPackage = new ChatPackage(chatEntries, chatRoomFinalPos);
+                            final String jsonBody = JSONUtils.toJson(chatPackage);
+                            ResponseUtils.sendJSONSuccess(res, jsonBody);
+                        }
                     } else {
                         ResponseUtils.sendPlainTextBadRequest(res, "The provided chat type was not specified or was not valid, "
-                                + "only \"" + ChatRoomType.ALL_TEAM_CHAT.toString() + "\" or \"" + ChatRoomType.ALL_TEAM_CHAT.toString() + "\" are allowed.");
+                                + "only \"" + ChatRoomType.ALL_TEAM_CHAT + "\" or \"" + ChatRoomType.ALL_TEAM_CHAT + "\" are allowed.");
                     }
                 } else {
                     ResponseUtils.sendPlainTextBadRequest(res, "The provided last position was not specified or was not a number.");

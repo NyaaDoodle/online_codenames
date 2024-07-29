@@ -5,6 +5,7 @@ import client.input.ClientInputController;
 import game.join.GameJoiner;
 import application.PlayerApplication;
 import game.room.GameRoom;
+import game.room.chat.ChatRoomType;
 import org.jetbrains.annotations.NotNull;
 import ui.UIElements;
 import utils.OtherUtils;
@@ -52,13 +53,20 @@ public class InputController extends ClientInputController {
                     if (gameRoom.getGameData().getGameListingData().isGameActive()) {
                         gameRoom.makeMove();
                     }
+                    else {
+                        System.out.println("The game hasn't started yet!");
+                    }
                     break;
                 case 3:
-                    // TODO all-team chat
+                    gameRoom.goToChatRoom(ChatRoomType.ALL_TEAM_CHAT);
                     break;
-
                 case 4:
-                    // TODO definers-only chat
+                    if (gameRoom.getPlayerState().getRole().equals(GameRole.DEFINER)) {
+                        gameRoom.goToChatRoom(ChatRoomType.DEFINERS_CHAT);
+                    }
+                    else {
+                        System.out.println("Guessers are not allowed in the definers-only chatroom.");
+                    }
                     break;
             }
         }

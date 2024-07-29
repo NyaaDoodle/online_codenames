@@ -13,6 +13,7 @@ import client.game.structure.GameStructure;
 import client.game.structure.Team;
 import client.utils.constants.ClientConstants;
 import client.utils.http.ClientHttpClientUtils;
+import game.room.chat.ChatRoom;
 import game.room.chat.ChatRoomType;
 import input.InputController;
 import client.lobby.game.list.GameListingData;
@@ -128,13 +129,13 @@ public class GameRoom extends ClientGameRoom {
         }
     }
 
-    public void goToChatRoom(final ChatRoomType chatRoomType) {
-
+    public void goToChatRoom(@NotNull final ChatRoomType chatRoomType) {
+        final ChatRoom chatRoom = new ChatRoom(chatRoomType, getPlayerState().getRole());
+        chatRoom.goToChatRoom();
     }
 
     @Override
     protected void printGameRoomMenu() {
-        // TODO add chat, differ between definer and guesser
         System.out.println("Select an option:");
         System.out.println("(1) Retrieve current game status");
         System.out.println("(2) Perform a move");

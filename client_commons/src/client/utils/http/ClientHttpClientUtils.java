@@ -19,7 +19,7 @@ public class ClientHttpClientUtils {
             .cookieJar(COOKIE_MANAGER).build();
 
     private static final String JOIN_GAME_ERROR_HEADER = "Error-Type";
-    private static final String NO_PLAYER_STATUS_HEADER = "No-Player-Status";
+    protected static final String NO_PLAYER_STATUS_HEADER = "No-Player-Status";
 
     protected static SimpleCookieManager getCookieManager() { return COOKIE_MANAGER; }
 

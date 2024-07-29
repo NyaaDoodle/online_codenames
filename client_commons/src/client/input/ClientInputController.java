@@ -57,4 +57,16 @@ public class ClientInputController {
         }
         return input;
     }
+
+    public static String chatMessageInput() {
+        while (true) {
+            final String input = SCANNER.nextLine();
+            if (input != null && !input.trim().isEmpty()) {
+                return input;
+            }
+            else {
+                System.out.println("Chat message cannot be empty or only white-space.");
+            }
+        }
+    }
 }
