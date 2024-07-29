@@ -1,5 +1,6 @@
 package servlets;
 
+import chat.ChatManager;
 import com.google.gson.JsonSyntaxException;
 import exceptions.JoinGameException;
 import game.engine.GameEngine;
@@ -143,6 +144,7 @@ public class JoinGameServlet extends HttpServlet {
 
     private void tellToCreateGameInstance(final GameListingData game) {
         final GameEngine gameEngine = ServletUtils.getGameEngine(getServletContext());
+        final ChatManager chatManager = ServletUtils.getChatManager(getServletContext());
         LogUtils.logToConsole("Creating game instance of \"" + game.getName() + "\"");
         gameEngine.addGame(game);
     }

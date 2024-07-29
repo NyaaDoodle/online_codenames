@@ -1,6 +1,7 @@
 package utils;
 
 import chat.ChatManager;
+import chat.ChatRoomType;
 import game.engine.GameEngine;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ public class ServletUtils {
     private static final String CHAT_MANAGER_ATTRIBUTE_NAME = "chatManager";
     private static final String GAME_ENGINE_ATTRIBUTE_NAME = "gameEngine";
     private static final String PLAYER_STATE_MANAGER_ATTRIBUTE_NAME = "playerStateManager";
+    private static final String CHAT_TYPE_PARAMETER = "chat-type";
 
     private static final Object initLobbyManagerLock = new Object();
     private static final Object initUserManagerLock = new Object();
@@ -93,5 +95,23 @@ public class ServletUtils {
     public static boolean isAdmin(final HttpServletRequest req) {
         final String sessionUsername = SessionUtils.getUsername(req);
         return Constants.ADMIN_USERNAMES.contains(sessionUsername);
+    }
+
+    public static ChatRoomType parseChatType(final HttpServletRequest req) {
+        String chatTypeRaw = req.getParameter(CHAT_TYPE_PARAMETER);
+        if (chatTypeRaw != null) {
+            if (chatTypeRaw.equals(ChatRoomType.DEFINERS_CHAT.toString())) {
+                return ChatRoomType.DEFINERS_CHAT;
+            }
+            else if (chatTypeRaw.equals(ChatRoomType.ALL_TEAM_CHAT.toString())) {
+                return ChatRoomType.ALL_TEAM_CHAT;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
     }
 }

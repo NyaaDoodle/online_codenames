@@ -1,5 +1,6 @@
 package servlets;
 
+import chat.ChatManager;
 import exceptions.GameListingException;
 import exceptions.GameStructureFileException;
 import lobby.LobbyManager;
@@ -35,6 +36,8 @@ public class NewGameServlet extends HttpServlet {
                 GameStructure gameStructure = JAXBConversion.parseToGameStructure(structureStream, dictionaryStream);
                 LogUtils.logToConsole("Adding game \"" + gameStructure.getName() + "\" to game list.");
                 addGameToLobby(gameStructure);
+                final ChatManager chatManager = ServletUtils.getChatManager(getServletContext());
+                chatManager.addChat(gameStructure.getName(), gameStructure.getTeams());
                 ResponseUtils.sendPlainTextSuccess(res, "New game \"" + gameStructure.getName() + "\" was added successfully");
             } catch (final JAXBException e) {
                 ResponseUtils.sendPlainTextBadRequest(res, JAXB_EXCEPTION_ERROR_PREFIX + e.getMessage());

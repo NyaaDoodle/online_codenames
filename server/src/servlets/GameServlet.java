@@ -1,5 +1,6 @@
 package servlets;
 
+import chat.ChatManager;
 import game.engine.GameEngine;
 import game.instance.Hint;
 import game.instance.MoveEvent;
@@ -68,10 +69,7 @@ public class GameServlet extends HttpServlet {
                                                             if (gameEngine.hasGameEnded(gameName)) {
                                                                 endGame(gameName, gameEngine, lobbyManager, playerStateManager);
                                                             } else if (!moveEvent.getTeamsThatLeftPlay().isEmpty()) {
-                                                                moveEvent.getTeamsThatLeftPlay().keySet().forEach(teamName -> {
-                                                                    LogUtils.logToConsole("Ejecting team \"" + teamName + "\" from play in game \"" + gameName + "\"");
-                                                                    playerStateManager.nullifyPlayerStateByTeam(teamName, gameName);
-                                                                });
+                                                                ejectTeamFromPlay(moveEvent, gameName, playerStateManager);
                                                             }
                                                             sendMoveEvent(res, moveEvent);
                                                         } else {
@@ -154,14 +152,25 @@ public class GameServlet extends HttpServlet {
     }
 
     private void endGame(final String gameName, final GameEngine gameEngine, final LobbyManager lobbyManager, final PlayerStateManager playerStateManager) {
+        final ChatManager chatManager = ServletUtils.getChatManager(getServletContext());
         LogUtils.logToConsole("Ending game \"" + gameName + "\" and returning it to pending state.");
         gameEngine.removeGame(gameName);
         lobbyManager.resetGame(gameName);
         playerStateManager.nullifyPlayerStateByGame(gameName);
+        chatManager.blankGameChats(gameName);
     }
 
     private void sendMoveEvent(final HttpServletResponse res, final MoveEvent moveEvent) throws IOException {
         final String jsonBody = JSONUtils.toJson(moveEvent);
         ResponseUtils.sendJSONSuccess(res, jsonBody);
+    }
+
+    private void ejectTeamFromPlay(final MoveEvent moveEvent, final String gameName, final PlayerStateManager playerStateManager) {
+        final ChatManager chatManager = ServletUtils.getChatManager(getServletContext());
+        moveEvent.getTeamsThatLeftPlay().keySet().forEach(teamName -> {
+            LogUtils.logToConsole("Ejecting team \"" + teamName + "\" from play in game \"" + gameName + "\"");
+            playerStateManager.nullifyPlayerStateByTeam(teamName, gameName);
+            chatManager.blankTeamChat(gameName, teamName);
+        });
     }
 }

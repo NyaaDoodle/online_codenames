@@ -13,6 +13,7 @@ import client.game.structure.GameStructure;
 import client.game.structure.Team;
 import client.utils.constants.ClientConstants;
 import client.utils.http.ClientHttpClientUtils;
+import game.room.chat.ChatRoomType;
 import input.InputController;
 import client.lobby.game.list.GameListingData;
 import okhttp3.HttpUrl;
@@ -125,6 +126,10 @@ public class GameRoom extends ClientGameRoom {
         else {
             System.out.println("The game isn't active yet. Please wait until all players have connected.");
         }
+    }
+
+    public void goToChatRoom(final ChatRoomType chatRoomType) {
+
     }
 
     @Override

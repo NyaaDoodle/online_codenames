@@ -13,6 +13,8 @@ public class Constants {
     public static final String GAME_SERVLET_NAME = "GameServlet";
     public static final String GAME_DATA_SERVLET_NAME = "GameDataServlet";
     public static final String EXIT_GAME_SERVLET_NAME = "ExitGameServlet";
+    public static final String CHAT_SERVLET_NAME = "ChatServlet";
+    public static final String SEND_CHAT_SERVLET_NAME = "SendChatServlet";
 
     public static final String LOGIN_RESOURCE_URI = "/login";
     public static final String LOGOUT_RESOURCE_URI = "/logout";
@@ -22,6 +24,8 @@ public class Constants {
     public static final String GAME_RESOURCE_URI = "/game";
     public static final String GAME_DATA_RESOURCE_URI = "/game-data";
     public static final String EXIT_GAME_RESOURCE_URI = "/exit-game";
+    public static final String CHAT_RESOURCE_URI = "/chat";
+    public static final String SEND_CHAT_RESOURCE_URI = "/send-chat";
 
     // In case we want more admin usernames(?), for now it's only "admin".
     public static final Set<String> ADMIN_USERNAMES = new HashSet<>(Collections.singletonList("admin"));
